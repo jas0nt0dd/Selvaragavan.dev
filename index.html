@@ -74,11 +74,37 @@
       color: var(--text-primary);
       line-height: 1.6;
       overflow-x: hidden;
+      position: relative;
       transition: background var(--transition), color var(--transition);
     }
     a { color: inherit; text-decoration: none; }
     img { max-width: 100%; }
     ul { list-style: none; }
+
+    /* ===== SITE-WIDE MATRIX BACKGROUND ===== */
+    .site-bg-matrix {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 1;
+      pointer-events: none;
+      opacity: 0.18;
+      mix-blend-mode: screen;
+    }
+    [data-theme="light"] .site-bg-matrix {
+      opacity: 0.12;
+      mix-blend-mode: multiply;
+    }
+    main > section,
+    footer {
+      position: relative;
+    }
+    main > section > *,
+    footer > * {
+      position: relative;
+      z-index: 2;
+    }
 
     /* ===== LOADING SCREEN ===== */
     #loading-screen {
@@ -214,22 +240,6 @@
       padding: 100px 6rem 4rem;
       gap: 4rem;
       overflow: hidden;
-    }
-    .hero-bg-matrix {
-      position: absolute;
-      top: 64px; left: 0; right: 0; bottom: 0;
-      width: 100%;
-      height: calc(100% - 64px);
-      z-index: 0;
-      pointer-events: none;
-      opacity: 0.32;
-      mix-blend-mode: screen;
-      -webkit-mask-image: radial-gradient(ellipse at 32% 42%, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.82) 34%, rgba(0,0,0,0.42) 58%, transparent 82%);
-      mask-image: radial-gradient(ellipse at 32% 42%, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.82) 34%, rgba(0,0,0,0.42) 58%, transparent 82%);
-    }
-    [data-theme="light"] .hero-bg-matrix {
-      opacity: 0.18;
-      mix-blend-mode: multiply;
     }
     .hero-left { position: relative; z-index: 2; }
     .hero-right { position: relative; z-index: 2; display: flex; align-items: center; justify-content: center; }
@@ -749,11 +759,6 @@
     @media (max-width: 900px) {
       section { padding: 4rem 2rem; }
       #hero { grid-template-columns: 1fr; padding: 100px 2rem 4rem; gap: 2rem; }
-      .hero-bg-matrix {
-        opacity: 0.22;
-        -webkit-mask-image: radial-gradient(ellipse at 50% 32%, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.45) 52%, transparent 78%);
-        mask-image: radial-gradient(ellipse at 50% 32%, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.45) 52%, transparent 78%);
-      }
       #neural-shield-canvas { height: 340px; max-width: 380px; margin: 0 auto; }
       .hero-right { justify-content: center; }
       .about-grid { grid-template-columns: 1fr; gap: 3rem; }
@@ -821,6 +826,9 @@
 <div class="cursor-dot" id="cursorDot"></div>
 <div class="cursor-ring" id="cursorRing"></div>
 
+<!-- SITE-WIDE MATRIX BACKGROUND -->
+<canvas id="site-matrix" class="site-bg-matrix" aria-hidden="true"></canvas>
+
 <!-- NAVBAR -->
 <header>
   <nav id="navbar" role="navigation" aria-label="Main navigation">
@@ -856,7 +864,6 @@
 <main>
 <!-- ===== HERO ===== -->
 <section id="hero" aria-label="Hero">
-  <canvas id="hero-matrix" class="hero-bg-matrix"></canvas>
   <div class="scan-line"></div>
 
   <!-- LEFT COLUMN -->
@@ -1512,18 +1519,18 @@ document.querySelectorAll('.filter-tab').forEach(tab => {
 
 // ===== MATRIX BACKGROUND =====
 (function initMatrix() {
-  const canvas = document.getElementById('hero-matrix');
+  const canvas = document.getElementById('site-matrix');
+  if (!canvas) return;
   const ctx = canvas.getContext('2d');
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (prefersReduced) return;
 
-  let W, H, cols, drops, cellSize;
+  let W, H, cols, drops, cellSize, dpr;
   const chars = '0123456789ABCDEFアイウエオカキクケコサシスセソタチツテトナニヌネノ01[]{}()<>=!?@#$%^&*';
   function resize() {
-    const rect = canvas.getBoundingClientRect();
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    W = rect.width;
-    H = rect.height;
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = window.innerWidth;
+    H = window.innerHeight;
     cellSize = window.innerWidth < 700 ? 20 : 17;
     canvas.width = Math.max(1, Math.floor(W * dpr));
     canvas.height = Math.max(1, Math.floor(H * dpr));
