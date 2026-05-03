@@ -89,11 +89,11 @@
       height: 100vh;
       z-index: 1;
       pointer-events: none;
-      opacity: 0.18;
+      opacity: 0.28;
       mix-blend-mode: screen;
     }
     [data-theme="light"] .site-bg-matrix {
-      opacity: 0.12;
+      opacity: 0.18;
       mix-blend-mode: multiply;
     }
     main > section,
@@ -746,6 +746,21 @@
     .reveal-delay-1 { transition-delay: 0.1s; }
     .reveal-delay-2 { transition-delay: 0.2s; }
     .reveal-delay-3 { transition-delay: 0.3s; }
+    .section-transition {
+      opacity: 0;
+      transform: translateY(44px) scale(0.985);
+      filter: blur(8px);
+      transition:
+        opacity 0.75s ease,
+        transform 0.75s cubic-bezier(0.22, 1, 0.36, 1),
+        filter 0.75s ease;
+      will-change: opacity, transform, filter;
+    }
+    .section-transition.section-visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      filter: blur(0);
+    }
 
     /* ===== RESPONSIVE ===== */
     @media (max-width: 1200px) {
@@ -789,6 +804,7 @@
     /* ===== ACCESSIBILITY ===== */
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+      .section-transition { opacity: 1; transform: none; filter: none; }
     }
 
     /* ===== SCROLLBAR ===== */
@@ -1448,6 +1464,20 @@ const observer_spy = new IntersectionObserver(entries => {
 }, { threshold: 0.4 });
 sections.forEach(s => observer_spy.observe(s));
 
+// ===== SECTION SCROLL TRANSITIONS =====
+const sectionTransitionObserver = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('section-visible');
+    }
+  });
+}, { threshold: 0.16, rootMargin: '0px 0px -10% 0px' });
+sections.forEach((section, index) => {
+  section.classList.add('section-transition');
+  if (index === 0) section.classList.add('section-visible');
+  sectionTransitionObserver.observe(section);
+});
+
 // ===== SCROLL REVEAL =====
 const reveals = document.querySelectorAll('.reveal');
 const revealObserver = new IntersectionObserver(entries => {
@@ -1526,7 +1556,7 @@ document.querySelectorAll('.filter-tab').forEach(tab => {
   if (prefersReduced) return;
 
   let W, H, cols, drops, cellSize, dpr;
-  const chars = '0123456789ABCDEFアイウエオカキクケコサシスセソタチツテトナニヌネノ01[]{}()<>=!?@#$%^&*';
+  const chars = '0123456789';
   function resize() {
     dpr = Math.min(window.devicePixelRatio || 1, 2);
     W = window.innerWidth;
@@ -1544,19 +1574,18 @@ document.querySelectorAll('.filter-tab').forEach(tab => {
     const isLight = document.documentElement.getAttribute('data-theme') === 'light';
     ctx.fillStyle = isLight ? 'rgba(240,244,248,0.09)' : 'rgba(10,10,15,0.055)';
     ctx.fillRect(0,0,W,H);
-    ctx.font = '13px JetBrains Mono, monospace';
-    ctx.shadowBlur = isLight ? 0 : 8;
+    ctx.font = '14px JetBrains Mono, monospace';
+    ctx.shadowBlur = isLight ? 2 : 12;
+    ctx.shadowColor = isLight ? 'rgba(0,122,76,0.25)' : 'rgba(0,255,159,0.55)';
     for (let i = 0; i < drops.length; i++) {
       const char = chars[Math.floor(Math.random() * chars.length)];
       const y = drops[i] * cellSize;
       const x = i * cellSize + (i % 3) * 2;
-      const alpha = Math.random() > 0.86 ? 0.7 : 0.2;
-      const green = Math.random() > 0.82;
-      ctx.shadowColor = green ? 'rgba(0,255,159,0.35)' : 'rgba(0,212,255,0.35)';
-      ctx.fillStyle = green ? `rgba(0,255,159,${alpha})` : `rgba(0,212,255,${alpha})`;
+      const alpha = Math.random() > 0.84 ? 0.95 : 0.42;
+      ctx.fillStyle = isLight ? `rgba(0,122,76,${alpha})` : `rgba(0,255,100,${alpha})`;
       ctx.fillText(char, x, y);
       if (y > H + 80 && Math.random() > 0.965) drops[i] = -Math.random() * 16;
-      drops[i] += 0.38 + (i % 5) * 0.012;
+      drops[i] += 0.42 + (i % 5) * 0.014;
     }
     requestAnimationFrame(draw);
   }
