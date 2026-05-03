@@ -74,56 +74,11 @@
       color: var(--text-primary);
       line-height: 1.6;
       overflow-x: hidden;
-      position: relative;
       transition: background var(--transition), color var(--transition);
     }
     a { color: inherit; text-decoration: none; }
     img { max-width: 100%; }
     ul { list-style: none; }
-
-    /* ===== SITE-WIDE MATRIX BACKGROUND ===== */
-    .site-bg-matrix {
-      position: fixed;
-      inset: 0;
-      width: 100vw;
-      height: 100vh;
-      z-index: 1;
-      pointer-events: none;
-      opacity: 0.28;
-      mix-blend-mode: screen;
-    }
-    [data-theme="light"] .site-bg-matrix {
-      opacity: 0.18;
-      mix-blend-mode: multiply;
-    }
-    .scroll-3d-scene {
-      position: fixed;
-      inset: 0;
-      z-index: 1;
-      pointer-events: none;
-      opacity: 0.36;
-      mix-blend-mode: screen;
-      -webkit-mask-image: linear-gradient(90deg, transparent 0%, transparent 48%, rgba(0,0,0,0.28) 62%, #000 82%);
-      mask-image: linear-gradient(90deg, transparent 0%, transparent 48%, rgba(0,0,0,0.28) 62%, #000 82%);
-    }
-    .scroll-3d-scene canvas {
-      width: 100% !important;
-      height: 100% !important;
-      display: block;
-    }
-    [data-theme="light"] .scroll-3d-scene {
-      opacity: 0.2;
-      mix-blend-mode: multiply;
-    }
-    main > section,
-    footer {
-      position: relative;
-    }
-    main > section > *,
-    footer > * {
-      position: relative;
-      z-index: 2;
-    }
 
     /* ===== LOADING SCREEN ===== */
     #loading-screen {
@@ -259,6 +214,22 @@
       padding: 100px 6rem 4rem;
       gap: 4rem;
       overflow: hidden;
+    }
+    .hero-bg-matrix {
+      position: absolute;
+      top: 64px; left: 0; right: 0; bottom: 0;
+      width: 100%;
+      height: calc(100% - 64px);
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.32;
+      mix-blend-mode: screen;
+      -webkit-mask-image: radial-gradient(ellipse at 32% 42%, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.82) 34%, rgba(0,0,0,0.42) 58%, transparent 82%);
+      mask-image: radial-gradient(ellipse at 32% 42%, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.82) 34%, rgba(0,0,0,0.42) 58%, transparent 82%);
+    }
+    [data-theme="light"] .hero-bg-matrix {
+      opacity: 0.18;
+      mix-blend-mode: multiply;
     }
     .hero-left { position: relative; z-index: 2; }
     .hero-right { position: relative; z-index: 2; display: flex; align-items: center; justify-content: center; }
@@ -489,7 +460,6 @@
       border-radius: var(--radius-lg);
       padding: 1px;
       background: linear-gradient(135deg, var(--accent-cyan), var(--accent-green), var(--accent-cyan));
-      mask: linear-gradient(#fff,#fff) content-box, linear-gradient(#fff,#fff);
       -webkit-mask: linear-gradient(#fff,#fff) content-box, linear-gradient(#fff,#fff);
       -webkit-mask-composite: destination-out;
       mask-composite: exclude;
@@ -524,6 +494,7 @@
     /* ===== SKILLS ===== */
     #skills { background: var(--bg-secondary); }
     .skills-container { margin-top: 3rem; display: flex; flex-direction: column; gap: 2.5rem; }
+    .skill-category { }
     .skill-cat-header {
       display: flex; align-items: center; gap: 0.75rem;
       font-family: var(--font-mono); font-size: 0.8rem; font-weight: 600;
@@ -631,17 +602,7 @@
       position: relative;
     }
     .ach-card:hover { border-color: var(--accent-amber); transform: translateY(-4px); box-shadow: 0 8px 30px rgba(255,107,53,0.15); }
-    .ach-icon {
-      width: 42px;
-      height: 42px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 12px;
-      color: var(--accent-amber);
-      background: rgba(255,107,53,0.1);
-      border: 1px solid rgba(255,107,53,0.25);
-    }
+    .ach-icon { font-size: 1.8rem; }
     .ach-title { font-family: var(--font-display); font-size: 0.95rem; font-weight: 600; line-height: 1.4; }
     .ach-meta { font-family: var(--font-mono); font-size: 0.7rem; color: var(--accent-amber); text-transform: uppercase; letter-spacing: 0.06em; }
     .ach-desc { font-size: 0.82rem; color: var(--text-secondary); line-height: 1.6; }
@@ -775,21 +736,6 @@
     .reveal-delay-1 { transition-delay: 0.1s; }
     .reveal-delay-2 { transition-delay: 0.2s; }
     .reveal-delay-3 { transition-delay: 0.3s; }
-    .section-transition {
-      opacity: 0;
-      transform: translateY(44px) scale(0.985);
-      filter: blur(8px);
-      transition:
-        opacity 0.75s ease,
-        transform 0.75s cubic-bezier(0.22, 1, 0.36, 1),
-        filter 0.75s ease;
-      will-change: opacity, transform, filter;
-    }
-    .section-transition.section-visible {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-      filter: blur(0);
-    }
 
     /* ===== RESPONSIVE ===== */
     @media (max-width: 1200px) {
@@ -803,6 +749,11 @@
     @media (max-width: 900px) {
       section { padding: 4rem 2rem; }
       #hero { grid-template-columns: 1fr; padding: 100px 2rem 4rem; gap: 2rem; }
+      .hero-bg-matrix {
+        opacity: 0.22;
+        -webkit-mask-image: radial-gradient(ellipse at 50% 32%, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.45) 52%, transparent 78%);
+        mask-image: radial-gradient(ellipse at 50% 32%, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.45) 52%, transparent 78%);
+      }
       #neural-shield-canvas { height: 340px; max-width: 380px; margin: 0 auto; }
       .hero-right { justify-content: center; }
       .about-grid { grid-template-columns: 1fr; gap: 3rem; }
@@ -817,7 +768,6 @@
     @media (max-width: 600px) {
       section { padding: 3.5rem 1.25rem; }
       #hero { padding: 90px 1.25rem 3rem; }
-      .scroll-3d-scene { display: none; }
       .spec-grid { grid-template-columns: 1fr 1fr; gap: 1rem; }
       .projects-grid { grid-template-columns: 1fr; }
       .achievements-grid { grid-template-columns: 1fr; }
@@ -834,8 +784,6 @@
     /* ===== ACCESSIBILITY ===== */
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
-      .section-transition { opacity: 1; transform: none; filter: none; }
-      .scroll-3d-scene { display: none; }
     }
 
     /* ===== SCROLLBAR ===== */
@@ -873,10 +821,6 @@
 <div class="cursor-dot" id="cursorDot"></div>
 <div class="cursor-ring" id="cursorRing"></div>
 
-<!-- SITE-WIDE MATRIX BACKGROUND -->
-<canvas id="site-matrix" class="site-bg-matrix" aria-hidden="true"></canvas>
-<div id="scroll-3d-scene" class="scroll-3d-scene" aria-hidden="true"></div>
-
 <!-- NAVBAR -->
 <header>
   <nav id="navbar" role="navigation" aria-label="Main navigation">
@@ -912,6 +856,7 @@
 <main>
 <!-- ===== HERO ===== -->
 <section id="hero" aria-label="Hero">
+  <canvas id="hero-matrix" class="hero-bg-matrix"></canvas>
   <div class="scan-line"></div>
 
   <!-- LEFT COLUMN -->
@@ -1094,11 +1039,11 @@
     <div class="project-card featured" data-category="security">
       <div class="project-header">
         <div class="project-badges">
-          <span class="badge badge-featured">Featured</span>
+          <span class="badge badge-featured">⭐ Featured</span>
           <span class="badge badge-security">Cybersecurity</span>
         </div>
       </div>
-      <div class="project-title">ArmurAI — Autonomous Pentesting Framework</div>
+      <div class="project-title">🛡️ ArmurAI — Autonomous Pentesting Framework</div>
       <p class="project-desc">Fully autonomous AI-powered penetration testing framework with 3 interfaces (GUI, Rich TUI, CLI). Chains 5 security tools intelligently — Nmap, Gobuster, Nikto, AI Analyzer, Orchestration Agent — with zero manual intervention. Built on a 3.56GB local LLM with GPU acceleration. 2000+ lines across 13 files.</p>
       <div class="project-tech">
         <span class="tech-chip">Python</span><span class="tech-chip">llama-cpp</span><span class="tech-chip">CustomTkinter</span><span class="tech-chip">Rich</span><span class="tech-chip">Nmap</span><span class="tech-chip">Local LLM</span>
@@ -1115,12 +1060,12 @@
     <div class="project-card featured" data-category="security">
       <div class="project-header">
         <div class="project-badges">
-          <span class="badge badge-featured">Featured</span>
+          <span class="badge badge-featured">⭐ Featured</span>
           <span class="badge badge-security">Cybersecurity</span>
           <span class="badge badge-ai">AI</span>
         </div>
       </div>
-      <div class="project-title">GNN Malware Detector</div>
+      <div class="project-title">🧠 GNN Malware Detector</div>
       <p class="project-desc">Graph Neural Network-based malware detection. Converts PE binaries to NetworkX directed graphs via static analysis & API call extraction, then classifies through GCN/GAT architectures. Full GUI, CLI, and evaluation metrics (Accuracy, Precision, Recall, F1).</p>
       <div class="project-tech">
         <span class="tech-chip">PyTorch</span><span class="tech-chip">PyTorch Geometric</span><span class="tech-chip">pefile</span><span class="tech-chip">NetworkX</span><span class="tech-chip">GCN/GAT</span>
@@ -1137,11 +1082,11 @@
     <div class="project-card featured" data-category="ai">
       <div class="project-header">
         <div class="project-badges">
-          <span class="badge badge-featured">Featured</span>
+          <span class="badge badge-featured">⭐ Featured</span>
           <span class="badge badge-mlops">MLOps</span>
         </div>
       </div>
-      <div class="project-title">MLOps Incident Response Environment</div>
+      <div class="project-title">⚙️ MLOps Incident Response Environment</div>
       <p class="project-desc">Production-grade OpenEnv for META × Hugging Face Hackathon. LLM agents act as on-call ML engineers diagnosing production incidents. Features 4 difficulty tiers, dense RL rewards, and GRPO fine-tuning pipeline. Achieved 0.9625 average score across all difficulties.</p>
       <div class="project-tech">
         <span class="tech-chip">FastAPI</span><span class="tech-chip">Docker</span><span class="tech-chip">Unsloth</span><span class="tech-chip">TRL</span><span class="tech-chip">GRPO</span><span class="tech-chip">HF Spaces</span>
@@ -1166,7 +1111,7 @@
           <span class="badge badge-ai">AI</span>
         </div>
       </div>
-      <div class="project-title">Pentesting Chatbot — RAG + CAG</div>
+      <div class="project-title">🔍 Pentesting Chatbot — RAG + CAG</div>
       <p class="project-desc">Intelligent pentesting assistant combining RAG and Cache-Augmented Generation for context-aware, knowledge-grounded responses. Enables natural language querying of security knowledge bases for real-time pentesting guidance.</p>
       <div class="project-tech">
         <span class="tech-chip">Python</span><span class="tech-chip">RAG</span><span class="tech-chip">CAG</span><span class="tech-chip">FAISS</span><span class="tech-chip">LLM</span>
@@ -1187,7 +1132,7 @@
           <span class="badge badge-mlops">Civic Tech</span>
         </div>
       </div>
-      <div class="project-title">PolicyLens AI — Policy Bias Detection</div>
+      <div class="project-title">⚖️ PolicyLens AI — Policy Bias Detection</div>
       <p class="project-desc">Upload any government policy PDF → get full bias report, SDG score, loophole flags, and plain-English summary in &lt;90s. 5-dimension bias detection using 3-model ensemble: HuggingFace BERT + IBM AIF360 + Mistral 7B. Maps clauses to all 17 UN SDGs. Finalist at AI Tool Dev Challenge 2.0.</p>
       <div class="project-tech">
         <span class="tech-chip">FastAPI</span><span class="tech-chip">React</span><span class="tech-chip">Mistral 7B</span><span class="tech-chip">BERT</span><span class="tech-chip">IBM AIF360</span><span class="tech-chip">Docker</span>
@@ -1208,7 +1153,7 @@
           <span class="badge badge-ai">Computer Vision</span>
         </div>
       </div>
-      <div class="project-title">ZKBot — Autonomous Cup Washing Robot</div>
+      <div class="project-title">🤖 ZKBot — Autonomous Cup Washing Robot</div>
       <p class="project-desc">Real-time YOLO-based computer vision pipeline integrated with a robotic arm for autonomous cup detection and washing. Custom YOLO model deployed to control robotic actuators via serial communication for automated cleaning workflows.</p>
       <div class="project-tech">
         <span class="tech-chip">YOLO</span><span class="tech-chip">OpenCV</span><span class="tech-chip">Arduino</span><span class="tech-chip">Serial Comm</span><span class="tech-chip">Robotics</span>
@@ -1230,37 +1175,37 @@
   <h2 class="section-title">Awards & <span class="grad-text">Achievements</span></h2>
   <div class="achievements-grid">
     <div class="ach-card reveal">
-      <div class="ach-icon"><i data-lucide="trophy" width="22" height="22"></i></div>
+      <div class="ach-icon">🥇</div>
       <div class="ach-meta">IIT BHU · Eureka</div>
       <div class="ach-title">Winner — Eureka Bug Bounty Competition</div>
       <div class="ach-desc">First place for identifying high-impact security vulnerabilities in a live application at IIT (BHU) Varanasi.</div>
     </div>
     <div class="ach-card reveal reveal-delay-1">
-      <div class="ach-icon"><i data-lucide="award" width="22" height="22"></i></div>
+      <div class="ach-icon">🏅</div>
       <div class="ach-meta">IIT Kanpur · Techkriti'26</div>
       <div class="ach-title">Top 20 Finalist — AWS Campus Hackathon 2026</div>
       <div class="ach-desc">Built an AWS-based solution, shortlisted out of hundreds of teams nationwide at IIT Kanpur's flagship hackathon.</div>
     </div>
     <div class="ach-card reveal reveal-delay-2">
-      <div class="ach-icon"><i data-lucide="award" width="22" height="22"></i></div>
+      <div class="ach-icon">🏅</div>
       <div class="ach-meta">April 2026 · AI Tool Dev Challenge 2.0</div>
       <div class="ach-title">Finalist — AI Tool Development Challenge</div>
       <div class="ach-desc">Built PolicyLens AI; presented to judges in competitive Zoom evaluation; recognized for innovation in SDG 16.</div>
     </div>
     <div class="ach-card reveal">
-      <div class="ach-icon"><i data-lucide="bar-chart-3" width="22" height="22"></i></div>
+      <div class="ach-icon">📊</div>
       <div class="ach-meta">Kaggle · IIT BHU Varanasi</div>
       <div class="ach-title">Top 30 — Vista Codefest'26 CV Hackathon</div>
       <div class="ach-desc">Top 30 placement in a national Computer Vision Kaggle competition organized by IIT BHU.</div>
     </div>
     <div class="ach-card reveal reveal-delay-1">
-      <div class="ach-icon"><i data-lucide="bar-chart-3" width="22" height="22"></i></div>
+      <div class="ach-icon">📊</div>
       <div class="ach-meta">Kaggle · IIT BHU</div>
       <div class="ach-title">Top 30 — Enigma Codefest'26</div>
       <div class="ach-desc">Top 30 in a national ML/Algorithmic Kaggle competition hosted by IIT BHU's Codefest team.</div>
     </div>
     <div class="ach-card reveal reveal-delay-2">
-      <div class="ach-icon"><i data-lucide="bot" width="22" height="22"></i></div>
+      <div class="ach-icon">🤖</div>
       <div class="ach-meta">Hugging Face · META</div>
       <div class="ach-title">0.9625 Avg Score — OpenEnv Hackathon</div>
       <div class="ach-desc">Achieved 0.9625 average score across all task difficulties in the META × Hugging Face OpenEnv challenge.</div>
@@ -1403,7 +1348,7 @@
 <!-- FOOTER -->
 <footer>
   <div class="footer-left">
-    © 2025 Selvaragavan M · AI, Cybersecurity, and Robotics Portfolio · Coimbatore, India
+    © 2025 Selvaragavan M · Built with 🔐 & 🤖 · Coimbatore, India
   </div>
   <div class="footer-right">
     <a href="https://github.com/jas0nt0dd" target="_blank" rel="noopener noreferrer" class="footer-soc" aria-label="GitHub">
@@ -1421,12 +1366,11 @@
 <!-- ===== JAVASCRIPT ===== -->
 <script>
 // ===== LOADING SCREEN =====
-function hideLoadingScreen() {
-  const loadingScreen = document.getElementById('loading-screen');
-  if (loadingScreen) loadingScreen.classList.add('hidden');
-}
-window.addEventListener('load', () => setTimeout(hideLoadingScreen, 500));
-setTimeout(hideLoadingScreen, 3600);
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    document.getElementById('loading-screen').classList.add('hidden');
+  }, 3000);
+});
 
 // ===== LUCIDE ICONS =====
 lucide.createIcons();
@@ -1496,20 +1440,6 @@ const observer_spy = new IntersectionObserver(entries => {
   });
 }, { threshold: 0.4 });
 sections.forEach(s => observer_spy.observe(s));
-
-// ===== SECTION SCROLL TRANSITIONS =====
-const sectionTransitionObserver = new IntersectionObserver(entries => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('section-visible');
-    }
-  });
-}, { threshold: 0.16, rootMargin: '0px 0px -10% 0px' });
-sections.forEach((section, index) => {
-  section.classList.add('section-transition');
-  if (index === 0) section.classList.add('section-visible');
-  sectionTransitionObserver.observe(section);
-});
 
 // ===== SCROLL REVEAL =====
 const reveals = document.querySelectorAll('.reveal');
@@ -1582,18 +1512,18 @@ document.querySelectorAll('.filter-tab').forEach(tab => {
 
 // ===== MATRIX BACKGROUND =====
 (function initMatrix() {
-  const canvas = document.getElementById('site-matrix');
-  if (!canvas) return;
+  const canvas = document.getElementById('hero-matrix');
   const ctx = canvas.getContext('2d');
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (prefersReduced) return;
 
-  let W, H, cols, drops, cellSize, dpr;
-  const chars = '0123456789';
+  let W, H, cols, drops, cellSize;
+  const chars = '0123456789ABCDEFアイウエオカキクケコサシスセソタチツテトナニヌネノ01[]{}()<>=!?@#$%^&*';
   function resize() {
-    dpr = Math.min(window.devicePixelRatio || 1, 2);
-    W = window.innerWidth;
-    H = window.innerHeight;
+    const rect = canvas.getBoundingClientRect();
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = rect.width;
+    H = rect.height;
     cellSize = window.innerWidth < 700 ? 20 : 17;
     canvas.width = Math.max(1, Math.floor(W * dpr));
     canvas.height = Math.max(1, Math.floor(H * dpr));
@@ -1607,241 +1537,23 @@ document.querySelectorAll('.filter-tab').forEach(tab => {
     const isLight = document.documentElement.getAttribute('data-theme') === 'light';
     ctx.fillStyle = isLight ? 'rgba(240,244,248,0.09)' : 'rgba(10,10,15,0.055)';
     ctx.fillRect(0,0,W,H);
-    ctx.font = '14px JetBrains Mono, monospace';
-    ctx.shadowBlur = isLight ? 2 : 12;
-    ctx.shadowColor = isLight ? 'rgba(0,122,76,0.25)' : 'rgba(0,255,159,0.55)';
+    ctx.font = '13px JetBrains Mono, monospace';
+    ctx.shadowBlur = isLight ? 0 : 8;
     for (let i = 0; i < drops.length; i++) {
       const char = chars[Math.floor(Math.random() * chars.length)];
       const y = drops[i] * cellSize;
       const x = i * cellSize + (i % 3) * 2;
-      const alpha = Math.random() > 0.84 ? 0.95 : 0.42;
-      ctx.fillStyle = isLight ? `rgba(0,122,76,${alpha})` : `rgba(0,255,100,${alpha})`;
+      const alpha = Math.random() > 0.86 ? 0.7 : 0.2;
+      const green = Math.random() > 0.82;
+      ctx.shadowColor = green ? 'rgba(0,255,159,0.35)' : 'rgba(0,212,255,0.35)';
+      ctx.fillStyle = green ? `rgba(0,255,159,${alpha})` : `rgba(0,212,255,${alpha})`;
       ctx.fillText(char, x, y);
       if (y > H + 80 && Math.random() > 0.965) drops[i] = -Math.random() * 16;
-      drops[i] += 0.42 + (i % 5) * 0.014;
+      drops[i] += 0.38 + (i % 5) * 0.012;
     }
     requestAnimationFrame(draw);
   }
   draw();
-})();
-
-// ===== SCROLL-DRIVEN 3D TRANSITION CORE =====
-(function initScrollTransitionCore() {
-  const host = document.getElementById('scroll-3d-scene');
-  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (!host || typeof THREE === 'undefined' || prefersReduced) return;
-
-  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-  renderer.setClearColor(0x000000, 0);
-  host.appendChild(renderer.domElement);
-
-  const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(46, 1, 0.1, 100);
-  camera.position.z = 6;
-
-  const ambient = new THREE.AmbientLight(0x00ff64, 0.7);
-  scene.add(ambient);
-  const keyLight = new THREE.PointLight(0x00ff9f, 2.2, 18);
-  keyLight.position.set(3, 2, 5);
-  scene.add(keyLight);
-
-  const core = new THREE.Group();
-  scene.add(core);
-
-  const shellMat = new THREE.MeshBasicMaterial({
-    color: 0x00ff64,
-    wireframe: true,
-    transparent: true,
-    opacity: 0.2
-  });
-  const shell = new THREE.Mesh(new THREE.SphereGeometry(1.08, 48, 24), shellMat);
-  core.add(shell);
-
-  const glassMat = new THREE.MeshPhongMaterial({
-    color: 0x002414,
-    emissive: 0x00aa45,
-    transparent: true,
-    opacity: 0.3,
-    shininess: 120
-  });
-  const glass = new THREE.Mesh(new THREE.SphereGeometry(0.76, 48, 24), glassMat);
-  glass.scale.z = 0.28;
-  glass.position.z = 0.18;
-  core.add(glass);
-
-  const irisGroup = new THREE.Group();
-  irisGroup.position.z = 0.48;
-  core.add(irisGroup);
-
-  const ringMat = new THREE.MeshBasicMaterial({ color: 0x00ff64, transparent: true, opacity: 0.72 });
-  const irisRing = new THREE.Mesh(new THREE.TorusGeometry(0.47, 0.028, 16, 112), ringMat);
-  irisGroup.add(irisRing);
-
-  const pupilMat = new THREE.MeshBasicMaterial({
-    color: 0x00ff64,
-    transparent: true,
-    opacity: 0.72,
-    side: THREE.DoubleSide
-  });
-  const pupil = new THREE.Mesh(new THREE.CircleGeometry(0.19, 64), pupilMat);
-  pupil.position.z = 0.035;
-  irisGroup.add(pupil);
-
-  const bladeMat = new THREE.MeshBasicMaterial({ color: 0x00ff64, transparent: true, opacity: 0.24 });
-  for (let i = 0; i < 10; i++) {
-    const blade = new THREE.Mesh(new THREE.BoxGeometry(0.055, 0.34, 0.018), bladeMat);
-    const angle = (i / 10) * Math.PI * 2;
-    blade.position.set(Math.cos(angle) * 0.66, Math.sin(angle) * 0.66, 0.018);
-    blade.rotation.z = angle + Math.PI / 2;
-    irisGroup.add(blade);
-  }
-
-  const orbitalGroup = new THREE.Group();
-  core.add(orbitalGroup);
-  function makeOrbit(radius, tube, opacity, rotation) {
-    const mat = new THREE.MeshBasicMaterial({ color: 0x00ff64, transparent: true, opacity });
-    const ring = new THREE.Mesh(new THREE.TorusGeometry(radius, tube, 16, 140), mat);
-    ring.rotation.set(rotation.x, rotation.y, rotation.z);
-    orbitalGroup.add(ring);
-    return ring;
-  }
-  const orbitA = makeOrbit(1.28, 0.01, 0.4, { x: Math.PI / 2.35, y: 0.2, z: 0 });
-  const orbitB = makeOrbit(1.72, 0.008, 0.26, { x: Math.PI / 3.2, y: Math.PI / 6, z: 0.5 });
-  const orbitC = makeOrbit(2.05, 0.006, 0.18, { x: Math.PI / 2, y: Math.PI / 2.7, z: 0.1 });
-
-  const particleCount = 150;
-  const particlePositions = new Float32Array(particleCount * 3);
-  for (let i = 0; i < particleCount; i++) {
-    const angle = Math.random() * Math.PI * 2;
-    const radius = 1.7 + Math.random() * 2.2;
-    particlePositions[i * 3] = Math.cos(angle) * radius;
-    particlePositions[i * 3 + 1] = Math.sin(angle) * radius * 0.62;
-    particlePositions[i * 3 + 2] = (Math.random() - 0.5) * 1.8;
-  }
-  const particleGeo = new THREE.BufferGeometry();
-  particleGeo.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
-  const particleMat = new THREE.PointsMaterial({
-    color: 0x00ff64,
-    size: 0.035,
-    transparent: true,
-    opacity: 0.46,
-    sizeAttenuation: true
-  });
-  const particles = new THREE.Points(particleGeo, particleMat);
-  core.add(particles);
-
-  const transitionSections = Array.from(document.querySelectorAll('main > section[id]'));
-  const posePalette = [
-    { x: 2.95, y: -0.14, scale: 0.42, cameraZ: 7.15, rotX: 0.12, rotY: -0.35, rotZ: 0.0, iris: 1.0, opacity: 0.18 },
-    { x: 2.7, y: 0.12, scale: 0.76, cameraZ: 6.25, rotX: 0.28, rotY: 0.35, rotZ: 0.2, iris: 0.78, opacity: 0.42 },
-    { x: 3.05, y: 0.26, scale: 0.7, cameraZ: 6.55, rotX: -0.2, rotY: 0.95, rotZ: -0.25, iris: 1.12, opacity: 0.34 },
-    { x: 2.78, y: 0.02, scale: 1.05, cameraZ: 5.55, rotX: 0.08, rotY: 1.55, rotZ: 0.45, iris: 0.42, opacity: 0.5 },
-    { x: 3.0, y: 0.3, scale: 0.82, cameraZ: 6.05, rotX: 0.4, rotY: 2.2, rotZ: -0.38, iris: 0.86, opacity: 0.4 },
-    { x: 2.72, y: -0.28, scale: 0.92, cameraZ: 5.78, rotX: -0.35, rotY: 2.8, rotZ: 0.58, iris: 0.62, opacity: 0.46 },
-    { x: 3.08, y: 0.24, scale: 0.76, cameraZ: 6.35, rotX: 0.32, rotY: 3.45, rotZ: -0.1, iris: 1.0, opacity: 0.32 },
-    { x: 2.82, y: -0.16, scale: 0.96, cameraZ: 5.65, rotX: -0.05, rotY: 4.0, rotZ: 0.32, iris: 0.56, opacity: 0.44 },
-    { x: 3.0, y: 0.08, scale: 1.1, cameraZ: 5.3, rotX: 0.2, rotY: 4.7, rotZ: 0.0, iris: 0.34, opacity: 0.5 }
-  ];
-
-  const current = { x: 2.95, y: -0.14, scale: 0.42, cameraZ: 7.15, rotX: 0, rotY: 0, rotZ: 0, iris: 1, opacity: 0.18 };
-  let width = 0;
-  let height = 0;
-
-  function resize() {
-    width = window.innerWidth;
-    height = window.innerHeight;
-    renderer.setSize(width, height);
-    camera.aspect = width / height;
-    camera.updateProjectionMatrix();
-  }
-  resize();
-  window.addEventListener('resize', resize);
-
-  function clamp(value, min, max) {
-    return Math.max(min, Math.min(max, value));
-  }
-  function lerp(a, b, t) {
-    return a + (b - a) * t;
-  }
-  function smoothstep(t) {
-    return t * t * (3 - 2 * t);
-  }
-  function poseAt(index) {
-    return posePalette[Math.min(index, posePalette.length - 1)];
-  }
-  function getTargetPose() {
-    if (!transitionSections.length) return { ...posePalette[0], pulse: 0 };
-    const anchor = window.scrollY + window.innerHeight * 0.52;
-    let index = 0;
-    for (let i = 0; i < transitionSections.length; i++) {
-      if (transitionSections[i].offsetTop <= anchor) index = i;
-    }
-    const nextIndex = Math.min(index + 1, transitionSections.length - 1);
-    const start = transitionSections[index].offsetTop;
-    const end = transitionSections[nextIndex].offsetTop || start + window.innerHeight;
-    const raw = index === nextIndex ? 0 : clamp((anchor - start) / Math.max(1, end - start), 0, 1);
-    const t = smoothstep(raw);
-    const pulse = Math.sin(raw * Math.PI);
-    const a = poseAt(index);
-    const b = poseAt(nextIndex);
-    const mobile = width < 700;
-    return {
-      x: mobile ? 2.6 : lerp(a.x, b.x, t),
-      y: lerp(a.y, b.y, t),
-      scale: lerp(a.scale, b.scale, t) + pulse * (mobile ? 0.08 : 0.16),
-      cameraZ: lerp(a.cameraZ, b.cameraZ, t) - pulse * 0.28,
-      rotX: lerp(a.rotX, b.rotX, t),
-      rotY: lerp(a.rotY, b.rotY, t) + pulse * 0.85,
-      rotZ: lerp(a.rotZ, b.rotZ, t),
-      iris: lerp(a.iris, b.iris, t) * (1 - pulse * 0.16),
-      opacity: lerp(a.opacity, b.opacity, t) + pulse * 0.04,
-      pulse
-    };
-  }
-
-  let time = 0;
-  function animate() {
-    requestAnimationFrame(animate);
-    time += 0.01;
-    const target = getTargetPose();
-    const ease = 0.075;
-
-    current.x = lerp(current.x, target.x, ease);
-    current.y = lerp(current.y, target.y, ease);
-    current.scale = lerp(current.scale, target.scale, ease);
-    current.cameraZ = lerp(current.cameraZ, target.cameraZ, ease);
-    current.rotX = lerp(current.rotX, target.rotX, ease);
-    current.rotY = lerp(current.rotY, target.rotY, ease);
-    current.rotZ = lerp(current.rotZ, target.rotZ, ease);
-    current.iris = lerp(current.iris, target.iris, ease);
-    current.opacity = lerp(current.opacity, target.opacity, ease);
-
-    core.position.set(current.x, current.y, 0);
-    core.scale.setScalar(current.scale);
-    core.rotation.set(current.rotX + Math.sin(time * 0.7) * 0.04, current.rotY + time * 0.12, current.rotZ);
-    camera.position.z = current.cameraZ;
-
-    irisGroup.scale.setScalar(current.iris);
-    irisGroup.rotation.z = -time * 0.85;
-    orbitalGroup.rotation.y = time * 0.28 + current.rotY * 0.18;
-    orbitA.rotation.z = time * 0.42;
-    orbitB.rotation.z = -time * 0.26;
-    orbitC.rotation.z = time * 0.18;
-    shell.rotation.y = -time * 0.16;
-    particles.rotation.z = time * 0.04;
-
-    const opacity = clamp(current.opacity, 0.16, 0.62);
-    shellMat.opacity = 0.14 * opacity + target.pulse * 0.08;
-    glassMat.opacity = 0.18 * opacity + target.pulse * 0.08;
-    ringMat.opacity = 0.55 * opacity + target.pulse * 0.18;
-    pupilMat.opacity = 0.58 * opacity + target.pulse * 0.2;
-    bladeMat.opacity = 0.18 * opacity + target.pulse * 0.14;
-    particleMat.opacity = 0.28 * opacity + target.pulse * 0.18;
-
-    renderer.render(scene, camera);
-  }
-  animate();
 })();
 
 // ===== THREE.JS NEURAL SHIELD =====
