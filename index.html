@@ -96,6 +96,23 @@
       opacity: 0.18;
       mix-blend-mode: multiply;
     }
+    .scroll-3d-scene {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      opacity: 0.58;
+      mix-blend-mode: screen;
+    }
+    .scroll-3d-scene canvas {
+      width: 100% !important;
+      height: 100% !important;
+      display: block;
+    }
+    [data-theme="light"] .scroll-3d-scene {
+      opacity: 0.36;
+      mix-blend-mode: multiply;
+    }
     main > section,
     footer {
       position: relative;
@@ -788,6 +805,7 @@
     @media (max-width: 600px) {
       section { padding: 3.5rem 1.25rem; }
       #hero { padding: 90px 1.25rem 3rem; }
+      .scroll-3d-scene { opacity: 0.28; }
       .spec-grid { grid-template-columns: 1fr 1fr; gap: 1rem; }
       .projects-grid { grid-template-columns: 1fr; }
       .achievements-grid { grid-template-columns: 1fr; }
@@ -805,6 +823,7 @@
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
       .section-transition { opacity: 1; transform: none; filter: none; }
+      .scroll-3d-scene { display: none; }
     }
 
     /* ===== SCROLLBAR ===== */
@@ -844,6 +863,7 @@
 
 <!-- SITE-WIDE MATRIX BACKGROUND -->
 <canvas id="site-matrix" class="site-bg-matrix" aria-hidden="true"></canvas>
+<div id="scroll-3d-scene" class="scroll-3d-scene" aria-hidden="true"></div>
 
 <!-- NAVBAR -->
 <header>
@@ -1389,11 +1409,12 @@
 <!-- ===== JAVASCRIPT ===== -->
 <script>
 // ===== LOADING SCREEN =====
-window.addEventListener('load', () => {
-  setTimeout(() => {
-    document.getElementById('loading-screen').classList.add('hidden');
-  }, 3000);
-});
+function hideLoadingScreen() {
+  const loadingScreen = document.getElementById('loading-screen');
+  if (loadingScreen) loadingScreen.classList.add('hidden');
+}
+window.addEventListener('load', () => setTimeout(hideLoadingScreen, 500));
+setTimeout(hideLoadingScreen, 3600);
 
 // ===== LUCIDE ICONS =====
 lucide.createIcons();
@@ -1590,6 +1611,225 @@ document.querySelectorAll('.filter-tab').forEach(tab => {
     requestAnimationFrame(draw);
   }
   draw();
+})();
+
+// ===== SCROLL-DRIVEN 3D TRANSITION CORE =====
+(function initScrollTransitionCore() {
+  const host = document.getElementById('scroll-3d-scene');
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!host || typeof THREE === 'undefined' || prefersReduced) return;
+
+  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.setClearColor(0x000000, 0);
+  host.appendChild(renderer.domElement);
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(46, 1, 0.1, 100);
+  camera.position.z = 6;
+
+  const ambient = new THREE.AmbientLight(0x00ff64, 0.7);
+  scene.add(ambient);
+  const keyLight = new THREE.PointLight(0x00ff9f, 2.2, 18);
+  keyLight.position.set(3, 2, 5);
+  scene.add(keyLight);
+
+  const core = new THREE.Group();
+  scene.add(core);
+
+  const shellMat = new THREE.MeshBasicMaterial({
+    color: 0x00ff64,
+    wireframe: true,
+    transparent: true,
+    opacity: 0.2
+  });
+  const shell = new THREE.Mesh(new THREE.SphereGeometry(1.08, 48, 24), shellMat);
+  core.add(shell);
+
+  const glassMat = new THREE.MeshPhongMaterial({
+    color: 0x002414,
+    emissive: 0x00aa45,
+    transparent: true,
+    opacity: 0.3,
+    shininess: 120
+  });
+  const glass = new THREE.Mesh(new THREE.SphereGeometry(0.76, 48, 24), glassMat);
+  glass.scale.z = 0.28;
+  glass.position.z = 0.18;
+  core.add(glass);
+
+  const irisGroup = new THREE.Group();
+  irisGroup.position.z = 0.48;
+  core.add(irisGroup);
+
+  const ringMat = new THREE.MeshBasicMaterial({ color: 0x00ff64, transparent: true, opacity: 0.72 });
+  const irisRing = new THREE.Mesh(new THREE.TorusGeometry(0.47, 0.028, 16, 112), ringMat);
+  irisGroup.add(irisRing);
+
+  const pupilMat = new THREE.MeshBasicMaterial({
+    color: 0x00ff64,
+    transparent: true,
+    opacity: 0.72,
+    side: THREE.DoubleSide
+  });
+  const pupil = new THREE.Mesh(new THREE.CircleGeometry(0.19, 64), pupilMat);
+  pupil.position.z = 0.035;
+  irisGroup.add(pupil);
+
+  const bladeMat = new THREE.MeshBasicMaterial({ color: 0x00ff64, transparent: true, opacity: 0.24 });
+  for (let i = 0; i < 10; i++) {
+    const blade = new THREE.Mesh(new THREE.BoxGeometry(0.055, 0.34, 0.018), bladeMat);
+    const angle = (i / 10) * Math.PI * 2;
+    blade.position.set(Math.cos(angle) * 0.66, Math.sin(angle) * 0.66, 0.018);
+    blade.rotation.z = angle + Math.PI / 2;
+    irisGroup.add(blade);
+  }
+
+  const orbitalGroup = new THREE.Group();
+  core.add(orbitalGroup);
+  function makeOrbit(radius, tube, opacity, rotation) {
+    const mat = new THREE.MeshBasicMaterial({ color: 0x00ff64, transparent: true, opacity });
+    const ring = new THREE.Mesh(new THREE.TorusGeometry(radius, tube, 16, 140), mat);
+    ring.rotation.set(rotation.x, rotation.y, rotation.z);
+    orbitalGroup.add(ring);
+    return ring;
+  }
+  const orbitA = makeOrbit(1.28, 0.01, 0.4, { x: Math.PI / 2.35, y: 0.2, z: 0 });
+  const orbitB = makeOrbit(1.72, 0.008, 0.26, { x: Math.PI / 3.2, y: Math.PI / 6, z: 0.5 });
+  const orbitC = makeOrbit(2.05, 0.006, 0.18, { x: Math.PI / 2, y: Math.PI / 2.7, z: 0.1 });
+
+  const particleCount = 150;
+  const particlePositions = new Float32Array(particleCount * 3);
+  for (let i = 0; i < particleCount; i++) {
+    const angle = Math.random() * Math.PI * 2;
+    const radius = 1.7 + Math.random() * 2.2;
+    particlePositions[i * 3] = Math.cos(angle) * radius;
+    particlePositions[i * 3 + 1] = Math.sin(angle) * radius * 0.62;
+    particlePositions[i * 3 + 2] = (Math.random() - 0.5) * 1.8;
+  }
+  const particleGeo = new THREE.BufferGeometry();
+  particleGeo.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
+  const particleMat = new THREE.PointsMaterial({
+    color: 0x00ff64,
+    size: 0.035,
+    transparent: true,
+    opacity: 0.46,
+    sizeAttenuation: true
+  });
+  const particles = new THREE.Points(particleGeo, particleMat);
+  core.add(particles);
+
+  const transitionSections = Array.from(document.querySelectorAll('main > section[id]'));
+  const posePalette = [
+    { x: 2.65, y: -0.12, scale: 0.56, cameraZ: 6.8, rotX: 0.12, rotY: -0.35, rotZ: 0.0, iris: 1.0, opacity: 0.32 },
+    { x: 0.6, y: 0.12, scale: 1.42, cameraZ: 5.15, rotX: 0.28, rotY: 0.35, rotZ: 0.2, iris: 0.78, opacity: 0.82 },
+    { x: -2.15, y: 0.2, scale: 1.12, cameraZ: 5.9, rotX: -0.2, rotY: 0.95, rotZ: -0.25, iris: 1.12, opacity: 0.7 },
+    { x: 0.08, y: 0.02, scale: 2.15, cameraZ: 4.05, rotX: 0.08, rotY: 1.55, rotZ: 0.45, iris: 0.42, opacity: 0.92 },
+    { x: 2.05, y: 0.32, scale: 1.34, cameraZ: 5.25, rotX: 0.4, rotY: 2.2, rotZ: -0.38, iris: 0.86, opacity: 0.78 },
+    { x: -1.75, y: -0.28, scale: 1.55, cameraZ: 4.85, rotX: -0.35, rotY: 2.8, rotZ: 0.58, iris: 0.62, opacity: 0.86 },
+    { x: 0.15, y: 0.28, scale: 1.24, cameraZ: 5.65, rotX: 0.32, rotY: 3.45, rotZ: -0.1, iris: 1.0, opacity: 0.68 },
+    { x: 1.85, y: -0.18, scale: 1.62, cameraZ: 4.65, rotX: -0.05, rotY: 4.0, rotZ: 0.32, iris: 0.56, opacity: 0.84 },
+    { x: 0.0, y: 0.08, scale: 2.35, cameraZ: 3.75, rotX: 0.2, rotY: 4.7, rotZ: 0.0, iris: 0.34, opacity: 0.94 }
+  ];
+
+  const current = { x: 2.65, y: -0.12, scale: 0.56, cameraZ: 6.8, rotX: 0, rotY: 0, rotZ: 0, iris: 1, opacity: 0.32 };
+  let width = 0;
+  let height = 0;
+
+  function resize() {
+    width = window.innerWidth;
+    height = window.innerHeight;
+    renderer.setSize(width, height);
+    camera.aspect = width / height;
+    camera.updateProjectionMatrix();
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  function clamp(value, min, max) {
+    return Math.max(min, Math.min(max, value));
+  }
+  function lerp(a, b, t) {
+    return a + (b - a) * t;
+  }
+  function smoothstep(t) {
+    return t * t * (3 - 2 * t);
+  }
+  function poseAt(index) {
+    return posePalette[Math.min(index, posePalette.length - 1)];
+  }
+  function getTargetPose() {
+    if (!transitionSections.length) return { ...posePalette[0], pulse: 0 };
+    const anchor = window.scrollY + window.innerHeight * 0.52;
+    let index = 0;
+    for (let i = 0; i < transitionSections.length; i++) {
+      if (transitionSections[i].offsetTop <= anchor) index = i;
+    }
+    const nextIndex = Math.min(index + 1, transitionSections.length - 1);
+    const start = transitionSections[index].offsetTop;
+    const end = transitionSections[nextIndex].offsetTop || start + window.innerHeight;
+    const raw = index === nextIndex ? 0 : clamp((anchor - start) / Math.max(1, end - start), 0, 1);
+    const t = smoothstep(raw);
+    const pulse = Math.sin(raw * Math.PI);
+    const a = poseAt(index);
+    const b = poseAt(nextIndex);
+    const mobile = width < 700;
+    return {
+      x: mobile ? 0 : lerp(a.x, b.x, t),
+      y: lerp(a.y, b.y, t),
+      scale: lerp(a.scale, b.scale, t) + pulse * (mobile ? 0.18 : 0.38),
+      cameraZ: lerp(a.cameraZ, b.cameraZ, t) - pulse * 0.72,
+      rotX: lerp(a.rotX, b.rotX, t),
+      rotY: lerp(a.rotY, b.rotY, t) + pulse * 0.85,
+      rotZ: lerp(a.rotZ, b.rotZ, t),
+      iris: lerp(a.iris, b.iris, t) * (1 - pulse * 0.16),
+      opacity: lerp(a.opacity, b.opacity, t) + pulse * 0.08,
+      pulse
+    };
+  }
+
+  let time = 0;
+  function animate() {
+    requestAnimationFrame(animate);
+    time += 0.01;
+    const target = getTargetPose();
+    const ease = 0.075;
+
+    current.x = lerp(current.x, target.x, ease);
+    current.y = lerp(current.y, target.y, ease);
+    current.scale = lerp(current.scale, target.scale, ease);
+    current.cameraZ = lerp(current.cameraZ, target.cameraZ, ease);
+    current.rotX = lerp(current.rotX, target.rotX, ease);
+    current.rotY = lerp(current.rotY, target.rotY, ease);
+    current.rotZ = lerp(current.rotZ, target.rotZ, ease);
+    current.iris = lerp(current.iris, target.iris, ease);
+    current.opacity = lerp(current.opacity, target.opacity, ease);
+
+    core.position.set(current.x, current.y, 0);
+    core.scale.setScalar(current.scale);
+    core.rotation.set(current.rotX + Math.sin(time * 0.7) * 0.04, current.rotY + time * 0.12, current.rotZ);
+    camera.position.z = current.cameraZ;
+
+    irisGroup.scale.setScalar(current.iris);
+    irisGroup.rotation.z = -time * 0.85;
+    orbitalGroup.rotation.y = time * 0.28 + current.rotY * 0.18;
+    orbitA.rotation.z = time * 0.42;
+    orbitB.rotation.z = -time * 0.26;
+    orbitC.rotation.z = time * 0.18;
+    shell.rotation.y = -time * 0.16;
+    particles.rotation.z = time * 0.04;
+
+    const opacity = clamp(current.opacity, 0.35, 1);
+    shellMat.opacity = 0.14 * opacity + target.pulse * 0.08;
+    glassMat.opacity = 0.18 * opacity + target.pulse * 0.08;
+    ringMat.opacity = 0.55 * opacity + target.pulse * 0.18;
+    pupilMat.opacity = 0.58 * opacity + target.pulse * 0.2;
+    bladeMat.opacity = 0.18 * opacity + target.pulse * 0.14;
+    particleMat.opacity = 0.28 * opacity + target.pulse * 0.18;
+
+    renderer.render(scene, camera);
+  }
+  animate();
 })();
 
 // ===== THREE.JS NEURAL SHIELD =====
