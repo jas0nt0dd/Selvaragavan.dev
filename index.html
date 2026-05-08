@@ -219,10 +219,15 @@
       display: flex; align-items: center; gap: 0.5rem;
     }
     .hero-role-prefix { color: var(--accent-amber); }
-    .hero-role-text {
+    .typewriter {
       color: var(--accent-cyan);
       font-weight: 600;
+      border-right: 2px solid var(--accent-cyan);
+      padding-right: 4px;
+      min-width: 2px;
+      animation: typeCursor 1s step-end infinite;
     }
+    @keyframes typeCursor { 0%, 100% { border-color: var(--accent-cyan); } 50% { border-color: transparent; } }
 
     .hero-desc {
       font-size: 0.95rem;
@@ -796,7 +801,7 @@
     </h1>
     <div class="hero-role-line">
       <span class="hero-role-prefix">&gt;&gt;&gt;</span>
-      <span class="hero-role-text">AI Engineer · Cybersecurity Researcher · Robotics Engineer</span>
+      <span class="typewriter" id="typewriter" aria-live="polite">AI Engineer</span>
     </div>
     <p class="hero-desc">
       AI & Data Science student at Kathir College of Engineering. I build real tools — autonomous pentesting frameworks, GNN malware detectors, and MLOps environments — and win at IIT-level competitions. Currently a Robotic Engineer at Robential Kinetics.
@@ -1331,6 +1336,41 @@ function closeMobileNav() {
   hamburgerBtn.classList.remove('open');
   hamburgerBtn.setAttribute('aria-expanded', 'false');
   mobileNav.setAttribute('aria-hidden', 'true');
+}
+
+// Hero role typewriter
+const roleText = document.getElementById('typewriter');
+const roles = ['AI Engineer', 'Cybersecurity Researcher', 'Robotics Engineer'];
+if (roleText) {
+  let roleIndex = 0;
+  let charIndex = 0;
+  let deleting = false;
+  roleText.textContent = '';
+
+  function typeRole() {
+    const currentRole = roles[roleIndex];
+
+    if (deleting) {
+      charIndex -= 1;
+      roleText.textContent = currentRole.slice(0, charIndex);
+      if (charIndex === 0) {
+        deleting = false;
+        roleIndex = (roleIndex + 1) % roles.length;
+      }
+    } else {
+      charIndex += 1;
+      roleText.textContent = currentRole.slice(0, charIndex);
+      if (charIndex === currentRole.length) {
+        deleting = true;
+        setTimeout(typeRole, 1400);
+        return;
+      }
+    }
+
+    setTimeout(typeRole, deleting ? 48 : 82);
+  }
+
+  setTimeout(typeRole, 300);
 }
 
 // Navigation scroll state
