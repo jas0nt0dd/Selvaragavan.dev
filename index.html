@@ -1546,116 +1546,137 @@
     marqueeTrack.innerHTML += marqueeTrack.innerHTML;
   }
 
-  /* ---------- BACKGROUND: NEURAL PARTICLE FIELD ---------- */
+  /* ---------- BACKGROUND: BAT SWARM ---------- */
   var particleCanvas = document.getElementById('bg-particles');
   if (particleCanvas && !reducedMotion) {
     var pctx = particleCanvas.getContext('2d');
-    var particles = [];
     var bats = [];
-    var PCOUNT = window.innerWidth < 768 ? 34 : 64;
-    var BAT_COUNT = window.innerWidth < 768 ? 6 : 12;
-    var MAXDIST = 130;
+    var PCOUNT = window.innerWidth < 768 ? 10 : 16;
+    var MAX_BAT_SIZE = window.innerWidth < 768 ? 0.9 : 1.2;
+    var MIN_BAT_SIZE = window.innerWidth < 768 ? 0.7 : 0.9;
+    var leaderTarget = { x: 0, y: 0 };
+    var time = 0;
 
     function resizeParticleCanvas() {
       particleCanvas.width = window.innerWidth;
       particleCanvas.height = document.documentElement.scrollHeight;
     }
     function initParticles() {
-      particles = [];
-      for (var i = 0; i < PCOUNT; i++) {
-        particles.push({
-          x: Math.random() * particleCanvas.width,
-          y: Math.random() * particleCanvas.height,
-          vx: (Math.random() - 0.5) * 0.25,
-          vy: (Math.random() - 0.5) * 0.25,
-          r: Math.random() * 1.4 + 0.6
-        });
-      }
       bats = [];
-      for (var i = 0; i < BAT_COUNT; i++) {
-        var size = Math.random() * 0.95 + 0.8;
+      for (var i = 0; i < PCOUNT; i++) {
         bats.push({
           x: Math.random() * particleCanvas.width,
-          y: Math.random() * particleCanvas.height * 0.45 + 40,
-          vx: (Math.random() * 0.35 + 0.15) * (Math.random() < 0.5 ? -1 : 1),
-          vy: (Math.random() - 0.5) * 0.1,
-          scale: size,
+          y: Math.random() * particleCanvas.height * 0.35 + 40,
+          vx: 0,
+          vy: 0,
+          scale: Math.random() * (MAX_BAT_SIZE - MIN_BAT_SIZE) + MIN_BAT_SIZE,
           phase: Math.random() * Math.PI * 2,
-          turn: Math.random() < 0.5 ? -1 : 1
+          turn: 1,
+          offsetX: i * 28,
+          offsetY: (i % 2 === 0 ? -14 : 10),
+          alpha: 0.85 - i * 0.05
         });
       }
     }
-    function drawBat(bat) {
+    function batPath(ctx, wingAngle) {
+      var flap = wingAngle * 5;
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(-12, -6 - flap);
+      ctx.quadraticCurveTo(-24, -18 - flap * 0.7, -42, -12 - flap * 0.35);
+      ctx.quadraticCurveTo(-30, -10 - flap * 0.25, -18, -8 - flap * 0.15);
+      ctx.lineTo(-30, -16 - flap * 0.5);
+      ctx.lineTo(-38, -10 - flap * 0.25);
+      ctx.lineTo(-32, -4);
+      ctx.lineTo(-38, 2 + flap * 0.15);
+      ctx.lineTo(-30, 8 + flap * 0.2);
+      ctx.lineTo(-18, 6 + flap * 0.12);
+      ctx.quadraticCurveTo(-30, 8 + flap * 0.3, -42, 12 + flap * 0.45);
+      ctx.quadraticCurveTo(-24, 18 + flap * 0.7, -12, 6 + flap * 0.35);
+      ctx.closePath();
+    }
+    function drawBat(bat, leader) {
       var s = bat.scale * 1.6;
+      var wing = Math.sin(bat.phase * 3) * 0.7;
       pctx.save();
       pctx.translate(bat.x, bat.y);
-      pctx.rotate(Math.sin(bat.phase) * 0.18);
+      pctx.rotate(bat.angle || 0);
       pctx.scale(bat.turn * s, s);
-      pctx.beginPath();
-      pctx.moveTo(0, 0);
-      pctx.lineTo(-10, -6);
-      pctx.lineTo(-18, -12);
-      pctx.lineTo(-14, -8);
-      pctx.lineTo(-22, -4);
-      pctx.lineTo(-14, -2);
-      pctx.lineTo(-22, 2);
-      pctx.lineTo(-14, 4);
-      pctx.lineTo(-18, 8);
-      pctx.lineTo(-10, 6);
-      pctx.closePath();
-      pctx.fillStyle = 'rgba(10,10,12,0.96)';
-      pctx.shadowBlur = 8;
-      pctx.shadowColor = 'rgba(200,29,37,0.14)';
+      pctx.globalAlpha = bat.alpha;
+
+      pctx.fillStyle = 'rgba(12,12,12,0.96)';
+      pctx.shadowBlur = 12;
+      pctx.shadowColor = 'rgba(200,29,37,0.25)';
+      batPath(pctx, wing);
       pctx.fill();
       pctx.shadowBlur = 0;
-      pctx.strokeStyle = 'rgba(255,64,52,0.22)';
-      pctx.lineWidth = 0.9;
+      pctx.strokeStyle = 'rgba(255,64,52,0.24)';
+      pctx.lineWidth = 1.1;
       pctx.stroke();
+
+      if (leader) {
+        pctx.fillStyle = 'rgba(255,59,68,0.18)';
+        pctx.beginPath();
+        pctx.ellipse(-9, 0, 32, 24, 0, 0, Math.PI * 2);
+        pctx.fill();
+      }
       pctx.restore();
+    }
+    function updateLeader() {
+      var scroll = window.scrollY / Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+      leaderTarget.x = particleCanvas.width * 0.25 + scroll * particleCanvas.width * 0.4 + Math.sin(time * 0.7) * 32;
+      leaderTarget.y = particleCanvas.height * 0.14 + Math.sin(time * 0.9) * 18;
     }
     function drawParticles() {
       pctx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);
-      var viewTop = window.scrollY - 200;
-      var viewBottom = window.scrollY + window.innerHeight + 200;
+      time += 0.014;
+      updateLeader();
 
       for (var i = 0; i < bats.length; i++) {
         var bat = bats[i];
+        var targetX, targetY;
+        if (i === 0) {
+          targetX = leaderTarget.x;
+          targetY = leaderTarget.y;
+        } else {
+          var leader = bats[i - 1];
+          targetX = leader.x - 24 - (i * 4);
+          targetY = leader.y + leader.turn * (bat.offsetY + Math.sin(time + i) * 8);
+        }
+
+        bat.vx += (targetX - bat.x) * 0.02;
+        bat.vy += (targetY - bat.y) * 0.02;
+        bat.vx *= 0.92;
+        bat.vy *= 0.92;
         bat.x += bat.vx;
         bat.y += bat.vy;
-        bat.phase += 0.05;
-        if (bat.x < -50) bat.x = particleCanvas.width + 50;
-        if (bat.x > particleCanvas.width + 50) bat.x = -50;
+        bat.angle = Math.atan2(bat.vy, bat.vx);
+        var speed = Math.hypot(bat.vx, bat.vy);
+        bat.turn = bat.vx < 0 ? -1 : 1;
+        bat.phase += 0.08 + speed * 0.6;
+
+        if (bat.x < -120) bat.x = particleCanvas.width + 120;
+        if (bat.x > particleCanvas.width + 120) bat.x = -120;
         if (bat.y < 20) bat.y = 20;
-        if (bat.y > particleCanvas.height * 0.55) bat.y = particleCanvas.height * 0.55;
-        drawBat(bat);
+        if (bat.y > particleCanvas.height * 0.7) bat.y = particleCanvas.height * 0.7;
       }
 
-      for (var i = 0; i < particles.length; i++) {
-        var p = particles[i];
-        p.x += p.vx; p.y += p.vy;
-        if (p.x < 0 || p.x > particleCanvas.width) p.vx *= -1;
-        if (p.y < 0 || p.y > particleCanvas.height) p.vy *= -1;
-        if (p.y < viewTop || p.y > viewBottom) continue;
-
-        for (var j = i + 1; j < particles.length; j++) {
-          var q = particles[j];
-          if (q.y < viewTop || q.y > viewBottom) continue;
-          var dx = p.x - q.x, dy = p.y - q.y;
-          var dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < MAXDIST) {
-            pctx.strokeStyle = 'rgba(200,29,37,' + (0.14 * (1 - dist / MAXDIST)) + ')';
-            pctx.lineWidth = 0.6;
-            pctx.beginPath();
-            pctx.moveTo(p.x, p.y);
-            pctx.lineTo(q.x, q.y);
-            pctx.stroke();
-          }
-        }
-        pctx.fillStyle = 'rgba(139,147,160,0.55)';
+      for (var i = 1; i < bats.length; i++) {
+        var follower = bats[i];
+        var leader = bats[i - 1];
+        pctx.save();
+        pctx.strokeStyle = 'rgba(255,59,68,' + (0.055 - i * 0.002) + ')';
+        pctx.lineWidth = 1;
         pctx.beginPath();
-        pctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        pctx.fill();
+        pctx.moveTo(leader.x, leader.y);
+        pctx.quadraticCurveTo((leader.x + follower.x) / 2 + 22, (leader.y + follower.y) / 2 - 14, follower.x, follower.y);
+        pctx.stroke();
+        pctx.restore();
       }
+      for (var i = 0; i < bats.length; i++) {
+        drawBat(bats[i], i === 0);
+      }
+
       requestAnimationFrame(drawParticles);
     }
     resizeParticleCanvas();
