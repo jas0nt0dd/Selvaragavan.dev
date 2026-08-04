@@ -28,6 +28,7 @@
   <!-- ============ FONTS ============ -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="icon" type="image/svg+xml" href="assets/bat-favicon.svg" />
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 
   <!-- ============ LIBS (CDN) ============ -->
@@ -255,8 +256,19 @@
       font-family: var(--font-mono); font-size: 0.95rem; font-weight: 700;
       color: var(--text-primary); letter-spacing: -0.01em; white-space: nowrap;
     }
-    .nav-logo-mark { width: 26px; height: 26px; flex-shrink: 0; }
+    .nav-logo-mark {
+      width: 32px; height: 32px; flex-shrink: 0;
+      position: relative; display: inline-flex; align-items: center; justify-content: center;
+      border-radius: 12px; background: rgba(200,29,37,0.12);
+      box-shadow: 0 0 0 rgba(255,64,52,0);
+      animation: navBatPulse 2.2s ease-in-out infinite;
+    }
+    .nav-logo-mark svg { width: 20px; height: 20px; display: block; }
     .nav-logo span.dim { color: var(--text-secondary); font-weight: 400; }
+    @keyframes navBatPulse {
+      0%,100% { box-shadow: 0 0 0 0 rgba(255,64,52,0.22); }
+      50% { box-shadow: 0 0 0 12px rgba(255,64,52,0.08); }
+    }
     .nav-links { display: flex; gap: 0.2rem; align-items: center; }
     .nav-link {
       font-family: var(--font-mono); font-size: 0.72rem; font-weight: 500;
@@ -852,10 +864,18 @@
 <header>
   <nav id="navbar" role="navigation" aria-label="Main navigation">
     <a href="#hero" class="nav-logo" aria-label="Home">
-      <svg class="nav-logo-mark" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <path d="M16 3 L27 8 V16 C27 23 22 28 16 30 C10 28 5 23 5 16 V8 Z" stroke="#c81d25" stroke-width="1.5" fill="rgba(200,29,37,0.1)"/>
-        <path d="M16 9 L16 30 M9.5 15 L22.5 15" stroke="#ff4034" stroke-width="1" opacity="0.75"/>
-      </svg>
+      <span class="nav-logo-mark">
+        <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <defs>
+            <linearGradient id="navBatGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#ff4034"/>
+              <stop offset="100%" stop-color="#c81d25"/>
+            </linearGradient>
+          </defs>
+          <path d="M6 18 C10 12 13 10 16 12 C19 10 22 12 26 18 C24 16 22 16 20 20 C18 24 16 20 16 20 C16 20 14 24 12 20 C10 16 8 16 6 18 Z" fill="url(#navBatGrad)"/>
+          <path d="M11 18 C12.5 16 14 15 16 16.5 C18 15 19.5 16 21 18 C19.5 17.2 18 17.2 16.5 18.1 C15 19 13.5 18.2 12 18.2 C11 18.2 11 18 11 18 Z" fill="#ffb3ac" opacity="0.95"/>
+        </svg>
+      </span>
       selvaragavan<span class="dim">.dev</span>
     </a>
     <div class="nav-links">
