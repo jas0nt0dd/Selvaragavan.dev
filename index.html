@@ -372,7 +372,7 @@
 
     .hero-frame {
       width: 100%; max-width: 460px; position: relative;
-      border-radius: var(--radius-lg); overflow: hidden;
+      border-radius: var(--radius-lg); overflow: visible;
       border: 1px solid var(--border-color);
       box-shadow: var(--shadow-card);
       transform-style: preserve-3d;
@@ -381,11 +381,12 @@
     .hero-frame::before {
       content: '';
       position: absolute;
-      inset: -14px;
+      inset: -24px;
       z-index: 0;
-      border-radius: calc(var(--radius-lg) + 14px);
-      background: radial-gradient(circle at center, rgba(255, 80, 70, 0.28), transparent 42%);
-      opacity: 0.9;
+      border-radius: calc(var(--radius-lg) + 24px);
+      background: radial-gradient(circle at center, rgba(255, 80, 70, 0.35), transparent 38%);
+      box-shadow: 0 0 56px 22px rgba(255, 45, 45, 0.22);
+      opacity: 0.95;
       animation: heroPulse 2.4s ease-in-out infinite;
       pointer-events: none;
     }
