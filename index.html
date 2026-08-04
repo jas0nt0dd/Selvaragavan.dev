@@ -1444,10 +1444,18 @@
 
       if (BAT_IMAGE.complete && imgW && imgH) {
         if (isLeader) {
-          ctx.shadowBlur = 14;
-          ctx.shadowColor = 'rgba(255,40,40,0.2)';
+          ctx.shadowBlur = 20;
+          ctx.shadowColor = 'rgba(255,60,60,0.45)';
         }
         ctx.drawImage(BAT_IMAGE, 0, 0, imgW * sizeFactor, imgH * sizeFactor);
+        if (isLeader) {
+          ctx.globalCompositeOperation = 'lighter';
+          ctx.fillStyle = 'rgba(255,80,80,0.18)';
+          ctx.beginPath();
+          ctx.ellipse(imgW * sizeFactor / 2, imgH * sizeFactor / 2, imgW * sizeFactor * 0.24, imgH * sizeFactor * 0.14, 0, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.globalCompositeOperation = 'source-over';
+        }
       } else {
         const path = new Path2D(BAT_PATH);
         ctx.save();
