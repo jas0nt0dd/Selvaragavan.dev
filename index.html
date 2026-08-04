@@ -175,7 +175,9 @@
 
     /* ===================== BACKGROUND CANVASES ===================== */
     #bg-particles {
-      position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.5;
+      position: fixed; inset: 0; z-index: 8; pointer-events: none;
+      opacity: 1; background: transparent; mix-blend-mode: screen;
+      filter: saturate(1.15) contrast(1.05);
     }
     #hero-beam-canvas {
       position: absolute; inset: 0; z-index: 1; pointer-events: none;
@@ -1551,30 +1553,31 @@
   if (particleCanvas && !reducedMotion) {
     var pctx = particleCanvas.getContext('2d');
     var bats = [];
-    var PCOUNT = window.innerWidth < 768 ? 10 : 16;
-    var MAX_BAT_SIZE = window.innerWidth < 768 ? 0.9 : 1.2;
-    var MIN_BAT_SIZE = window.innerWidth < 768 ? 0.7 : 0.9;
+    var PCOUNT = window.innerWidth < 768 ? 14 : 22;
+    var MAX_BAT_SIZE = window.innerWidth < 768 ? 0.95 : 1.3;
+    var MIN_BAT_SIZE = window.innerWidth < 768 ? 0.75 : 0.95;
     var leaderTarget = { x: 0, y: 0 };
     var time = 0;
 
     function resizeParticleCanvas() {
       particleCanvas.width = window.innerWidth;
-      particleCanvas.height = document.documentElement.scrollHeight;
+      particleCanvas.height = window.innerHeight;
     }
     function initParticles() {
       bats = [];
+      var pageHeight = Math.max(document.documentElement.scrollHeight, window.innerHeight);
       for (var i = 0; i < PCOUNT; i++) {
         bats.push({
           x: Math.random() * particleCanvas.width,
-          y: Math.random() * particleCanvas.height * 0.35 + 40,
+          y: Math.random() * pageHeight * 0.86 + 20,
           vx: 0,
           vy: 0,
           scale: Math.random() * (MAX_BAT_SIZE - MIN_BAT_SIZE) + MIN_BAT_SIZE,
           phase: Math.random() * Math.PI * 2,
           turn: 1,
-          offsetX: i * 28,
-          offsetY: (i % 2 === 0 ? -14 : 10),
-          alpha: 0.85 - i * 0.05
+          offsetX: i * 24,
+          offsetY: (i % 2 === 0 ? -20 : 16),
+          alpha: 0.94 - i * 0.03
         });
       }
     }
@@ -1596,41 +1599,56 @@
       ctx.closePath();
     }
     function drawBat(bat, leader) {
-      var s = bat.scale * 1.6;
-      var wing = Math.sin(bat.phase * 3) * 0.7;
+      var s = bat.scale * 1.75;
+      var wing = Math.sin(bat.phase * 3.4) * 0.78;
       pctx.save();
       pctx.translate(bat.x, bat.y);
       pctx.rotate(bat.angle || 0);
       pctx.scale(bat.turn * s, s);
       pctx.globalAlpha = bat.alpha;
 
-      pctx.fillStyle = 'rgba(12,12,12,0.96)';
-      pctx.shadowBlur = 12;
-      pctx.shadowColor = 'rgba(200,29,37,0.25)';
+      pctx.shadowBlur = 20;
+      pctx.shadowColor = 'rgba(255,40,40,0.28)';
+      pctx.fillStyle = 'rgba(10,10,12,0.98)';
       batPath(pctx, wing);
       pctx.fill();
-      pctx.shadowBlur = 0;
-      pctx.strokeStyle = 'rgba(255,64,52,0.24)';
-      pctx.lineWidth = 1.1;
+
+      pctx.globalCompositeOperation = 'lighter';
+      pctx.strokeStyle = 'rgba(255,120,85,0.65)';
+      pctx.lineWidth = 1.8;
       pctx.stroke();
+      pctx.strokeStyle = 'rgba(255,40,40,0.24)';
+      pctx.lineWidth = 3.4;
+      pctx.globalAlpha = 0.18;
+      pctx.stroke();
+      pctx.globalCompositeOperation = 'source-over';
+      pctx.globalAlpha = bat.alpha;
+
+      pctx.fillStyle = 'rgba(255,40,40,0.16)';
+      pctx.beginPath();
+      pctx.ellipse(-32, 0, 10, 10, 0, 0, Math.PI * 2);
+      pctx.fill();
 
       if (leader) {
-        pctx.fillStyle = 'rgba(255,59,68,0.18)';
+        pctx.fillStyle = 'rgba(255,59,68,0.22)';
         pctx.beginPath();
-        pctx.ellipse(-9, 0, 32, 24, 0, 0, Math.PI * 2);
+        pctx.ellipse(-9, 0, 28, 20, 0, 0, Math.PI * 2);
         pctx.fill();
       }
       pctx.restore();
     }
     function updateLeader() {
-      var scroll = window.scrollY / Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
-      leaderTarget.x = particleCanvas.width * 0.25 + scroll * particleCanvas.width * 0.4 + Math.sin(time * 0.7) * 32;
-      leaderTarget.y = particleCanvas.height * 0.14 + Math.sin(time * 0.9) * 18;
+      var scrollY = window.scrollY;
+      var scroll = scrollY / Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+      leaderTarget.x = particleCanvas.width * 0.24 + (scroll - 0.5) * particleCanvas.width * 0.13 + Math.sin(time * 0.52) * 34;
+      leaderTarget.y = scrollY + particleCanvas.height * 0.22 + Math.sin(time * 0.82) * 24;
     }
     function drawParticles() {
       pctx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);
-      time += 0.014;
+      time += 0.018;
       updateLeader();
+      var viewTop = window.scrollY - 80;
+      var viewBottom = window.scrollY + window.innerHeight + 80;
 
       for (var i = 0; i < bats.length; i++) {
         var bat = bats[i];
@@ -1640,41 +1658,48 @@
           targetY = leaderTarget.y;
         } else {
           var leader = bats[i - 1];
-          targetX = leader.x - 24 - (i * 4);
-          targetY = leader.y + leader.turn * (bat.offsetY + Math.sin(time + i) * 8);
+          targetX = leader.x - 30 - (i * 4);
+          targetY = leader.y + leader.turn * (bat.offsetY + Math.sin(time + i) * 10);
         }
 
-        bat.vx += (targetX - bat.x) * 0.02;
-        bat.vy += (targetY - bat.y) * 0.02;
-        bat.vx *= 0.92;
-        bat.vy *= 0.92;
+        bat.vx += (targetX - bat.x) * 0.025;
+        bat.vy += (targetY - bat.y) * 0.025;
+        bat.vx *= 0.88;
+        bat.vy *= 0.88;
         bat.x += bat.vx;
         bat.y += bat.vy;
         bat.angle = Math.atan2(bat.vy, bat.vx);
         var speed = Math.hypot(bat.vx, bat.vy);
         bat.turn = bat.vx < 0 ? -1 : 1;
-        bat.phase += 0.08 + speed * 0.6;
+        bat.phase += 0.09 + speed * 0.8;
 
-        if (bat.x < -120) bat.x = particleCanvas.width + 120;
-        if (bat.x > particleCanvas.width + 120) bat.x = -120;
-        if (bat.y < 20) bat.y = 20;
-        if (bat.y > particleCanvas.height * 0.7) bat.y = particleCanvas.height * 0.7;
+        if (bat.x < -140) bat.x = particleCanvas.width + 140;
+        if (bat.x > particleCanvas.width + 140) bat.x = -140;
+        if (bat.y < -120) bat.y = document.documentElement.scrollHeight + 120;
+        if (bat.y > document.documentElement.scrollHeight + 120) bat.y = -120;
       }
 
       for (var i = 1; i < bats.length; i++) {
         var follower = bats[i];
         var leader = bats[i - 1];
-        pctx.save();
-        pctx.strokeStyle = 'rgba(255,59,68,' + (0.055 - i * 0.002) + ')';
-        pctx.lineWidth = 1;
-        pctx.beginPath();
-        pctx.moveTo(leader.x, leader.y);
-        pctx.quadraticCurveTo((leader.x + follower.x) / 2 + 22, (leader.y + follower.y) / 2 - 14, follower.x, follower.y);
-        pctx.stroke();
-        pctx.restore();
+        var leaderY = leader.y - window.scrollY;
+        var followerY = follower.y - window.scrollY;
+        if (leaderY > -80 && leaderY < particleCanvas.height + 80 && followerY > -80 && followerY < particleCanvas.height + 80) {
+          pctx.save();
+          pctx.strokeStyle = 'rgba(255,59,68,' + (0.08 - i * 0.003) + ')';
+          pctx.lineWidth = 1.1;
+          pctx.beginPath();
+          pctx.moveTo(leader.x, leaderY);
+          pctx.quadraticCurveTo((leader.x + follower.x) / 2 + 16, (leaderY + followerY) / 2 - 12, follower.x, followerY);
+          pctx.stroke();
+          pctx.restore();
+        }
       }
       for (var i = 0; i < bats.length; i++) {
-        drawBat(bats[i], i === 0);
+        var bat = bats[i];
+        var visibleY = bat.y - window.scrollY;
+        if (visibleY < -90 || visibleY > particleCanvas.height + 90) continue;
+        drawBat({ x: bat.x, y: visibleY, angle: bat.angle, scale: bat.scale, phase: bat.phase, turn: bat.turn, alpha: bat.alpha }, i === 0);
       }
 
       requestAnimationFrame(drawParticles);
