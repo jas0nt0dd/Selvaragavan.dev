@@ -1464,12 +1464,12 @@
         b.x += (targetX - b.x) * ease;
         b.y += (targetY - b.y) * ease;
         b.flap += 0.18 + i * 0.01;
-        const followerScale = 0.015 * (0.7 + 0.3 * moveFactor);
+        const followerScale = 0.022 * (0.75 + 0.35 * moveFactor);
         drawBat(ctx, b.x, b.y, followerScale, angle, b.flap, false);
       }
 
       leader.flap += 0.22;
-      drawBat(ctx, leader.x, leader.y, 0.022, angle, leader.flap, true);
+      drawBat(ctx, leader.x, leader.y, 0.032, angle, leader.flap, true);
       requestAnimationFrame(animateCursor);
     }
 
