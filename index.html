@@ -170,6 +170,7 @@
 
     main > section, footer { position: relative; }
     main > section > *, footer > * { position: relative; z-index: 3; }
+    section { background: transparent; }
 
     /* ===================== CUSTOM CURSOR ===================== */
     #bat-cursor-layer {
@@ -417,7 +418,7 @@
     }
 
     /* ===================== ABOUT ===================== */
-    #about { background: var(--bg-panel); }
+    #about { background: transparent; }
     .about-grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 5rem; align-items: start; margin-top: 3rem; }
     .about-text p { color: var(--text-secondary); line-height: 1.9; margin-bottom: 1.1rem; font-size: 0.96rem; }
     .about-highlight { display: inline; color: var(--red-ember); font-weight: 600; }
@@ -436,7 +437,7 @@
     .stat-label { font-size: 0.76rem; color: var(--text-secondary); margin-top: 6px; font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.08em; }
 
     /* ===================== SPECIALIZATIONS ===================== */
-    #specializations { background: var(--bg-primary); }
+    #specializations { background: transparent; }
     .spec-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; margin-top: 3rem; }
     .spec-card {
       background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-lg);
@@ -462,7 +463,7 @@
     .spec-desc { font-size: 0.82rem; color: var(--text-secondary); line-height: 1.65; }
 
     /* ===================== SKILLS ===================== */
-    #skills { background: var(--bg-panel); overflow: hidden; }
+    #skills { background: transparent; overflow: hidden; }
     .skills-container { margin-top: 3rem; display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 1.25rem; }
     .skill-category { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius); padding: 1.45rem; }
     .skill-cat-header {
@@ -495,7 +496,7 @@
     @keyframes marqueeScroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
     /* ===================== PROJECTS ===================== */
-    #projects { background: var(--bg-primary); }
+    #projects { background: transparent; }
     .filter-tabs { display: flex; gap: 0.5rem; flex-wrap: wrap; margin: 2rem 0; }
     .filter-tab {
       font-family: var(--font-mono); font-size: 0.73rem; font-weight: 600; padding: 8px 18px;
@@ -594,7 +595,7 @@
     body.modal-open { overflow: hidden; }
 
     /* ===================== ACHIEVEMENTS ===================== */
-    #achievements { background: var(--bg-panel); }
+    #achievements { background: transparent; }
     .achievements-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin-top: 3rem; }
     .ach-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius); padding: 1.5rem; display: flex; flex-direction: column; gap: 0.75rem; transition: all var(--transition); position: relative; }
     .ach-card:hover { border-color: var(--warn-amber); box-shadow: 0 8px 30px rgba(240,178,58,0.14); }
@@ -604,7 +605,7 @@
     .ach-desc { font-size: 0.82rem; color: var(--text-secondary); line-height: 1.6; }
 
     /* ===================== EXPERIENCE (TIMELINE) ===================== */
-    #experience { background: var(--bg-primary); }
+    #experience { background: transparent; }
     .timeline { margin-top: 3rem; position: relative; }
     .timeline-line-track { position: absolute; left: 16px; top: 0; bottom: 0; width: 1px; background: rgba(139,147,160,0.15); }
     .timeline-line-fill {
@@ -620,7 +621,7 @@
     .timeline-desc { font-size: 0.88rem; color: var(--text-secondary); line-height: 1.8; max-width: 640px; }
 
     /* ===================== EDUCATION ===================== */
-    #education { background: var(--bg-panel); }
+    #education { background: transparent; }
     .edu-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px,1fr)); gap: 1.5rem; margin-top: 3rem; }
     .edu-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 2rem; transition: all var(--transition); position: relative; overflow: hidden; }
     .edu-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--red-signal), var(--steel)); }
@@ -631,7 +632,7 @@
     .edu-cgpa { display: inline-block; font-family: var(--font-mono); font-size: 0.76rem; font-weight: 600; color: var(--steel); background: rgba(139,147,160,0.1); border: 1px solid rgba(139,147,160,0.28); padding: 4px 12px; border-radius: 100px; }
 
     /* ===================== CERTIFICATIONS ===================== */
-    #certifications { background: var(--bg-primary); }
+    #certifications { background: transparent; }
     .cert-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin-top: 3rem; }
     .cert-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius); padding: 1.5rem; transition: all var(--transition); }
     .cert-card:hover { border-color: var(--red-signal); box-shadow: var(--shadow-glow); }
@@ -641,7 +642,7 @@
     .cert-drive-btn:hover { color: var(--steel); }
 
     /* ===================== CONTACT ===================== */
-    #contact { background: var(--bg-panel); }
+    #contact { background: transparent; }
     .contact-grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 4rem; margin-top: 3rem; align-items: start; }
     .contact-intro { font-size: 0.95rem; color: var(--text-secondary); line-height: 1.8; margin-bottom: 2rem; }
     .contact-links { display: flex; flex-direction: column; gap: 1rem; }
@@ -761,6 +762,7 @@
 </div>
 
 <!-- ===================== PRELOADER ===================== -->
+<div id="preloader" aria-hidden="true">
   <div class="preload-mark">
     <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M24 4 L40 12 V24 C40 34 33 41 24 44 C15 41 8 34 8 24 V12 Z" stroke="#c81d25" stroke-width="1.4" fill="rgba(200,29,37,0.08)"/>
@@ -901,6 +903,7 @@
   <div class="hero-right">
     <div class="hero-frame" id="heroFrame">
       <img src="assets/hero-portrait.jpg" alt="Selvaragavan M">
+    </div>
   </div>
 </section>
 
