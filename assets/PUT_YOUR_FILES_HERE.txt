@@ -1,0 +1,1 @@
+Place hero-portrait.jpg (900x1100) and resume.pdf in this folder. See README.md at project root for exact instructions.
