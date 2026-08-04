@@ -120,6 +120,7 @@
       transition: background var(--transition), color var(--transition);
       cursor: none;
     }
+    .js-enabled body { cursor: none; }
     @media (hover: none) { body { cursor: auto; } }
 
     .bat-bg-container {
@@ -168,6 +169,7 @@
     ul { list-style: none; }
     button { font-family: inherit; }
 
+    main { position: relative; z-index: 2; }
     main > section, footer { position: relative; }
     main > section > *, footer > * { position: relative; z-index: 3; }
     section { background: transparent; }
@@ -678,8 +680,9 @@
     #back-to-top:hover { border-color: var(--red-signal); color: var(--red-ember); box-shadow: var(--shadow-glow); }
 
     /* ===================== SCROLL REVEAL BASE ===================== */
-    .reveal { opacity: 0; transform: translateY(28px); }
-    .no-js .reveal, .reduced-motion .reveal { opacity: 1; transform: none; }
+    .reveal { opacity: 1; transform: none; transition: opacity .45s ease, transform .45s ease; }
+    .reduced-motion .reveal,
+    .no-js .reveal { opacity: 1; transform: none; }
 
     /* ===================== RESPONSIVE ===================== */
     @media (max-width: 1200px) {
@@ -743,7 +746,7 @@
     ::-webkit-scrollbar-thumb:hover { background: var(--red-signal); }
   </style>
 </head>
-<body>
+<body class="js-enabled">
 <canvas id="bat-cursor-layer" aria-hidden="true"></canvas>
 <div class="bat-bg-container" aria-hidden="true">
   <svg class="bat-svg" viewBox="0 0 1000 240" xmlns="http://www.w3.org/2000/svg">
@@ -1886,13 +1889,16 @@
 
   /* ---------- GSAP SCROLL REVEALS ---------- */
   function initGsap() {
-    if (!window.gsap || !window.ScrollTrigger || reducedMotion) return;
+    if (reducedMotion) return;
+    if (!window.gsap || !window.ScrollTrigger) {
+      return;
+    }
     gsap.registerPlugin(ScrollTrigger);
 
     // Individual/grouped reveal elements
-    document.querySelectorAll('.reveal').forEach(function (el, i) {
-      gsap.to(el, {
-        opacity: 1, y: 0, duration: 0.7, ease: 'power2.out',
+    document.querySelectorAll('.reveal').forEach(function (el) {
+      gsap.from(el, {
+        opacity: 0, y: 28, duration: 0.7, ease: 'power2.out',
         scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none none' }
       });
     });
@@ -1902,8 +1908,8 @@
     gridSelectors.forEach(function (sel) {
       document.querySelectorAll(sel).forEach(function (grid) {
         var items = grid.children;
-        gsap.to(items, {
-          opacity: 1, y: 0, duration: 0.6, ease: 'power2.out', stagger: 0.09,
+        gsap.from(items, {
+          opacity: 0, y: 28, duration: 0.6, ease: 'power2.out', stagger: 0.09,
           scrollTrigger: { trigger: grid, start: 'top 88%', toggleActions: 'play none none none' }
         });
       });
@@ -1928,8 +1934,9 @@
 
   /* Fallback: if GSAP/ScrollTrigger fail to load (network block), force reveal visible */
   setTimeout(function () {
-    if (!window.gsap) {
+    if (!window.gsap || !window.ScrollTrigger) {
       document.querySelectorAll('.reveal').forEach(function (el) { el.style.opacity = 1; el.style.transform = 'none'; });
+      if (preloader) preloader.classList.add('loaded');
     }
   }, 2500);
 
