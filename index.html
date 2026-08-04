@@ -1418,6 +1418,9 @@
 
   /* ---------- CUSTOM CURSOR ---------- */
   const batCanvas = document.getElementById('bat-cursor-layer');
+  const BAT_IMAGE = new Image();
+  BAT_IMAGE.src = 'assets/bat-black-silhouette-with-opened-wings.png';
+
   if (!reducedMotion && !isTouch && batCanvas && batCanvas.getContext) {
     const ctx = batCanvas.getContext('2d');
 
@@ -1430,23 +1433,37 @@
 
     const BAT_PATH = 'M 500,112 C 493,112 487,100 482,100 C 472,128 430,132 360,100 L 50,100 C 110,135 155,152 220,155 C 300,158 410,180 500,195 C 590,180 700,158 780,155 C 845,152 890,135 950,100 L 640,100 C 570,132 528,128 518,100 C 513,100 507,112 500,112 Z';
 
-    function drawBat(ctx, x, y, scale, angle, flap, isLeader) {
+    function drawImageBat(ctx, x, y, scale, angle, flap, isLeader, sizeFactor) {
       ctx.save();
       ctx.translate(x, y);
       ctx.rotate(angle);
-      ctx.scale(scale, scale * (0.80 + 0.20 * Math.cos(flap)));
-      ctx.translate(-500, -147.5);
-      const path = new Path2D(BAT_PATH);
+      ctx.scale(scale * sizeFactor, scale * sizeFactor * (0.80 + 0.20 * Math.cos(flap)));
+      const imgW = BAT_IMAGE.naturalWidth || 1000;
+      const imgH = BAT_IMAGE.naturalHeight || 240;
+      ctx.translate(-imgW / 2, -imgH / 2);
 
-      ctx.save();
-      ctx.translate(2, 3);
-      ctx.fillStyle = 'rgba(122, 16, 21, 0.65)';
-      ctx.fill(path);
-      ctx.restore();
+      if (BAT_IMAGE.complete && imgW && imgH) {
+        if (isLeader) {
+          ctx.shadowBlur = 14;
+          ctx.shadowColor = 'rgba(255,40,40,0.2)';
+        }
+        ctx.drawImage(BAT_IMAGE, 0, 0, imgW * sizeFactor, imgH * sizeFactor);
+      } else {
+        const path = new Path2D(BAT_PATH);
+        ctx.save();
+        ctx.translate(2, 3);
+        ctx.fillStyle = 'rgba(122, 16, 21, 0.65)';
+        ctx.fill(path);
+        ctx.restore();
 
-      ctx.fillStyle = isLeader ? '#ff2a2a' : '#b8121a';
-      ctx.fill(path);
+        ctx.fillStyle = isLeader ? '#ff2a2a' : '#b8121a';
+        ctx.fill(path);
+      }
       ctx.restore();
+    }
+
+    function drawBat(ctx, x, y, scale, angle, flap, isLeader) {
+      drawImageBat(ctx, x, y, scale, angle, flap, isLeader, 1);
     }
 
     const mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
@@ -1792,7 +1809,8 @@
       ctx.quadraticCurveTo(-24, 18 + flap * 0.7, -12, 6 + flap * 0.35);
       ctx.closePath();
     }
-    function drawBat(bat, leader) {
+    function drawImageBatParticle(bat, leader) {
+      var img = BAT_IMAGE;
       var s = bat.scale * (leader ? 1.6 : 1.0);
       var wing = Math.sin(bat.phase * 3.4) * 0.72;
       pctx.save();
@@ -1801,27 +1819,29 @@
       pctx.scale(bat.turn * s, s);
       pctx.globalAlpha = leader ? bat.alpha : bat.alpha * 0.75;
 
-      if (leader) {
-        pctx.shadowBlur = 14;
-        pctx.shadowColor = 'rgba(255,40,40,0.2)';
+      var imgW = img.naturalWidth || 1000;
+      var imgH = img.naturalHeight || 240;
+      var drawScale = leader ? 0.084 : 0.072;
+      var width = imgW * drawScale;
+      var height = imgH * drawScale;
+
+      if (img.complete && imgW && imgH) {
+        if (leader) {
+          pctx.shadowBlur = 14;
+          pctx.shadowColor = 'rgba(255,40,40,0.2)';
+        }
+        pctx.drawImage(img, -width / 2, -height / 2, width, height);
       } else {
-        pctx.shadowBlur = 0;
-      }
-      pctx.fillStyle = 'rgba(8,8,10,' + (leader ? '0.98' : '0.84') + ')';
-      batPath(pctx, wing);
-      pctx.fill();
+        pctx.save();
+        pctx.fillStyle = 'rgba(8,8,10,' + (leader ? '0.98' : '0.84') + ')';
+        batPath(pctx, wing);
+        pctx.fill();
+        pctx.restore();
 
-      pctx.strokeStyle = leader ? 'rgba(255,72,58,0.38)' : 'rgba(255,60,50,0.22)';
-      pctx.lineWidth = leader ? 1.8 : 1.1;
-      pctx.globalAlpha = leader ? 1 : 0.75;
-      pctx.stroke();
-
-      if (leader) {
-        pctx.globalAlpha = 0.14;
-        pctx.strokeStyle = 'rgba(255,50,50,0.18)';
-        pctx.lineWidth = 2.2;
+        pctx.strokeStyle = leader ? 'rgba(255,72,58,0.38)' : 'rgba(255,60,50,0.22)';
+        pctx.lineWidth = leader ? 1.8 : 1.1;
+        pctx.globalAlpha = leader ? 1 : 0.75;
         pctx.stroke();
-        pctx.globalAlpha = 1;
       }
 
       if (!leader) {
@@ -1838,6 +1858,9 @@
         pctx.fill();
       }
       pctx.restore();
+    }
+    function drawBat(bat, leader) {
+      drawImageBatParticle(bat, leader);
     }
     function updateLeader() {
       var scrollY = window.scrollY;
