@@ -1551,7 +1551,9 @@
   if (particleCanvas && !reducedMotion) {
     var pctx = particleCanvas.getContext('2d');
     var particles = [];
+    var bats = [];
     var PCOUNT = window.innerWidth < 768 ? 34 : 64;
+    var BAT_COUNT = window.innerWidth < 768 ? 6 : 12;
     var MAXDIST = 130;
 
     function resizeParticleCanvas() {
@@ -1569,11 +1571,64 @@
           r: Math.random() * 1.4 + 0.6
         });
       }
+      bats = [];
+      for (var i = 0; i < BAT_COUNT; i++) {
+        var size = Math.random() * 0.95 + 0.8;
+        bats.push({
+          x: Math.random() * particleCanvas.width,
+          y: Math.random() * particleCanvas.height * 0.45 + 40,
+          vx: (Math.random() * 0.35 + 0.15) * (Math.random() < 0.5 ? -1 : 1),
+          vy: (Math.random() - 0.5) * 0.1,
+          scale: size,
+          phase: Math.random() * Math.PI * 2,
+          turn: Math.random() < 0.5 ? -1 : 1
+        });
+      }
+    }
+    function drawBat(bat) {
+      var s = bat.scale * 1.6;
+      pctx.save();
+      pctx.translate(bat.x, bat.y);
+      pctx.rotate(Math.sin(bat.phase) * 0.18);
+      pctx.scale(bat.turn * s, s);
+      pctx.beginPath();
+      pctx.moveTo(0, 0);
+      pctx.lineTo(-10, -6);
+      pctx.lineTo(-18, -12);
+      pctx.lineTo(-14, -8);
+      pctx.lineTo(-22, -4);
+      pctx.lineTo(-14, -2);
+      pctx.lineTo(-22, 2);
+      pctx.lineTo(-14, 4);
+      pctx.lineTo(-18, 8);
+      pctx.lineTo(-10, 6);
+      pctx.closePath();
+      pctx.fillStyle = 'rgba(10,10,12,0.96)';
+      pctx.shadowBlur = 8;
+      pctx.shadowColor = 'rgba(200,29,37,0.14)';
+      pctx.fill();
+      pctx.shadowBlur = 0;
+      pctx.strokeStyle = 'rgba(255,64,52,0.22)';
+      pctx.lineWidth = 0.9;
+      pctx.stroke();
+      pctx.restore();
     }
     function drawParticles() {
       pctx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);
       var viewTop = window.scrollY - 200;
       var viewBottom = window.scrollY + window.innerHeight + 200;
+
+      for (var i = 0; i < bats.length; i++) {
+        var bat = bats[i];
+        bat.x += bat.vx;
+        bat.y += bat.vy;
+        bat.phase += 0.05;
+        if (bat.x < -50) bat.x = particleCanvas.width + 50;
+        if (bat.x > particleCanvas.width + 50) bat.x = -50;
+        if (bat.y < 20) bat.y = 20;
+        if (bat.y > particleCanvas.height * 0.55) bat.y = particleCanvas.height * 0.55;
+        drawBat(bat);
+      }
 
       for (var i = 0; i < particles.length; i++) {
         var p = particles[i];
