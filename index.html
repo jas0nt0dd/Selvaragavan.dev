@@ -175,11 +175,15 @@
     section { background: transparent; }
 
     /* ===================== CUSTOM CURSOR ===================== */
+    .js-enabled body { cursor: none; }
     #bat-cursor-layer {
       position: fixed; inset: 0; z-index: 9999;
       pointer-events: none; /* critical — never blocks real clicks */
     }
-    @media (hover: none) { #bat-cursor-layer { display: none; } }
+    @media (hover: none) {
+      #bat-cursor-layer { display: none; }
+      body { cursor: auto; }
+    }
 
     /* ===================== PRELOADER ===================== */
     #preloader {
@@ -1361,95 +1365,115 @@
   setTimeout(initIcons, 300); // defer-loaded script safety net
 
   /* ---------- CUSTOM CURSOR ---------- */
-  var batCanvas = document.getElementById('bat-cursor-layer');
+  const batCanvas = document.getElementById('bat-cursor-layer');
   if (!reducedMotion && !isTouch && batCanvas && batCanvas.getContext) {
-    var ctx = batCanvas.getContext('2d');
-    function resizeBatCanvas() {
+    const ctx = batCanvas.getContext('2d');
+
+    function resizeCanvas() {
       batCanvas.width = window.innerWidth;
       batCanvas.height = window.innerHeight;
     }
-    resizeBatCanvas();
-    window.addEventListener('resize', resizeBatCanvas);
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
 
-    var BAT_PATH = 'M50 38 C46 34, 40 33, 34 34 L2 30 C8 42, 18 48, 30 50 C34 51, 36 53, 38 56 L42 50 L46 56 L50 50 L54 56 L58 50 L62 56 C64 53, 66 51, 70 50 C82 48, 92 42, 98 30 L66 34 C60 33, 54 34, 50 38 Z';
+    const BAT_PATH = 'M 500,112 C 493,112 487,100 482,100 C 472,128 430,132 360,100 L 50,100 C 110,135 155,152 220,155 C 300,158 410,180 500,195 C 590,180 700,158 780,155 C 845,152 890,135 950,100 L 640,100 C 570,132 528,128 518,100 C 513,100 507,112 500,112 Z';
 
     function drawBat(ctx, x, y, scale, angle, flap, isLeader) {
       ctx.save();
       ctx.translate(x, y);
       ctx.rotate(angle);
-      ctx.scale(scale, scale * (0.82 + 0.18 * Math.cos(flap)));
-      var path = new Path2D(BAT_PATH);
+      ctx.scale(scale, scale * (0.80 + 0.20 * Math.cos(flap)));
+      ctx.translate(-500, -147.5);
+      const path = new Path2D(BAT_PATH);
 
       ctx.save();
-      ctx.translate(1.5, 2);
-      ctx.fillStyle = 'rgba(122,16,21,0.55)';
+      ctx.translate(2, 3);
+      ctx.fillStyle = 'rgba(122, 16, 21, 0.65)';
       ctx.fill(path);
       ctx.restore();
 
-      ctx.fillStyle = isLeader ? '#ff4034' : '#c81d25';
+      ctx.fillStyle = isLeader ? '#ff2a2a' : '#b8121a';
       ctx.fill(path);
       ctx.restore();
     }
 
-    var FOLLOWER_COUNT = 6;
-    var mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
-    var bats = [{ x: mouse.x, y: mouse.y, flap: 0, isLeader: true }];
-    for (var i = 1; i <= FOLLOWER_COUNT; i += 1) {
-      bats.push({ x: mouse.x, y: mouse.y, flap: Math.random() * 6, isLeader: false });
-    }
+    const mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+    let isMoving = false;
+    let idleTimer = null;
 
-    function formationOffset(i) {
-      var row = Math.ceil(i / 2);
-      var side = i % 2 === 0 ? 1 : -1;
-      return { back: row * 34, side: side * row * 20 };
-    }
+    window.addEventListener('mousemove', (e) => {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+      isMoving = true;
+      clearTimeout(idleTimer);
+      idleTimer = setTimeout(() => {
+        isMoving = false;
+      }, 120);
+    });
 
-    var lastAngle = 0;
-    var lastScrollY = window.scrollY;
-    var scrollVel = 0;
-    window.addEventListener('scroll', function () {
+    let lastScrollY = window.scrollY;
+    let scrollVel = 0;
+    window.addEventListener('scroll', () => {
       scrollVel = window.scrollY - lastScrollY;
       lastScrollY = window.scrollY;
     }, { passive: true });
 
-    window.addEventListener('mousemove', function (e) {
-      mouse.x = e.clientX;
-      mouse.y = e.clientY;
-    });
+    const FOLLOWER_COUNT = 5;
+    const bats = [{ x: mouse.x, y: mouse.y, flap: 0, isLeader: true }];
+    for (let i = 1; i <= FOLLOWER_COUNT; i += 1) {
+      bats.push({ x: mouse.x, y: mouse.y, flap: Math.random() * 6, isLeader: false });
+    }
 
-    function animate() {
-      var leader = bats[0];
-      leader.x += (mouse.x - leader.x) * 0.16;
-      leader.y += (mouse.y - leader.y) * 0.16;
+    function formationOffset(i) {
+      const row = Math.ceil(i / 2);
+      const side = i % 2 === 0 ? 1 : -1;
+      return { back: row * 22, side: side * row * 14 };
+    }
 
-      var dx = mouse.x - leader.x;
-      var dy = mouse.y - leader.y;
-      var moving = Math.hypot(dx, dy) > 0.5;
-      var angle = moving ? Math.atan2(dy, dx) : lastAngle;
+    let lastAngle = 0;
+    let moveFactor = 0;
+
+    function animateCursor() {
+      const leader = bats[0];
+      const targetFactor = isMoving ? 1 : 0;
+      moveFactor += (targetFactor - moveFactor) * 0.12;
+
+      const dx = mouse.x - leader.x;
+      const dy = mouse.y - leader.y;
+      const speed = Math.hypot(dx, dy);
+
+      leader.x += dx * 0.22;
+      leader.y += dy * 0.22;
+
+      const angle = speed > 0.5 ? Math.atan2(dy, dx) : lastAngle;
       lastAngle = angle;
+      const scrollBank = Math.max(-1, Math.min(1, scrollVel * 0.04));
+      scrollVel *= 0.88;
 
       ctx.clearRect(0, 0, batCanvas.width, batCanvas.height);
-      var scrollBank = Math.max(-1, Math.min(1, scrollVel * 0.05));
 
-      for (var j = 1; j < bats.length; j += 1) {
-        var b = bats[j];
-        var off = formationOffset(j);
-        var targetX = leader.x - Math.cos(angle) * off.back - Math.sin(angle) * off.side;
-        var targetY = leader.y - Math.sin(angle) * off.back + Math.cos(angle) * off.side;
-        targetY += scrollBank * Math.ceil(j / 2) * 6;
-        var ease = 0.10 - j * 0.006;
+      for (let i = 1; i < bats.length; i += 1) {
+        const b = bats[i];
+        const off = formationOffset(i);
+        const row = Math.ceil(i / 2);
+        const currentBack = off.back * moveFactor;
+        const currentSide = off.side * moveFactor;
+        const targetX = leader.x - Math.cos(angle) * currentBack - Math.sin(angle) * currentSide;
+        const targetY = leader.y - Math.sin(angle) * currentBack + Math.cos(angle) * currentSide + (scrollBank * row * 4 * moveFactor);
+        const ease = 0.14 - i * 0.01;
         b.x += (targetX - b.x) * ease;
         b.y += (targetY - b.y) * ease;
-        b.flap += 0.16 + j * 0.01;
-        drawBat(ctx, b.x, b.y, 0.28, angle, b.flap, false);
+        b.flap += 0.18 + i * 0.01;
+        const followerScale = 0.015 * (0.7 + 0.3 * moveFactor);
+        drawBat(ctx, b.x, b.y, followerScale, angle, b.flap, false);
       }
 
       leader.flap += 0.22;
-      drawBat(ctx, leader.x + 4, leader.y - 2, 0.32, angle, leader.flap, true);
-      scrollVel *= 0.9;
-      requestAnimationFrame(animate);
+      drawBat(ctx, leader.x, leader.y, 0.022, angle, leader.flap, true);
+      requestAnimationFrame(animateCursor);
     }
-    animate();
+
+    animateCursor();
   }
 
   /* ---------- THEME TOGGLE ---------- */
