@@ -692,7 +692,13 @@
     .timeline-period { font-family: var(--font-mono); font-size: 0.7rem; color: var(--steel); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.5rem; }
     .timeline-role { font-family: var(--font-display); font-size: 1.15rem; font-weight: 700; margin-bottom: 0.25rem; }
     .timeline-company { color: var(--red-ember); font-weight: 500; margin-bottom: 0.75rem; font-size: 0.9rem; }
+    .timeline-content { display: flex; align-items: flex-start; justify-content: space-between; gap: 2rem; max-width: 920px; }
+    .timeline-text { flex: 1; }
     .timeline-desc { font-size: 0.88rem; color: var(--text-secondary); line-height: 1.8; max-width: 640px; }
+    .timeline-visual { flex-shrink: 0; width: min(240px, 32vw); border: 1px solid var(--border-color); border-radius: var(--radius-lg); overflow: hidden; background: var(--bg-card); box-shadow: var(--shadow-card); }
+    .timeline-visual img { display: block; width: 100%; height: auto; object-fit: cover; }
+    .timeline-link { display: inline-flex; align-items: center; gap: 0.5rem; margin-top: 1rem; padding: 0.7rem 1rem; border: 1px solid var(--border-color); border-radius: 999px; color: var(--text-primary); background: rgba(200,29,37,0.06); font-family: var(--font-mono); font-size: 0.72rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; transition: all var(--transition); }
+    .timeline-link:hover { border-color: var(--red-signal); color: var(--red-ember); box-shadow: var(--shadow-glow); }
 
     /* ===================== EDUCATION ===================== */
     #education { background: transparent; }
@@ -1294,10 +1300,20 @@
     <div class="timeline-item reveal">
       <div class="timeline-dot"></div>
       <div class="timeline-period">2024 — Present</div>
-      <div class="timeline-role">Robotic Engineer</div>
-      <div class="timeline-company">Robential Kinetics Pvt. Ltd.</div>
-      <div class="timeline-desc">
-        Lead end-to-end design, programming, and testing of robotic systems. Integrate hardware, sensors, and control software for robotic arms and custom automation mechanisms. Drive iterative prototyping and control logic refinement based on on-site testing. Deployed ZKBot — an autonomous cup washing robot using YOLO CV + serial communication.
+      <div class="timeline-content">
+        <div class="timeline-text">
+          <div class="timeline-role">Robotic Engineer</div>
+          <div class="timeline-company">Robential Kinetics Pvt. Ltd.</div>
+          <div class="timeline-desc">
+            Lead end-to-end design, programming, and testing of robotic systems. Integrate hardware, sensors, and control software for robotic arms and custom automation mechanisms. Drive iterative prototyping and control logic refinement based on on-site testing. Deployed ZKBot — an autonomous cup washing robot using YOLO CV + serial communication.
+          </div>
+          <a href="https://robential.com/" target="_blank" rel="noopener noreferrer" class="timeline-link" data-cursor-hover>
+            <i data-lucide="external-link" width="14" height="14"></i> View Website
+          </a>
+        </div>
+        <div class="timeline-visual">
+          <img src="assets/robential.png" alt="Robential Kinetics company preview" />
+        </div>
       </div>
     </div>
   </div>
