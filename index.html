@@ -689,16 +689,16 @@
     }
     .timeline-item { padding-left: 3rem; padding-bottom: 3rem; position: relative; }
     .timeline-dot { position: absolute; left: 10px; top: 6px; width: 13px; height: 13px; border-radius: 50%; background: var(--red-ember); box-shadow: 0 0 12px rgba(255,64,52,0.65); border: 2px solid var(--bg-primary); }
-    .timeline-period { font-family: var(--font-mono); font-size: 0.7rem; color: var(--steel); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.5rem; }
-    .timeline-role { font-family: var(--font-display); font-size: 1.15rem; font-weight: 700; margin-bottom: 0.25rem; }
-    .timeline-company { color: var(--red-ember); font-weight: 500; margin-bottom: 0.75rem; font-size: 0.9rem; }
-    .timeline-content { display: flex; align-items: flex-start; justify-content: space-between; gap: 2rem; max-width: 920px; }
-    .timeline-text { flex: 1; }
-    .timeline-desc { font-size: 0.88rem; color: var(--text-secondary); line-height: 1.8; max-width: 640px; }
-    .timeline-visual { position: relative; flex-shrink: 0; width: min(240px, 32vw); border: 1px solid rgba(200,29,37,0.35); border-radius: var(--radius-lg); overflow: hidden; background: var(--bg-card); box-shadow: var(--shadow-card); animation: crimsonPulse 2.8s ease-in-out infinite; }
+    .timeline-period { font-family: var(--font-mono); font-size: 0.75rem; color: var(--steel); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.75rem; }
+    .timeline-role { font-family: var(--font-display); font-size: 1.35rem; font-weight: 700; margin-bottom: 0.35rem; }
+    .timeline-company { color: var(--red-ember); font-weight: 600; margin-bottom: 1rem; font-size: 1rem; }
+    .timeline-content { display: flex; align-items: flex-start; justify-content: space-between; gap: 2.5rem; width: 100%; max-width: none; }
+    .timeline-text { flex: 1; min-width: 0; }
+    .timeline-desc { font-size: 0.95rem; color: var(--text-secondary); line-height: 2; max-width: none; }
+    .timeline-visual { position: relative; flex-shrink: 0; width: min(420px, 45vw); max-width: 460px; min-width: 240px; border: 1px solid rgba(200,29,37,0.35); border-radius: var(--radius-lg); overflow: hidden; background: var(--bg-card); box-shadow: var(--shadow-card); animation: crimsonPulse 2.8s ease-in-out infinite; }
     .timeline-visual::before { content: ''; position: absolute; inset: -2px; border: 1px solid rgba(255,64,52,0.25); border-radius: inherit; pointer-events: none; animation: crimsonGlow 2.8s ease-in-out infinite; }
-    .timeline-visual img { display: block; width: 100%; height: auto; object-fit: cover; }
-    .timeline-link { display: inline-flex; align-items: center; gap: 0.5rem; margin-top: 1rem; padding: 0.7rem 1rem; border: 1px solid var(--border-color); border-radius: 999px; color: var(--text-primary); background: rgba(200,29,37,0.06); font-family: var(--font-mono); font-size: 0.72rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; transition: all var(--transition); }
+    .timeline-visual img { display: block; width: 100%; height: 100%; object-fit: cover; }
+    .timeline-link { display: inline-flex; align-items: center; gap: 0.5rem; margin-top: 1.5rem; padding: 0.85rem 1.15rem; border: 1px solid var(--border-color); border-radius: 999px; color: var(--text-primary); background: rgba(200,29,37,0.08); font-family: var(--font-mono); font-size: 0.78rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; transition: all var(--transition); }
     .timeline-link:hover { border-color: var(--red-signal); color: var(--red-ember); box-shadow: var(--shadow-glow); }
     @keyframes crimsonPulse {
       0%, 100% { box-shadow: 0 0 0 rgba(200,29,37,0.0), 0 10px 34px rgba(0,0,0,0.55); }
@@ -706,7 +706,21 @@
     }
     @keyframes crimsonGlow {
       0%, 100% { transform: scale(0.98); opacity: 0.55; }
-      50% { transform: scale(1.01); opacity: 1; }
+      50% { transform: scale(1.02); opacity: 1; }
+    }
+
+    @media (max-width: 1100px) {
+      .timeline-content { flex-direction: column; gap: 1.75rem; }
+      .timeline-visual { width: 100%; max-width: none; min-width: auto; }
+    }
+
+    @media (max-width: 780px) {
+      .timeline-item { padding-left: 1.75rem; }
+      .timeline-period { font-size: 0.72rem; }
+      .timeline-role { font-size: 1.2rem; }
+      .timeline-company { font-size: 0.95rem; }
+      .timeline-desc { font-size: 0.94rem; }
+      .timeline-link { width: fit-content; }
     }
 
     /* ===================== EDUCATION ===================== */
