@@ -603,6 +603,7 @@
     }
     .project-media video, .project-media img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s cubic-bezier(.2,.7,.2,1); }
     .project-card:hover .project-media video, .project-card:hover .project-media img { transform: scale(1.06); }
+    .project-media.video-error { background: linear-gradient(135deg, rgba(200,29,37,0.12), rgba(139,147,160,0.08)); }
     .project-media::after {
       content: ''; position: absolute; inset: 0;
       background: repeating-linear-gradient(0deg, rgba(0,0,0,0.16) 0px, rgba(0,0,0,0.16) 1px, transparent 1px, transparent 3px);
@@ -1117,7 +1118,7 @@
     <div class="project-card featured reveal" data-category="ai"
          data-full-desc="Production-grade OpenEnv environment built for the META × Hugging Face Hackathon. LLM agents act as on-call ML engineers diagnosing live production incidents inside a simulated infrastructure. Features 4 escalating difficulty tiers, dense RL reward shaping, and a full GRPO fine-tuning pipeline for training incident-response agents. Achieved a 0.9625 average score across all difficulty tiers, deployed live on Hugging Face Spaces.">
       <div class="project-media">
-        <div class="project-media-placeholder"><i data-lucide="film" width="26" height="26"></i><span>assets/projects/mlops-incident.mp4 (1280×800)</span></div>
+        <video src="assets/projects/mlops-incident.mp4" autoplay muted loop playsinline preload="metadata" poster="assets/hero-portrait.jpg" onerror="this.style.display='none'; this.parentElement.classList.add('video-error');"></video>
       </div>
       <div class="project-body">
         <div class="project-header">
@@ -1140,7 +1141,7 @@
     <div class="project-card reveal" data-category="ai"
          data-full-desc="A full-stack parking management platform for gatekeepers, built to replace manual entry/exit logs at truck yards. FastAPI backend handles session state, automated billing calculations, and WhatsApp notification dispatch on entry, exit, and payment events. Next.js frontend gives gatekeepers a fast entry/exit flow and gives admins live dashboards for monitoring active sessions, payment status, and generating reports across time ranges.">
       <div class="project-media">
-        <div class="project-media-placeholder"><i data-lucide="film" width="26" height="26"></i><span>assets/projects/truck-parking.mp4 (1280×800)</span></div>
+        <video src="assets/projects/truck-parking.mp4" autoplay muted loop playsinline preload="metadata" poster="assets/hero-portrait.jpg" onerror="this.style.display='none'; this.parentElement.classList.add('video-error');"></video>
       </div>
       <div class="project-body">
         <div class="project-header">
@@ -1200,7 +1201,7 @@
     <div class="project-card reveal" data-category="robotics"
          data-full-desc="Real-time YOLO-based computer vision pipeline integrated with a robotic arm for autonomous cup detection and washing at Robential Kinetics. A custom-trained YOLO model identifies cup position and orientation, then drives robotic actuators via serial communication to an Arduino-controlled arm for a complete automated cleaning workflow — from detection through wash cycle.">
       <div class="project-media">
-        <div class="project-media-placeholder"><i data-lucide="film" width="26" height="26"></i><span>assets/projects/zkbot.mp4 (1280×800)</span></div>
+        <video src="assets/projects/zkbot.mp4" autoplay muted loop playsinline preload="metadata" poster="assets/hero-portrait.jpg" onerror="this.style.display='none'; this.parentElement.classList.add('video-error');"></video>
       </div>
       <div class="project-body">
         <div class="project-header">
