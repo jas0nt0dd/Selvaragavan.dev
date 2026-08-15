@@ -1,0 +1,25 @@
+.canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: var(--z-cursor);
+  opacity: 0;
+  transition: opacity 160ms ease;
+}
+
+.canvas.visible {
+  opacity: 1;
+}
+
+.canvas.hovering {
+  filter: drop-shadow(0 0 18px rgba(255, 35, 35, 0.8));
+}
+
+/* Hide the native cursor site-wide only once the custom cursor is confirmed active */
+:global(body.has-custom-cursor),
+:global(body.has-custom-cursor a),
+:global(body.has-custom-cursor button) {
+  cursor: none;
+}

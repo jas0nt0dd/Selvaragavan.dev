@@ -1,0 +1,32 @@
+.section {
+  position: relative;
+  overflow: visible;
+  padding-block: var(--space-9);
+  border-top: 1px solid var(--color-border);
+}
+
+.sectionHead {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: var(--space-5);
+  margin-bottom: var(--space-7);
+}
+
+.heading {
+  font-size: clamp(1.8rem, 3.6vw, var(--fs-2xl));
+  max-width: 36ch;
+}
+
+.note {
+  margin-top: var(--space-3);
+  max-width: 62ch;
+  font-size: var(--fs-sm);
+  color: var(--color-steel);
+}
+
+.timelineWrap {
+  margin-top: var(--space-7);
+  max-width: 46rem;
+}

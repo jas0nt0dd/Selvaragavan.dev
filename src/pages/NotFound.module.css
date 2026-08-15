@@ -1,0 +1,28 @@
+.wrap {
+  min-height: 70dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: var(--space-4);
+}
+
+.icon {
+  color: var(--color-red-signal);
+}
+
+.code {
+  font-size: var(--fs-xs);
+  letter-spacing: var(--ls-wider);
+  color: var(--color-steel);
+}
+
+.title {
+  font-size: clamp(2rem, 5vw, var(--fs-3xl));
+}
+
+.description {
+  max-width: 40ch;
+  margin-bottom: var(--space-4);
+}

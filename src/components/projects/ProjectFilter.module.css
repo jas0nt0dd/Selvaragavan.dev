@@ -1,0 +1,38 @@
+.filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 0.5rem 0.9rem;
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  letter-spacing: var(--ls-wide);
+  color: var(--color-smoke);
+  background: var(--color-panel);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  transition: border-color var(--dur-fast) ease, color var(--dur-fast) ease, background var(--dur-fast) ease;
+}
+.chip:hover {
+  color: var(--color-bone);
+  border-color: var(--color-border-strong);
+}
+
+.chipActive {
+  color: var(--color-bone);
+  background: var(--color-red-dim);
+  border-color: var(--color-red-line);
+}
+
+.count {
+  font-size: var(--fs-2xs);
+  color: var(--color-steel);
+}
+.chipActive .count {
+  color: var(--color-red-glow);
+}

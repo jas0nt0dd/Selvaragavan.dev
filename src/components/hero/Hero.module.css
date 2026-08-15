@@ -1,0 +1,285 @@
+.hero {
+  position: relative;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  padding-top: var(--space-9);
+  padding-bottom: var(--space-8);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1.3fr 0.9fr;
+  gap: var(--space-8);
+  align-items: center;
+}
+
+.copy {
+  animation: fade-up 900ms var(--ease-signal) both;
+}
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-5);
+  font-size: var(--fs-2xs);
+  color: var(--color-smoke);
+}
+.eyebrowDivider {
+  color: var(--color-border-strong);
+}
+
+.headline {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.headlineName {
+  display: block;
+  font-size: clamp(2.1rem, 5.8vw, var(--fs-4xl));
+  line-height: 1.1;
+  color: var(--color-bone);
+  white-space: normal;
+  word-break: break-word;
+}
+
+.headlineSub {
+  display: block;
+  font-size: clamp(1.05rem, 2.4vw, var(--fs-xl));
+  font-weight: 500;
+  line-height: 1.35;
+  color: var(--color-red-glow);
+  letter-spacing: var(--ls-tight);
+}
+
+.roleSequence {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+  min-height: 2.5rem;
+}
+
+.roleLabel {
+  font-size: var(--fs-2xs);
+  letter-spacing: var(--ls-wide);
+  color: var(--color-steel);
+}
+
+.roleStream {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.5em;
+}
+
+.roleItem {
+  position: absolute;
+  inset: 0 auto auto 0;
+  color: var(--color-red-glow);
+  font-size: var(--fs-md);
+  font-weight: 700;
+  letter-spacing: var(--ls-tight);
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 280ms ease, transform 280ms ease;
+  white-space: nowrap;
+}
+
+.roleItemActive {
+  position: relative;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* FlipText styling for role display */
+:global(.flip-text-wrapper) {
+  color: var(--color-red-glow);
+  font-size: var(--fs-md);
+  font-weight: 700;
+  letter-spacing: var(--ls-tight);
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.5em;
+}
+
+.subhead {
+  margin-top: var(--space-5);
+  max-width: 52ch;
+  font-size: var(--fs-md);
+  color: var(--color-smoke);
+}
+
+.markers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-6);
+}
+
+.marker {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 0.55rem 0.9rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: rgba(16, 20, 27, 0.6);
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  letter-spacing: var(--ls-wide);
+  color: var(--color-bone-dim);
+  transition: border-color var(--dur-fast) ease, color var(--dur-fast) ease;
+}
+.marker:hover {
+  border-color: var(--color-red-line);
+  color: var(--color-bone);
+}
+
+.ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  margin-top: var(--space-7);
+}
+
+/* -------------------- HUD panel -------------------- */
+
+.panel {
+  background: rgba(16, 20, 27, 0.72);
+  backdrop-filter: blur(14px);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-panel);
+  padding: var(--space-5);
+  animation: fade-up 900ms var(--ease-signal) 160ms both;
+}
+
+.panelHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: var(--fs-2xs);
+  letter-spacing: var(--ls-wide);
+  color: var(--color-steel);
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.videoContainer {
+  padding-block: var(--space-4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  aspect-ratio: 3 / 2;
+}
+
+.statusVideo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.log {
+  padding-block: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.logLine {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: var(--fs-2xs);
+  color: var(--color-bone-dim);
+  letter-spacing: var(--ls-wide);
+  opacity: 0;
+  animation: fade-up 500ms var(--ease-signal) forwards;
+}
+
+.logBullet {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--color-red-signal);
+  flex-shrink: 0;
+}
+
+.panelFoot {
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.roleTicker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.employment {
+  font-size: var(--fs-2xs);
+  color: var(--color-red-glow);
+  letter-spacing: var(--ls-wide);
+}
+
+/* -------------------- Scroll cue -------------------- */
+
+.scrollCue {
+  position: absolute;
+  left: 50%;
+  bottom: var(--space-6);
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--fs-2xs);
+  color: var(--color-steel);
+  letter-spacing: var(--ls-wider);
+  transition: color var(--dur-fast) ease;
+}
+.scrollCue:hover {
+  color: var(--color-red-glow);
+}
+.scrollLine {
+  width: 1px;
+  height: 28px;
+  background: linear-gradient(to bottom, var(--color-border-strong), transparent);
+  animation: sweep-down 2.2s var(--ease-tactical) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scrollLine {
+    animation: none;
+  }
+}
+
+@media (max-width: 1080px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+  .panel {
+    order: -1;
+  }
+}
+
+@media (max-width: 640px) {
+  .hero {
+    padding-top: var(--space-8);
+  }
+  .ctas .button,
+  .ctas a {
+    width: 100%;
+    justify-content: center;
+  }
+}
