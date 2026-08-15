@@ -3,10 +3,20 @@
   background: var(--color-panel);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
-  transition: border-color var(--dur-fast) ease;
+  box-shadow: var(--shadow-panel);
+  transition:
+    border-color var(--dur-fast) ease,
+    background var(--dur-fast) ease,
+    box-shadow var(--dur-fast) ease;
 }
 .cardOpen {
   border-color: var(--color-red-line);
+}
+.cardCompact {
+  min-height: 9.25rem;
+  padding: var(--space-4);
+  background: linear-gradient(180deg, rgba(22, 28, 37, 0.92), rgba(16, 20, 27, 0.88));
+  box-shadow: 0 12px 34px -22px rgba(0, 0, 0, 0.8);
 }
 
 .trigger {
@@ -28,6 +38,9 @@
   flex: 1;
   font-size: var(--fs-md);
 }
+.cardCompact .title {
+  font-size: var(--fs-base);
+}
 
 .chevron {
   flex-shrink: 0;
@@ -44,12 +57,27 @@
   font-size: var(--fs-sm);
   max-width: 62ch;
 }
+.cardCompact .problem {
+  display: -webkit-box;
+  margin-top: var(--space-3);
+  overflow: hidden;
+  color: var(--color-bone-dim);
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
 
 .tagRow {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-2);
   margin-top: var(--space-4);
+}
+.cardCompact .tagRow {
+  display: none;
+}
+
+.cardCompact .chevron {
+  display: none;
 }
 
 .detail {
@@ -98,5 +126,11 @@
   .detail {
     grid-template-columns: 1fr;
     gap: var(--space-5);
+  }
+}
+
+@media (max-width: 640px) {
+  .cardCompact {
+    min-height: 8.5rem;
   }
 }

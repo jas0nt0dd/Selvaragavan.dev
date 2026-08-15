@@ -1,37 +1,40 @@
-import { useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { useMemo, useRef, useState } from "react";
+import { motion, useReducedMotion, useScroll, useTransform, type MotionValue } from "framer-motion";
 import { PageHeader, Reveal, EmptyState } from "@/components/ui/primitives";
 import { ProjectCard } from "@/components/projects/ProjectCard";
 import { ProjectFilter } from "@/components/projects/ProjectFilter";
 import { projects } from "@/data/projects";
-import type { ProjectCategory } from "@/types";
+import type { Project, ProjectCategory } from "@/types";
 import styles from "./Projects.module.css";
-import { useMemo, useState } from "react";
 
 type FilterState = ProjectCategory | "all";
 
 interface StickyCardProps {
   index: number;
-  project: any;
-  scrollProgress: any;
-  range: [number, number];
-  targetScale: number;
+  isLast: boolean;
+  project: Project;
 }
 
-function StickyCard({ index, project, scrollProgress, range, targetScale }: StickyCardProps) {
+function StickyCard({ index, isLast, project }: StickyCardProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const scale = useTransform(scrollProgress, range, [1, targetScale]);
-  const opacity = useTransform(scrollProgress, range, [1, 1, 0]);
-  const y = useTransform(scrollProgress, range, [0, 0, -80]);
+  const prefersReducedMotion = useReducedMotion();
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"]
+  });
+
+  const scale = useTransform(scrollYProgress, [0, 0.28, 0.78, 1], [0.96, 1, 1, isLast ? 1 : 0.97]);
+  const opacity = useTransform(scrollYProgress, [0, 0.22, 0.82, 1], [0, 1, 1, isLast ? 1 : 0.16]);
+  const y = useTransform(scrollYProgress, [0, 0.26, 0.82, 1], [72, 0, 0, isLast ? 0 : -70]);
+
+  const motionStyle: { scale?: MotionValue<number>; opacity?: MotionValue<number>; y?: MotionValue<number> } = prefersReducedMotion
+    ? {}
+    : { scale, opacity, y };
 
   return (
     <div ref={containerRef} className={styles.stickyContainer}>
       <motion.div
-        style={{
-          scale,
-          opacity,
-          y,
-        }}
+        style={motionStyle}
         className={styles.stickyCard}
       >
         <ProjectCard project={project} index={index} />
@@ -42,12 +45,6 @@ function StickyCard({ index, project, scrollProgress, range, targetScale }: Stic
 
 export function Projects() {
   const [active, setActive] = useState<FilterState>("all");
-  const containerRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end end"],
-  });
-
   const counts = useMemo(() => {
     const map: Record<string, number> = { all: projects.length };
     projects.forEach((p) => p.category.forEach((c) => (map[c] = (map[c] ?? 0) + 1)));
@@ -75,31 +72,16 @@ export function Projects() {
         </div>
 
         {filtered.length > 0 ? (
-          <div 
-            ref={containerRef} 
-            className={styles.stackContainer}
-            style={{
-              paddingBottom: `calc(100vh * ${filtered.length - 1})`
-            }}
-          >
+          <div className={styles.stackContainer}>
             <div className={styles.stack}>
-              {filtered.map((project, i) => {
-                const targetScale = 1;
-                const rangeStart = i / filtered.length;
-                const rangeEnd = (i + 1) / filtered.length;
-                const range: [number, number] = [rangeStart, rangeEnd];
-
-                return (
-                  <StickyCard
-                    key={project.id}
-                    index={i}
-                    project={project}
-                    scrollProgress={scrollYProgress}
-                    range={range}
-                    targetScale={targetScale}
-                  />
-                );
-              })}
+              {filtered.map((project, i) => (
+                <StickyCard
+                  key={project.id}
+                  index={i}
+                  isLast={i === filtered.length - 1}
+                  project={project}
+                />
+              ))}
             </div>
           </div>
         ) : (

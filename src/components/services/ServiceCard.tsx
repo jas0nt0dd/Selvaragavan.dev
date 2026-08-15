@@ -1,21 +1,36 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Icon } from "@/icons/icons";
 import { Tag } from "@/components/ui/primitives";
 import { AsciiGlitchRipple } from "@/components/effects/AsciiGlitchRipple";
 import type { Service } from "@/types";
 import styles from "./ServiceCard.module.css";
 
-export function ServiceCard({ service }: { service: Service }) {
+interface ServiceCardProps {
+  service: Service;
+  compact?: boolean;
+}
+
+export function ServiceCard({ service, compact = false }: ServiceCardProps) {
   const [open, setOpen] = useState(false);
 
+  useEffect(() => {
+    if (compact) setOpen(false);
+  }, [compact]);
+
   return (
-    <article className={`${styles.card} ${open ? styles.cardOpen : ""}`}>
+    <article
+      className={`${styles.card} ${open ? styles.cardOpen : ""} ${compact ? styles.cardCompact : ""}`}
+      data-cursor="interactive"
+    >
       <button
         type="button"
         className={styles.trigger}
         aria-expanded={open}
         aria-controls={`service-${service.id}`}
-        onClick={() => setOpen((v) => !v)}
+        tabIndex={compact ? -1 : 0}
+        onClick={() => {
+          if (!compact) setOpen((v) => !v);
+        }}
       >
         <span className={`${styles.code} mono`}>{service.code}</span>
         <AsciiGlitchRipple as="h3" className={styles.title}>{service.title}</AsciiGlitchRipple>
@@ -32,7 +47,7 @@ export function ServiceCard({ service }: { service: Service }) {
         ))}
       </div>
 
-      <div id={`service-${service.id}`} className={styles.detail} hidden={!open}>
+      <div id={`service-${service.id}`} className={styles.detail} hidden={!open || compact}>
         <div className={styles.detailBlock}>
           <p className={`${styles.detailLabel} mono`}>What I deliver</p>
           <ul className={styles.deliveryList}>

@@ -1,12 +1,13 @@
 .section {
-  padding-block: var(--space-8);
+  padding-top: var(--space-8);
+  padding-bottom: var(--space-6);
 }
 
 .stackContainer {
   position: relative;
   width: 100%;
   margin-top: var(--space-7);
-  padding-top: 30vh;
+  padding-top: clamp(3rem, 18vh, 11rem);
 }
 
 .stack {
@@ -28,6 +29,7 @@
   height: 100vh;
   pointer-events: none;
   z-index: auto;
+  contain: layout;
 }
 
 .stickyCard {
@@ -50,7 +52,7 @@
 
 @media (max-width: 640px) {
   .stackContainer {
-    padding-bottom: calc(100vh * 6);
+    padding-top: var(--space-6);
   }
 
   .stickyCard {

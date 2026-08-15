@@ -1,13 +1,14 @@
+import type { CSSProperties } from "react";
 import { Hero } from "@/components/hero/Hero";
-import { ProjectCard } from "@/components/projects/ProjectCard";
+import { RouteLink } from "@/components/layout/RouteLink";
 import { Reveal, SectionLabel, Button, Divider } from "@/components/ui/primitives";
 import { AsciiGlitchRipple } from "@/components/effects/AsciiGlitchRipple";
-import { projects } from "@/data/projects";
+import { projectCategoryLabels, projects } from "@/data/projects";
 import { services } from "@/data/services";
+import type { Project } from "@/types";
 import styles from "./Home.module.css";
 
 export function Home() {
-  const featured = projects.filter((p) => p.featured).slice(0, 3);
   const serviceSample = services.slice(0, 4);
 
   return (
@@ -30,13 +31,9 @@ export function Home() {
             </div>
           </Reveal>
 
-          <div className={styles.cardGrid}>
-            {featured.map((project, i) => (
-              <Reveal key={project.id} delay={(Math.min(i + 1, 5) as 1 | 2 | 3)}>
-                <ProjectCard project={project} index={i} />
-              </Reveal>
-            ))}
-          </div>
+          <Reveal delay={2}>
+            <HomeProjectFlow projects={projects} />
+          </Reveal>
         </div>
       </section>
 
@@ -89,5 +86,58 @@ export function Home() {
         </div>
       </section>
     </>
+  );
+}
+
+function HomeProjectFlow({ projects: carouselProjects }: { projects: Project[] }) {
+  const count = carouselProjects.length;
+  const animationDuration = count * 4.8;
+
+  return (
+    <div
+      className={styles.projectFlow}
+      style={
+        {
+          "--project-flow-duration": `${animationDuration}s`
+        } as CSSProperties
+      }
+    >
+      {carouselProjects.map((project, index) => {
+        const primaryCategory = project.category[0];
+
+        return (
+          <RouteLink
+            key={project.id}
+            to={`/projects/${project.slug}`}
+            exact={false}
+            className={styles.projectFlowCard}
+            style={
+              {
+                "--project-flow-delay": `${-(index * (animationDuration / count))}s`
+              } as CSSProperties
+            }
+            data-cursor="interactive"
+          >
+            <div className={styles.projectFlowMedia}>
+              {project.media.poster ? (
+                <img src={project.media.poster} alt="" loading="lazy" />
+              ) : (
+                <div className={styles.projectFlowFallback}>
+                  <span className="mono">NO PREVIEW</span>
+                </div>
+              )}
+              <span className={`${styles.projectFlowIndex} mono`}>CASE {String(index + 1).padStart(2, "0")}</span>
+            </div>
+            <div className={styles.projectFlowBody}>
+              <span className={`${styles.projectFlowMeta} mono`}>
+                {primaryCategory ? projectCategoryLabels[primaryCategory] : project.status}
+              </span>
+              <h3>{project.title}</h3>
+              <p>{project.shortDescription}</p>
+            </div>
+          </RouteLink>
+        );
+      })}
+    </div>
   );
 }

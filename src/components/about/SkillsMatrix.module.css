@@ -21,13 +21,253 @@
   gap: var(--space-4);
 }
 
+.solarSystem {
+  --orbit-inner: 8.5rem;
+  --orbit-mid: 14rem;
+  --orbit-outer: 19rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-7);
+  align-items: center;
+  justify-items: center;
+  margin-top: var(--space-7);
+}
+
+.solarSystemExpanded {
+  grid-template-columns: minmax(0, 1.25fr) minmax(22rem, 0.75fr);
+  justify-items: stretch;
+}
+
+.orbitStage {
+  position: relative;
+  width: 100%;
+  max-width: 52rem;
+  min-height: 34rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 1200px;
+  overflow: visible;
+  isolation: isolate;
+}
+
+.orbitStage::before {
+  content: "";
+  position: absolute;
+  inset: 14% 6%;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(196, 23, 43, 0.18), transparent 34%),
+    radial-gradient(circle at 50% 50%, rgba(237, 235, 230, 0.05), transparent 62%);
+  filter: blur(18px);
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+.orbitTilt {
+  position: relative;
+  width: 44rem;
+  height: 44rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: rotateX(65deg) rotateY(-10deg);
+  transform-style: preserve-3d;
+}
+
+.core {
+  position: absolute;
+  z-index: 20;
+  width: 7.25rem;
+  height: 7.25rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  border: 1px solid rgba(196, 23, 43, 0.45);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, rgba(196, 23, 43, 0.22), rgba(16, 20, 27, 0.96) 64%),
+    var(--color-panel);
+  color: var(--color-red-glow);
+  box-shadow:
+    0 0 32px rgba(196, 23, 43, 0.32),
+    inset 0 0 26px rgba(255, 255, 255, 0.04);
+  transform: rotateY(10deg) rotateX(-65deg);
+  transform-style: preserve-3d;
+}
+
+.core::before,
+.core::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  border: 1px dashed rgba(196, 23, 43, 0.24);
+  pointer-events: none;
+}
+
+.core::before {
+  inset: -1.2rem;
+  animation: spin-clockwise 20s linear infinite;
+}
+
+.core::after {
+  inset: -2.3rem;
+  border-color: rgba(154, 163, 178, 0.16);
+  animation: spin-counter 30s linear infinite;
+}
+
+.coreGlow {
+  position: absolute;
+  inset: -1rem;
+  z-index: -1;
+  border-radius: 50%;
+  background: rgba(196, 23, 43, 0.2);
+  filter: blur(18px);
+  animation: sun-pulse 4s ease-in-out infinite alternate;
+}
+
+.coreLabel {
+  font-size: var(--fs-2xs);
+  letter-spacing: var(--ls-wide);
+  color: var(--color-bone-dim);
+}
+
+.orbitLayer {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform-style: preserve-3d;
+}
+
+.orbitRing {
+  position: absolute;
+  border: 1px dashed rgba(154, 163, 178, 0.28);
+  border-radius: 50%;
+  box-shadow:
+    inset 0 0 24px rgba(255, 255, 255, 0.015),
+    0 0 24px rgba(196, 23, 43, 0.04);
+  pointer-events: none;
+}
+
+.orbitNodePath {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  transform-style: preserve-3d;
+  animation: orbit-move var(--orbit-speed) linear infinite;
+}
+
+.orbitNode {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  min-width: 7.8rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.55rem 0.85rem;
+  border: 1px solid rgba(154, 163, 178, 0.22);
+  border-radius: var(--radius-pill);
+  background: rgba(10, 12, 16, 0.74);
+  color: var(--color-bone-dim);
+  font-size: var(--fs-2xs);
+  letter-spacing: var(--ls-wide);
+  white-space: nowrap;
+  backdrop-filter: blur(12px);
+  box-shadow:
+    0 8px 28px rgba(0, 0, 0, 0.42),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  pointer-events: auto;
+  transition:
+    color var(--dur-fast) ease,
+    border-color var(--dur-fast) ease,
+    background var(--dur-fast) ease,
+    box-shadow var(--dur-fast) ease,
+    scale var(--dur-fast) ease;
+  animation: orbit-billboard var(--orbit-speed) linear infinite;
+}
+
+.orbitNode:hover,
+.orbitNode:focus-visible,
+.orbitNodeActive {
+  color: var(--color-bone);
+  border-color: var(--color-red-line);
+  background: rgba(196, 23, 43, 0.18);
+  box-shadow:
+    0 0 28px rgba(196, 23, 43, 0.28),
+    0 12px 34px rgba(0, 0, 0, 0.45);
+  scale: 1.08;
+}
+
+@keyframes orbit-move {
+  0% {
+    transform: translate(-50%, -50%) rotateZ(0deg) translateX(var(--orbit-radius));
+  }
+  100% {
+    transform: translate(-50%, -50%) rotateZ(-360deg) translateX(var(--orbit-radius));
+  }
+}
+
+@keyframes orbit-billboard {
+  0% {
+    transform: translate(-50%, -50%) rotateZ(0deg) rotateY(10deg) rotateX(-65deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotateZ(360deg) rotateY(10deg) rotateX(-65deg);
+  }
+}
+
+@keyframes sun-pulse {
+  0% {
+    transform: scale(0.92);
+    opacity: 0.62;
+  }
+  100% {
+    transform: scale(1.12);
+    opacity: 1;
+  }
+}
+
+@keyframes spin-clockwise {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes spin-counter {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(-360deg); }
+}
+
 .module {
   padding: var(--space-5);
   background: var(--color-panel);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
+  box-shadow: var(--shadow-panel);
   transition: border-color var(--dur-fast) ease;
   height: 100%;
+}
+
+.modulePanel {
+  width: 100%;
+  animation: module-panel-in 360ms var(--ease-signal) both;
+}
+
+@keyframes module-panel-in {
+  0% {
+    opacity: 0;
+    transform: translateX(18px) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
 }
 .module:hover,
 .moduleOpen {
@@ -81,12 +321,55 @@
   color: var(--color-bone-dim);
 }
 
+.skillItem span:nth-child(2) {
+  min-width: 0;
+}
+
 .skillDot {
   width: 5px;
   height: 5px;
   border-radius: 50%;
   background: var(--color-red-signal);
   flex-shrink: 0;
+}
+
+.toolLogo {
+  width: 2.35rem;
+  height: 2.35rem;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(154, 163, 178, 0.2);
+  border-radius: 0.7rem;
+  background:
+    radial-gradient(circle at 50% 15%, rgba(196, 23, 43, 0.12), transparent 72%),
+    rgba(255, 255, 255, 0.035);
+  overflow: hidden;
+}
+
+.toolLogo img {
+  display: block;
+  width: 1.55rem;
+  height: 1.55rem;
+  object-fit: contain;
+}
+
+.toolLogoBadge {
+  width: min(8.5rem, 42vw);
+  border-radius: var(--radius-sm);
+  background: transparent;
+}
+
+.toolLogoBadge img {
+  width: 100%;
+  height: 1.75rem;
+  object-fit: contain;
+}
+
+.toolLogoInterest {
+  filter: saturate(0.55);
+  opacity: 0.75;
 }
 .skillDotInterest {
   background: var(--color-steel);
@@ -141,13 +424,74 @@
   .grid {
     grid-template-columns: repeat(2, 1fr);
   }
+
+  .solarSystem,
+  .solarSystemExpanded {
+    grid-template-columns: 1fr;
+    justify-items: center;
+  }
+
+  .orbitStage {
+    min-height: 31rem;
+  }
+
+  .orbitTilt {
+    width: 36rem;
+    height: 36rem;
+  }
+
+  .modulePanel {
+    max-width: 42rem;
+  }
 }
 
 @media (max-width: 640px) {
+  .solarSystem {
+    --orbit-inner: 5.2rem;
+    --orbit-mid: 8.5rem;
+    --orbit-outer: 11.6rem;
+    gap: var(--space-5);
+  }
+
+  .orbitStage {
+    min-height: 25rem;
+    overflow: hidden;
+  }
+
+  .orbitTilt {
+    width: 27rem;
+    height: 27rem;
+  }
+
+  .core {
+    width: 5.5rem;
+    height: 5.5rem;
+  }
+
+  .orbitNode {
+    min-width: 5.9rem;
+    padding: 0.45rem 0.55rem;
+    font-size: 0.58rem;
+  }
+
   .grid {
     grid-template-columns: 1fr;
   }
   .footerRow {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .orbitNodePath,
+  .orbitNode,
+  .core::before,
+  .core::after,
+  .coreGlow {
+    animation: none !important;
+  }
+
+  .modulePanel {
+    animation: none !important;
   }
 }

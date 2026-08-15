@@ -126,6 +126,8 @@ export interface Certification {
   id: string;
   title: string;
   issuer: string;
+  description?: string;
+  image?: string;
   url?: string;
   verified: boolean;
 }

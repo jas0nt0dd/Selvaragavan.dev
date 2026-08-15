@@ -1,5 +1,6 @@
 import { PageHeader, Reveal, SectionLabel, Button } from "@/components/ui/primitives";
 import { CylinderCarousel } from "@/components/ui/CylinderCarousel";
+import { CertificationStack } from "@/components/credentials/CertificationStack";
 import { AsciiGlitchRipple } from "@/components/effects/AsciiGlitchRipple";
 import { Icon } from "@/icons/icons";
 import { awards, education, certifications } from "@/data/credentials";
@@ -136,22 +137,9 @@ export function Credentials() {
               marked "unverified" until a real URL is added — no fabricated proof links.
             </AsciiGlitchRipple>
           </Reveal>
-          <div className={styles.certGrid}>
-            {certifications.map((cert, i) => (
-              <Reveal key={cert.id} delay={(Math.min(i + 1, 5) as 1 | 2 | 3 | 4 | 5)}>
-                <div className={styles.certCard}>
-                  <div className={styles.certHead}>
-                    <Icon name="file" size={16} />
-                    <span className={`${styles.certStatus} ${cert.verified ? styles.certVerified : ""} mono`}>
-                      {cert.verified ? "Verified" : "Unverified"}
-                    </span>
-                  </div>
-                  <AsciiGlitchRipple as="p" className={styles.certTitle}>{cert.title}</AsciiGlitchRipple>
-                  <AsciiGlitchRipple as="p" className={`${styles.certIssuer} mono`}>{cert.issuer}</AsciiGlitchRipple>
-                </div>
-              </Reveal>
-            ))}
-          </div>
+          <Reveal delay={2}>
+            <CertificationStack certifications={certifications} />
+          </Reveal>
         </div>
       </section>
 

@@ -2,6 +2,26 @@ import { useEffect, useRef, useState } from "react";
 import { usePrefersReducedMotion, useIsTouchDevice } from "@/hooks/useMotionHooks";
 import styles from "./CustomCursor.module.css";
 
+const BAT_CURSOR_SRC = "/assets/bat-black-silhouette-with-opened-wings.png";
+const BAT_HOTSPOT_X = 0.5;
+const BAT_HOTSPOT_Y = 0.73;
+const BAT_LEADER_WIDTH_MOVING = 54;
+const BAT_LEADER_WIDTH_IDLE = 42;
+const BAT_FOLLOWER_WIDTH_MOVING = 24;
+const BAT_FOLLOWER_WIDTH_IDLE = 14;
+const INTERACTIVE_SELECTOR = [
+  "a",
+  "button",
+  "[role='button']",
+  "input",
+  "textarea",
+  "select",
+  "summary",
+  "label",
+  "[tabindex]:not([tabindex='-1'])",
+  "[data-cursor='interactive']"
+].join(", ");
+
 export function CustomCursor() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [active, setActive] = useState(false);
@@ -19,12 +39,12 @@ export function CustomCursor() {
 
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
+    const context = ctx;
 
     document.body.classList.add("has-custom-cursor");
-    setActive(true);
 
     const batImage = new Image();
-    batImage.src = "/assets/apple-touch-icon.png";
+    batImage.src = BAT_CURSOR_SRC;
 
     const mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
     let isMoving = false;
@@ -46,8 +66,12 @@ export function CustomCursor() {
 
     function resizeCanvas() {
       if (!canvas) return;
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+      const dpr = Math.max(1, window.devicePixelRatio || 1);
+      canvas.width = Math.round(window.innerWidth * dpr);
+      canvas.height = Math.round(window.innerHeight * dpr);
+      canvas.style.width = `${window.innerWidth}px`;
+      canvas.style.height = `${window.innerHeight}px`;
+      context.setTransform(dpr, 0, 0, dpr, 0, 0);
     }
 
     function drawImageBat(
@@ -68,7 +92,9 @@ export function CustomCursor() {
 
       const imgW = batImage.naturalWidth;
       const imgH = batImage.naturalHeight;
-      drawingContext.translate(-imgW / 2, -imgH / 2);
+      const hotspotX = isLeader ? imgW * BAT_HOTSPOT_X : imgW / 2;
+      const hotspotY = isLeader ? imgH * BAT_HOTSPOT_Y : imgH / 2;
+      drawingContext.translate(-hotspotX, -hotspotY);
 
       if (isLeader) {
         drawingContext.shadowBlur = 18;
@@ -88,6 +114,11 @@ export function CustomCursor() {
       drawingContext.restore();
     }
 
+    function scaleForWidth(width: number) {
+      if (!batImage.naturalWidth) return width / 512;
+      return width / batImage.naturalWidth;
+    }
+
     const formationOffset = (index: number) => {
       const row = Math.ceil(index / 2);
       const side = index % 2 === 0 ? 1 : -1;
@@ -105,8 +136,8 @@ export function CustomCursor() {
       }, 120);
 
       const el = document.elementFromPoint(event.clientX, event.clientY);
-      const interactive = !!el?.closest("a, button, [role='button'], input, textarea, [data-cursor='interactive']");
-      setHoveringInteractive(interactive);
+      const interactive = !!el?.closest(INTERACTIVE_SELECTOR);
+      setHoveringInteractive((current) => (current === interactive ? current : interactive));
     };
 
     const onLeave = () => {
@@ -126,15 +157,15 @@ export function CustomCursor() {
       const dx = mouse.x - leader.x;
       const dy = mouse.y - leader.y;
       const speed = Math.hypot(dx, dy);
-      leader.x += dx * 0.22;
-      leader.y += dy * 0.22;
+      leader.x = mouse.x;
+      leader.y = mouse.y;
 
       const angle = speed > 0.5 ? Math.atan2(dy, dx) : lastAngle;
       lastAngle = angle;
       const scrollBank = Math.max(-1, Math.min(1, scrollVel * 0.04));
       scrollVel *= 0.88;
 
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      context.clearRect(0, 0, window.innerWidth, window.innerHeight);
 
       for (let index = 1; index < followers.length; index += 1) {
         const bat = followers[index];
@@ -156,22 +187,23 @@ export function CustomCursor() {
           bat.y = leader.y;
         }
 
-        const followerScale = (isMoving ? 0.26 : 0.12) * (0.75 + 0.35 * moveFactor);
+        const followerWidth = (isMoving ? BAT_FOLLOWER_WIDTH_MOVING : BAT_FOLLOWER_WIDTH_IDLE) * (0.75 + 0.35 * moveFactor);
+        const followerScale = scaleForWidth(followerWidth);
         if (isMoving) {
-          ctx.save();
-          ctx.globalAlpha = bat.opacity;
-          drawImageBat(ctx, bat.x, bat.y, followerScale, angle, bat.flap, false);
-          ctx.restore();
+          context.save();
+          context.globalAlpha = bat.opacity;
+          drawImageBat(context, bat.x, bat.y, followerScale, angle, bat.flap, false);
+          context.restore();
         }
       }
 
       leader.flap += 0.22;
-      const leaderScale = isMoving ? 0.52 : 0.33;
-      ctx.save();
-      ctx.shadowBlur = isMoving ? 42 : 22;
-      ctx.shadowColor = isMoving ? "rgba(255, 80, 80, 0.6)" : "rgba(255, 80, 80, 0.28)";
-      drawImageBat(ctx, leader.x, leader.y, leaderScale, angle, leader.flap, true);
-      ctx.restore();
+      const leaderScale = scaleForWidth(isMoving ? BAT_LEADER_WIDTH_MOVING : BAT_LEADER_WIDTH_IDLE);
+      context.save();
+      context.shadowBlur = isMoving ? 42 : 22;
+      context.shadowColor = isMoving ? "rgba(255, 80, 80, 0.6)" : "rgba(255, 80, 80, 0.28)";
+      drawImageBat(context, leader.x, leader.y, leaderScale, angle, leader.flap, true);
+      context.restore();
 
       frame = window.requestAnimationFrame(animate);
     };

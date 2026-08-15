@@ -19,7 +19,6 @@
 
 /* Hide the native cursor site-wide only once the custom cursor is confirmed active */
 :global(body.has-custom-cursor),
-:global(body.has-custom-cursor a),
-:global(body.has-custom-cursor button) {
-  cursor: none;
+:global(body.has-custom-cursor *) {
+  cursor: none !important;
 }
