@@ -1,7 +1,8 @@
-import { PageHeader, Reveal, Divider, Button } from "@/components/ui/primitives";
+import { useEffect, useRef, useState } from "react";
+import { PageHeader, Divider, Button } from "@/components/ui/primitives";
 import { ServiceCard } from "@/components/services/ServiceCard";
-import { AsciiGlitchRipple } from "@/components/effects/AsciiGlitchRipple";
 import { services } from "@/data/services";
+import { usePrefersReducedMotion } from "@/hooks/useMotionHooks";
 import styles from "./Services.module.css";
 
 export function Services() {
@@ -20,26 +21,67 @@ export function Services() {
         <div className="container">
           <div className={styles.grid}>
             {services.map((service, i) => (
-              <Reveal key={service.id} delay={(Math.min((i % 5) + 1, 5) as 1 | 2 | 3 | 4 | 5)}>
+              <ShopfrontReveal key={service.id} index={i}>
                 <ServiceCard service={service} />
-              </Reveal>
+              </ShopfrontReveal>
             ))}
           </div>
 
-          <Reveal>
+          <div className={styles.ctaRow}>
             <Divider label="ENGAGEMENT" />
-            <div className={styles.ctaRow}>
-              <AsciiGlitchRipple as="p" className={styles.ctaText}>
-                Every module above starts as a scoped conversation, not a fixed package. Tell me what you're
-                building and I'll tell you honestly whether it's a fit.
-              </AsciiGlitchRipple>
-              <Button as="link" to="/contact" icon="arrow">
-                Start a conversation
-              </Button>
-            </div>
-          </Reveal>
+            <p className={styles.ctaText}>
+              Every module above starts as a scoped conversation, not a fixed package. Tell me what you're
+              building and I'll tell you honestly whether it's a fit.
+            </p>
+            <Button as="link" to="/contact" icon="arrow">
+              Start a conversation
+            </Button>
+          </div>
         </div>
       </section>
     </>
+  );
+}
+
+/**
+ * Reveals a service module the way passing shopfronts light up as you walk
+ * a street: each card unlocks in sequence as it crosses a trigger line, and
+ * un-reveals (walks back into shadow) if you scroll back past it — no
+ * one-shot "seen it once" state.
+ */
+function ShopfrontReveal({ children, index }: { children: React.ReactNode; index: number }) {
+  const ref = useRef<HTMLDivElement | null>(null);
+  const [state, setState] = useState<"dim" | "lit">("dim");
+  const reducedMotion = usePrefersReducedMotion();
+
+  useEffect(() => {
+    if (reducedMotion) {
+      setState("lit");
+      return;
+    }
+    const node = ref.current;
+    if (!node) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setState(entry.isIntersecting ? "lit" : "dim");
+      },
+      {
+        threshold: 0,
+        rootMargin: "-12% 0px -18% 0px"
+      }
+    );
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [reducedMotion]);
+
+  return (
+    <div
+      ref={ref}
+      className={`${styles.shopfront} ${state === "lit" ? styles.shopfrontLit : ""}`}
+      style={{ ["--shop-delay" as string]: `${(index % 3) * 90}ms` }}
+    >
+      {children}
+    </div>
   );
 }

@@ -6,6 +6,50 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: var(--space-4);
+  margin-bottom: var(--space-9);
+}
+
+.shopfront {
+  position: relative;
+  opacity: 0;
+  transform: translateY(38px) scale(0.97);
+  filter: brightness(0.35) saturate(0.5) blur(1.5px);
+  transition:
+    opacity 520ms var(--ease-signal) var(--shop-delay, 0ms),
+    transform 520ms var(--ease-signal) var(--shop-delay, 0ms),
+    filter 520ms var(--ease-signal) var(--shop-delay, 0ms);
+  will-change: transform, opacity, filter;
+}
+
+.shopfront::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: var(--radius-md);
+  background: radial-gradient(circle at 50% -10%, rgba(196, 23, 43, 0.35), transparent 65%);
+  opacity: 0;
+  transition: opacity 420ms ease var(--shop-delay, 0ms);
+  pointer-events: none;
+  z-index: -1;
+}
+
+.shopfrontLit {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  filter: brightness(1) saturate(1) blur(0);
+}
+
+.shopfrontLit::before {
+  opacity: 1;
+  animation: shop-flicker 700ms ease var(--shop-delay, 0ms);
+}
+
+@keyframes shop-flicker {
+  0% { opacity: 0; }
+  18% { opacity: 0.9; }
+  32% { opacity: 0.15; }
+  46% { opacity: 0.8; }
+  100% { opacity: 1; }
 }
 
 .ctaRow {
@@ -14,15 +58,35 @@
   align-items: center;
   gap: var(--space-6);
   flex-wrap: wrap;
+  margin-top: var(--space-8);
+  padding-top: var(--space-8);
+  border-top: 1px solid var(--color-border);
 }
 
 .ctaText {
   max-width: 52ch;
   font-size: var(--fs-md);
+  color: var(--color-smoke);
 }
 
 @media (max-width: 900px) {
   .grid {
     grid-template-columns: 1fr;
+  }
+
+  .ctaRow {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shopfront,
+  .shopfront::before {
+    transition: none !important;
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
   }
 }
