@@ -20,7 +20,8 @@ function StickyCard({ index, isLast, project }: StickyCardProps) {
   const prefersReducedMotion = useReducedMotion();
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ["start end", "end start"]
+    // The last card has no content after it, so complete its timeline at page bottom.
+    offset: isLast ? ["start end", "end end"] : ["start end", "end start"]
   });
 
   const scale = useTransform(scrollYProgress, [0, 0.28, 0.78, 1], [0.96, 1, 1, isLast ? 1 : 0.97]);
@@ -37,7 +38,7 @@ function StickyCard({ index, isLast, project }: StickyCardProps) {
         style={motionStyle}
         className={styles.stickyCard}
       >
-        <ProjectCard project={project} index={index} />
+        <ProjectCard project={project} index={index} revealProgress={scrollYProgress} />
       </motion.div>
     </div>
   );

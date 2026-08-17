@@ -5,7 +5,7 @@ export const profile = {
   name: "Selvaragavan M",
   alias: "jas0nt0dd",
   location: "Coimbatore, Tamil Nadu, India",
-  roles: ["AI Developer", "ML Engineer", "Gen AI Engineer", "Robotic Engineer"],
+  roles: ["ML Engineer", "Robotics Engineer", "Cybersecurity Enthusiast", "Junior Analyst"],
   degree: "B.Tech, Artificial Intelligence & Data Science",
   institution: "Kathir College of Engineering",
   educationPeriod: "2023–2027",

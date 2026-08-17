@@ -1,13 +1,21 @@
 import { useEffect, useRef, useState, type MouseEvent } from "react";
+import type { MotionValue } from "framer-motion";
 import { RouteLink } from "@/components/layout/RouteLink";
 import { Icon } from "@/icons/icons";
 import { Tag } from "@/components/ui/primitives";
 import { projectCategoryLabels } from "@/data/projects";
-import { usePrefersReducedMotion, useIsTouchDevice } from "@/hooks/useMotionHooks";
+import { useIsTouchDevice, usePrefersReducedMotion } from "@/hooks/useMotionHooks";
 import type { Project } from "@/types";
+import { ProjectDissolveMedia } from "./ProjectDissolveMedia";
 import styles from "./ProjectCard.module.css";
 
-export function ProjectCard({ project, index = 0 }: { project: Project; index?: number }) {
+interface ProjectCardProps {
+  project: Project;
+  index?: number;
+  revealProgress?: MotionValue<number>;
+}
+
+export function ProjectCard({ project, index = 0, revealProgress }: ProjectCardProps) {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const cardRef = useRef<HTMLAnchorElement | null>(null);
   const [posterFailed, setPosterFailed] = useState(false);
@@ -39,23 +47,26 @@ export function ProjectCard({ project, index = 0 }: { project: Project; index?: 
     return () => observer.disconnect();
   }, [reducedMotion]);
 
-  const canAutoplayPreview = !reducedMotion && !isTouch && project.media.video && !videoFailed;
+  const canAutoplayPreview = !reducedMotion && !isTouch && Boolean(project.media.video) && !videoFailed;
 
   const handleEnter = () => {
     if (canAutoplayPreview && videoRef.current) {
       videoRef.current.play().then(() => setPlaying(true)).catch(() => setVideoFailed(true));
     }
   };
+
   const handleLeave = () => {
-    if (videoRef.current) {
-      videoRef.current.pause();
-      videoRef.current.currentTime = 0;
-      setPlaying(false);
-    }
+    if (!videoRef.current) return;
+    videoRef.current.pause();
+    videoRef.current.currentTime = 0;
+    setPlaying(false);
   };
+
   const togglePlay = (event: MouseEvent) => {
     event.preventDefault();
+    event.stopPropagation();
     if (!videoRef.current) return;
+
     if (playing) {
       videoRef.current.pause();
       setPlaying(false);
@@ -85,7 +96,7 @@ export function ProjectCard({ project, index = 0 }: { project: Project; index?: 
       </div>
 
       <div className={styles.mediaFrame}>
-        {project.media.video && !videoFailed && (
+        {project.media.video && !videoFailed ? (
           <video
             ref={videoRef}
             className={styles.media}
@@ -94,12 +105,10 @@ export function ProjectCard({ project, index = 0 }: { project: Project; index?: 
             muted
             loop
             playsInline
-            preload="none"
+            preload="metadata"
             onError={() => setVideoFailed(true)}
           />
-        )}
-
-        {(!project.media.video || videoFailed) && project.media.poster && !posterFailed && (
+        ) : project.media.poster && !posterFailed ? (
           <img
             className={styles.media}
             src={project.media.poster}
@@ -107,24 +116,31 @@ export function ProjectCard({ project, index = 0 }: { project: Project; index?: 
             loading="lazy"
             onError={() => setPosterFailed(true)}
           />
-        )}
-
-        {(posterFailed || (!project.media.poster && (!project.media.video || videoFailed))) && (
+        ) : (
           <div className={styles.mediaFallback}>
             <Icon name="terminal" size={26} />
             <span className="mono">NO PREVIEW ON FILE</span>
           </div>
         )}
 
+        {project.media.poster && !posterFailed && revealProgress && !reducedMotion ? (
+          <ProjectDissolveMedia src={project.media.poster} alt="" progress={revealProgress} />
+        ) : null}
+
         <div className={styles.redactionBars} aria-hidden="true">
           <span /><span /><span /><span />
         </div>
 
-        {canAutoplayPreview && (
-          <button type="button" className={styles.playToggle} onClick={togglePlay} aria-label={playing ? "Pause preview" : "Play preview"}>
+        {canAutoplayPreview ? (
+          <button
+            type="button"
+            className={styles.playToggle}
+            onClick={togglePlay}
+            aria-label={playing ? "Pause preview" : "Play preview"}
+          >
             <Icon name={playing ? "pause" : "play"} size={14} />
           </button>
-        )}
+        ) : null}
 
         {project.featured && <span className={`${styles.featuredBadge} mono`}>FEATURED</span>}
         <div className={styles.scan} />

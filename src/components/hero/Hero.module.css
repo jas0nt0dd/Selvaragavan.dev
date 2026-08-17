@@ -73,36 +73,28 @@
   display: inline-flex;
   align-items: center;
   min-height: 1.5em;
+  min-width: 23ch;
 }
 
 .roleItem {
-  position: absolute;
-  inset: 0 auto auto 0;
+  display: inline-block;
   color: var(--color-red-glow);
   font-size: var(--fs-md);
   font-weight: 700;
   letter-spacing: var(--ls-tight);
-  opacity: 0;
-  transform: translateY(12px);
-  transition: opacity 280ms ease, transform 280ms ease;
   white-space: nowrap;
+  animation: role-cycle-in 320ms var(--ease-signal) both;
 }
 
-.roleItemActive {
-  position: relative;
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* FlipText styling for role display */
-:global(.flip-text-wrapper) {
-  color: var(--color-red-glow);
-  font-size: var(--fs-md);
-  font-weight: 700;
-  letter-spacing: var(--ls-tight);
-  display: inline-flex;
-  align-items: center;
-  min-height: 1.5em;
+@keyframes role-cycle-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.45em);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .subhead {
@@ -143,6 +135,37 @@
   flex-wrap: wrap;
   gap: var(--space-4);
   margin-top: var(--space-7);
+}
+
+.identityAudio {
+  position: absolute;
+  top: var(--space-6);
+  left: 50%;
+  z-index: 2;
+  transform: translateX(-50%);
+}
+
+.identityAudioButton {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 2.5rem;
+  padding: 0.55rem 0.85rem;
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  background: rgba(16, 20, 27, 0.7);
+  color: var(--color-bone);
+  font-size: var(--fs-2xs);
+  letter-spacing: var(--ls-wide);
+  transition: border-color var(--dur-fast) ease, color var(--dur-fast) ease, background var(--dur-fast) ease;
+}
+
+.identityAudioButton:hover,
+.identityAudioButton:focus-visible,
+.identityAudioButton[aria-pressed="true"] {
+  border-color: var(--color-red-line);
+  background: rgba(88, 13, 24, 0.58);
+  color: var(--color-red-glow);
 }
 
 /* -------------------- HUD panel -------------------- */
@@ -262,6 +285,10 @@
   .scrollLine {
     animation: none;
   }
+
+  .roleItem {
+    animation: none;
+  }
 }
 
 @media (max-width: 1080px) {
@@ -282,4 +309,16 @@
     width: 100%;
     justify-content: center;
   }
+
+  .roleSequence {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .roleStream {
+    min-width: 0;
+  }
+
+  .identityAudio { top: var(--space-5); }
 }

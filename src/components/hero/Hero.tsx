@@ -1,17 +1,17 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { RouteLink } from "@/components/layout/RouteLink";
 import { Button, StatusIndicator, Tag } from "@/components/ui/primitives";
 import { Icon } from "@/icons/icons";
 import { profile } from "@/data/profile";
 import { OBJECTWAYS_START_DATE } from "@/data/experience";
 import { usePrefersReducedMotion } from "@/hooks/useMotionHooks";
-import { FlipText } from "@/components/effects/FlipText";
 import { AsciiGlitchRipple } from "@/components/effects/AsciiGlitchRipple";
 import styles from "./Hero.module.css";
 
 export function Hero() {
   return (
     <section className={styles.hero} aria-label="Introduction">
+      <WhoAmIButton />
       <div className={`container ${styles.grid}`}>
         <div className={styles.copy}>
           <div className={styles.eyebrow}>
@@ -27,9 +27,7 @@ export function Hero() {
 
           <div className={styles.roleSequence} aria-live="polite">
             <span className={`${styles.roleLabel} mono`}>CURRENT ROLE</span>
-            <FlipText duration={2.8} delay={0.2}>
-              {profile.roles[0]}
-            </FlipText>
+            <RoleCycler />
           </div>
 
           <AsciiGlitchRipple as="p" className={styles.subhead}>{profile.subhead}</AsciiGlitchRipple>
@@ -51,6 +49,7 @@ export function Hero() {
               Open a Channel
             </Button>
           </div>
+
         </div>
 
         <aside className={styles.panel} aria-label="System status readout">
@@ -119,6 +118,70 @@ function TypewriterName() {
       <span>{typed}</span>
       <span className="visually-hidden">{full}</span>
     </span>
+  );
+}
+
+function RoleCycler() {
+  const reducedMotion = usePrefersReducedMotion();
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  useEffect(() => {
+    if (reducedMotion) return;
+
+    const interval = window.setInterval(() => {
+      setActiveIndex((current) => (current + 1) % profile.roles.length);
+    }, 3000);
+
+    return () => window.clearInterval(interval);
+  }, [reducedMotion]);
+
+  const role = profile.roles[activeIndex];
+
+  return (
+    <span className={styles.roleStream}>
+      <span key={role} className={styles.roleItem}>{role}</span>
+    </span>
+  );
+}
+
+function WhoAmIButton() {
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  const toggleAudio = () => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    if (isPlaying) {
+      audio.pause();
+      setIsPlaying(false);
+      return;
+    }
+
+    audio.currentTime = 0;
+    audio.play().then(() => setIsPlaying(true)).catch(() => setIsPlaying(false));
+  };
+
+  return (
+    <div className={styles.identityAudio}>
+      <audio
+        ref={audioRef}
+        src="/assets/audio/who-am-i.mp3"
+        preload="metadata"
+        onEnded={() => setIsPlaying(false)}
+        onPause={() => setIsPlaying(false)}
+      />
+      <button
+        type="button"
+        className={styles.identityAudioButton}
+        onClick={toggleAudio}
+        aria-pressed={isPlaying}
+        aria-label={isPlaying ? "Pause identity transmission" : "Play identity transmission"}
+      >
+        <Icon name={isPlaying ? "pause" : "play"} size={14} />
+        <span className="mono">{isPlaying ? "TRANSMISSION ACTIVE" : "WHO AM I?"}</span>
+      </button>
+    </div>
   );
 }
 
