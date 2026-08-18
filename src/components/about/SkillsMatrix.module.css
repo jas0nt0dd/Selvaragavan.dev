@@ -447,20 +447,20 @@
 
 @media (max-width: 640px) {
   .solarSystem {
-    --orbit-inner: 5.2rem;
-    --orbit-mid: 8.5rem;
-    --orbit-outer: 11.6rem;
+    --orbit-inner: 4rem;
+    --orbit-mid: 6.5rem;
+    --orbit-outer: 8.8rem;
     gap: var(--space-5);
   }
 
   .orbitStage {
-    min-height: 25rem;
+    min-height: 22rem;
     overflow: hidden;
   }
 
   .orbitTilt {
-    width: 27rem;
-    height: 27rem;
+    width: min(23rem, 100vw);
+    height: min(23rem, 100vw);
   }
 
   .core {
@@ -469,9 +469,9 @@
   }
 
   .orbitNode {
-    min-width: 5.9rem;
-    padding: 0.45rem 0.55rem;
-    font-size: 0.58rem;
+    min-width: 5rem;
+    padding: 0.4rem 0.45rem;
+    font-size: 0.53rem;
   }
 
   .grid {

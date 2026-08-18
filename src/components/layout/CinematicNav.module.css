@@ -227,6 +227,24 @@
 }
 
 @media (max-width: 640px) {
+  .bar {
+    padding: var(--space-3) var(--page-gutter);
+  }
+
+  .brand {
+    max-width: calc(100vw - 5.5rem);
+    padding: var(--space-2);
+  }
+
+  .brandText {
+    font-size: 0.65rem;
+  }
+
+  .trigger {
+    width: 2.75rem;
+    height: 2.75rem;
+  }
+
   .overlayScan {
     left: -110vw;
     top: -32vh;

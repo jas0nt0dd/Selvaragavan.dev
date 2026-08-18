@@ -55,3 +55,18 @@
   color: var(--color-steel);
   flex-shrink: 0;
 }
+
+@media (max-width: 640px) {
+  .panel {
+    padding: var(--space-4);
+  }
+
+  .channel {
+    align-items: flex-start;
+    padding-inline: 0;
+  }
+
+  .channelValue {
+    overflow-wrap: anywhere;
+  }
+}

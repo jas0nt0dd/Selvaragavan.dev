@@ -100,6 +100,24 @@
 }
 
 @media (max-width: 640px) {
+  .footer {
+    padding-block: var(--space-5);
+  }
+
+  .footerInner {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .footerNav {
+    gap: var(--space-3) var(--space-4);
+  }
+
+  .footerSocials {
+    gap: var(--space-5);
+  }
+
   .footerMeta {
     flex-direction: column;
     gap: var(--space-1);

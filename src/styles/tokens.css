@@ -101,3 +101,12 @@
   background: var(--color-red-signal);
   color: var(--color-bone);
 }
+
+@media (max-width: 640px) {
+  :root {
+    --page-gutter: 1rem;
+    --space-8: 3.5rem;
+    --space-9: 5rem;
+    --space-10: 6.5rem;
+  }
+}

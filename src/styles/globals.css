@@ -9,6 +9,8 @@
 html {
   color-scheme: dark;
   scroll-behavior: smooth;
+  overflow-x: clip;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
@@ -69,6 +71,7 @@ input, textarea, select {
   font-family: inherit;
   font-size: inherit;
   color: inherit;
+  max-width: 100%;
 }
 
 /* Visible, tactical focus ring everywhere — never remove outline without replacement */
@@ -175,5 +178,11 @@ input, textarea, select {
   ::view-transition-old(root),
   ::view-transition-new(root) {
     animation: none !important;
+  }
+}
+
+@media (max-width: 640px) {
+  ::-webkit-scrollbar {
+    width: 6px;
   }
 }

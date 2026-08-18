@@ -128,3 +128,28 @@
     max-width: 320px;
   }
 }
+
+@media (max-width: 640px) {
+  .section {
+    padding-block: var(--space-8);
+  }
+
+  .frame {
+    max-width: min(100%, 18rem);
+  }
+
+  .about {
+    font-size: var(--fs-base);
+  }
+
+  .motto {
+    font-size: var(--fs-md);
+  }
+
+  .factGrid {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+    margin-top: var(--space-5);
+    padding-top: var(--space-5);
+  }
+}

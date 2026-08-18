@@ -195,3 +195,25 @@
     gap: var(--space-3);
   }
 }
+
+@media (max-width: 640px) {
+  .button {
+    min-height: 2.75rem;
+    padding: 0.7rem 1rem;
+    white-space: normal;
+    text-align: center;
+  }
+
+  .pageHeader {
+    padding-top: 7rem;
+    padding-bottom: var(--space-6);
+  }
+
+  .pageHeaderTitle {
+    font-size: clamp(2rem, 11vw, 2.8rem);
+  }
+
+  .pageHeaderDescription {
+    font-size: var(--fs-base);
+  }
+}

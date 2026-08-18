@@ -302,7 +302,52 @@
 
 @media (max-width: 640px) {
   .hero {
-    padding-top: var(--space-8);
+    display: block;
+    min-height: 0;
+    padding-top: 9.5rem;
+    padding-bottom: var(--space-7);
+  }
+
+  .grid {
+    gap: var(--space-6);
+  }
+
+  .identityAudio {
+    top: 5rem;
+  }
+
+  .headline {
+    gap: var(--space-3);
+  }
+
+  .headlineName {
+    font-size: clamp(2.3rem, 11vw, 3.15rem);
+  }
+
+  .headlineSub {
+    font-size: var(--fs-md);
+  }
+
+  .subhead {
+    font-size: var(--fs-base);
+  }
+
+  .markers {
+    gap: var(--space-2);
+    margin-top: var(--space-5);
+  }
+
+  .marker {
+    padding: 0.45rem 0.65rem;
+  }
+
+  .ctas {
+    margin-top: var(--space-6);
+  }
+
+  .panel {
+    order: initial;
+    padding: var(--space-4);
   }
   .ctas .button,
   .ctas a {
@@ -320,5 +365,10 @@
     min-width: 0;
   }
 
-  .identityAudio { top: var(--space-5); }
+  .scrollCue {
+    position: static;
+    width: fit-content;
+    margin: var(--space-6) auto 0;
+    transform: none;
+  }
 }

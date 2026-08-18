@@ -40,6 +40,22 @@
   transform-origin: center;
 }
 
+@media (max-width: 640px) {
+  .stackContainer {
+    margin-top: var(--space-6);
+    padding-top: 0;
+  }
+
+  .stickyContainer {
+    height: 100svh;
+    padding: 5.5rem var(--page-gutter) var(--space-4);
+  }
+
+  .stickyCard {
+    width: 100%;
+  }
+}
+
 .empty {
   margin-top: var(--space-7);
 }

@@ -234,8 +234,8 @@
   }
 
   .carouselTrack {
-    height: 410px;
-    overflow: hidden;
+    height: 38rem;
+    overflow: clip;
   }
 
   .carouselItem:not(.carouselItemActive) {
@@ -250,6 +250,12 @@
   .carouselDots {
     max-width: min(16rem, 54vw);
     overflow: hidden;
+  }
+
+  .carouselControl {
+    width: 2.75rem;
+    height: 2.75rem;
+    flex-shrink: 0;
   }
 }
 
