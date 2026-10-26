@@ -1,7 +1,8 @@
 import { Suspense, useRef } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Center, OrbitControls, useGLTF } from "@react-three/drei";
-import type { Group } from "three";
+import { Vector3, type Group } from "three";
+import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 import { usePrefersReducedMotion } from "@/hooks/useMotionHooks";
 import styles from "./Hero.module.css";
 
@@ -27,6 +28,48 @@ function BatLogo() {
   );
 }
 
+function BatLogoControls({ reducedMotion }: { reducedMotion: boolean }) {
+  const controlsRef = useRef<OrbitControlsImpl | null>(null);
+  const returningHome = useRef(false);
+  const homePosition = useRef(new Vector3(0, 0, 4));
+  const homeTarget = useRef(new Vector3(0, 0, 0));
+  const { camera } = useThree();
+
+  useFrame((_, delta) => {
+    const controls = controlsRef.current;
+    if (!controls || !returningHome.current) return;
+
+    controls.update();
+    const ease = Math.min(1, delta * 3);
+    camera.position.lerp(homePosition.current, ease);
+    controls.target.lerp(homeTarget.current, ease);
+
+    if (camera.position.distanceTo(homePosition.current) < 0.01 && controls.target.length() < 0.01) {
+      camera.position.set(0, 0, 4);
+      controls.target.set(0, 0, 0);
+      returningHome.current = false;
+    }
+  });
+
+  return (
+    <OrbitControls
+      ref={controlsRef}
+      enablePan={false}
+      enableZoom={false}
+      enableRotate={!reducedMotion}
+      enableDamping
+      dampingFactor={0.08}
+      rotateSpeed={0.55}
+      onStart={() => {
+        returningHome.current = false;
+      }}
+      onEnd={() => {
+        if (!reducedMotion) returningHome.current = true;
+      }}
+    />
+  );
+}
+
 useGLTF.preload(MODEL_PATH);
 
 export function BatLogoModel() {
@@ -46,13 +89,7 @@ export function BatLogoModel() {
         <Suspense fallback={null}>
           <BatLogo />
         </Suspense>
-        <OrbitControls
-          enablePan={false}
-          enableZoom={false}
-          enableRotate={!reducedMotion}
-          autoRotate={false}
-          rotateSpeed={0.55}
-        />
+        <BatLogoControls reducedMotion={reducedMotion} />
       </Canvas>
       <span className={`${styles.modelHint} mono`} aria-hidden="true">
         DRAG TO INSPECT
