@@ -192,6 +192,7 @@
 }
 
 .videoContainer {
+  position: relative;
   padding-block: var(--space-4);
   display: flex;
   align-items: center;
@@ -202,11 +203,30 @@
   aspect-ratio: 3 / 2;
 }
 
-.statusVideo {
+.modelContainer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.modelCanvas {
   width: 100%;
   height: 100%;
-  object-fit: cover;
   display: block;
+}
+
+.modelHint {
+  position: absolute;
+  right: var(--space-3);
+  bottom: var(--space-3);
+  padding: 0.25rem 0.45rem;
+  border: 1px solid rgba(196, 23, 43, 0.38);
+  border-radius: var(--radius-sm);
+  background: rgba(5, 7, 10, 0.62);
+  color: var(--color-red-glow);
+  font-size: var(--fs-2xs);
+  letter-spacing: var(--ls-wide);
+  pointer-events: none;
 }
 
 .log {

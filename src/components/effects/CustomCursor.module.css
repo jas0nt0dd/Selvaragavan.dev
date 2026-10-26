@@ -14,7 +14,9 @@
 }
 
 .canvas.hovering {
-  filter: drop-shadow(0 0 18px rgba(255, 35, 35, 0.8));
+  filter:
+    drop-shadow(0 0 10px rgba(255, 59, 78, 0.95))
+    drop-shadow(0 0 28px rgba(255, 59, 78, 0.82));
 }
 
 /* Hide the native cursor site-wide only once the custom cursor is confirmed active */

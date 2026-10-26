@@ -6,6 +6,7 @@ import { profile } from "@/data/profile";
 import { OBJECTWAYS_START_DATE } from "@/data/experience";
 import { usePrefersReducedMotion } from "@/hooks/useMotionHooks";
 import { AsciiGlitchRipple } from "@/components/effects/AsciiGlitchRipple";
+import { BatLogoModel } from "./BatLogoModel";
 import styles from "./Hero.module.css";
 
 export function Hero() {
@@ -58,15 +59,7 @@ export function Hero() {
             <Icon name="cpu" size={16} />
           </div>
           <div className={styles.videoContainer}>
-            <video
-              className={styles.statusVideo}
-              src="/assets/metal-human/metal-human.mp4"
-              poster="/assets/metal-human/metal-human.jpg"
-              autoPlay
-              loop
-              muted
-              playsInline
-            />
+            <BatLogoModel />
           </div>
           <div className={styles.panelFoot}>
             <RoleTicker />

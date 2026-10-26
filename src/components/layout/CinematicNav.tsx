@@ -105,6 +105,12 @@ export function CinematicNav() {
         aria-modal="true"
         aria-label="Site navigation"
         aria-hidden={!open}
+        onClick={(event) => {
+          if (event.target === event.currentTarget) {
+            setOpen(false);
+            triggerRef.current?.focus();
+          }
+        }}
       >
         <div className={styles.overlayGrid} aria-hidden="true" />
         <div className={styles.overlayScan} aria-hidden="true" />
@@ -141,6 +147,10 @@ export function CinematicNav() {
                 onMouseLeave={() => setHovered(null)}
                 onFocus={() => setHovered(i)}
                 onBlur={() => setHovered(null)}
+                onClick={() => {
+                  setOpen(false);
+                  triggerRef.current?.focus();
+                }}
               >
                 <span className={`${styles.nodeIndex} mono`}>{item.index}</span>
                 <span className={styles.nodeLabel}>{item.label}</span>

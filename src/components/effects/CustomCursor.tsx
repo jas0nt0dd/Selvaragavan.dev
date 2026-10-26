@@ -97,15 +97,15 @@ export function CustomCursor() {
       drawingContext.translate(-hotspotX, -hotspotY);
 
       if (isLeader) {
-        drawingContext.shadowBlur = 18;
-        drawingContext.shadowColor = "rgba(255, 80, 80, 0.42)";
+        drawingContext.shadowBlur = 28;
+        drawingContext.shadowColor = "rgba(255, 59, 78, 0.78)";
       }
 
       drawingContext.drawImage(batImage, 0, 0, imgW, imgH);
 
       if (isLeader) {
         drawingContext.globalCompositeOperation = "screen";
-        drawingContext.fillStyle = "rgba(255, 80, 80, 0.18)";
+        drawingContext.fillStyle = "rgba(255, 59, 78, 0.34)";
         drawingContext.beginPath();
         drawingContext.ellipse(imgW / 2, imgH / 2, imgW * 0.24, imgH * 0.14, 0, 0, Math.PI * 2);
         drawingContext.fill();
@@ -200,8 +200,8 @@ export function CustomCursor() {
       leader.flap += 0.22;
       const leaderScale = scaleForWidth(isMoving ? BAT_LEADER_WIDTH_MOVING : BAT_LEADER_WIDTH_IDLE);
       context.save();
-      context.shadowBlur = isMoving ? 42 : 22;
-      context.shadowColor = isMoving ? "rgba(255, 80, 80, 0.6)" : "rgba(255, 80, 80, 0.28)";
+      context.shadowBlur = isMoving ? 58 : 34;
+      context.shadowColor = isMoving ? "rgba(255, 59, 78, 0.88)" : "rgba(255, 59, 78, 0.48)";
       drawImageBat(context, leader.x, leader.y, leaderScale, angle, leader.flap, true);
       context.restore();
 
