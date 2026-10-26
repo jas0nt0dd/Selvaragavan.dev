@@ -24,6 +24,7 @@ export function ProjectCard({ project, index = 0, revealProgress }: ProjectCardP
   const [declassified, setDeclassified] = useState(false);
   const reducedMotion = usePrefersReducedMotion();
   const isTouch = useIsTouchDevice();
+  const canAutoplayPreview = !reducedMotion && !isTouch && Boolean(project.media.video) && !videoFailed;
 
   useEffect(() => {
     if (reducedMotion) {
@@ -47,19 +48,37 @@ export function ProjectCard({ project, index = 0, revealProgress }: ProjectCardP
     return () => observer.disconnect();
   }, [reducedMotion]);
 
-  const canAutoplayPreview = !reducedMotion && !isTouch && Boolean(project.media.video) && !videoFailed;
+  useEffect(() => {
+    if (!canAutoplayPreview) return;
+    const node = cardRef.current;
+    if (!node) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const video = videoRef.current;
+          if (!video) return;
+
+          if (entry.isIntersecting) {
+            video.play().then(() => setPlaying(true)).catch(() => setVideoFailed(true));
+          } else {
+            video.pause();
+            video.currentTime = 0;
+            setPlaying(false);
+          }
+        });
+      },
+      { threshold: 0.35 }
+    );
+
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [canAutoplayPreview]);
 
   const handleEnter = () => {
     if (canAutoplayPreview && videoRef.current) {
       videoRef.current.play().then(() => setPlaying(true)).catch(() => setVideoFailed(true));
     }
-  };
-
-  const handleLeave = () => {
-    if (!videoRef.current) return;
-    videoRef.current.pause();
-    videoRef.current.currentTime = 0;
-    setPlaying(false);
   };
 
   const togglePlay = (event: MouseEvent) => {
@@ -87,7 +106,6 @@ export function ProjectCard({ project, index = 0, revealProgress }: ProjectCardP
       }}
       exact={false}
       onMouseEnter={handleEnter}
-      onMouseLeave={handleLeave}
       data-cursor="interactive"
     >
       <div className={styles.folderTab}>
@@ -105,6 +123,7 @@ export function ProjectCard({ project, index = 0, revealProgress }: ProjectCardP
             muted
             loop
             playsInline
+            autoPlay
             preload="metadata"
             onError={() => setVideoFailed(true)}
           />
