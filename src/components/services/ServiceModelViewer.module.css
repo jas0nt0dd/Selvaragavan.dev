@@ -1,0 +1,24 @@
+.viewer {
+  display: contents;
+}
+
+.canvas {
+  display: block;
+  width: min(100%, 26rem);
+  height: clamp(13rem, 24vw, 18rem);
+  margin: 0 auto;
+  pointer-events: auto;
+  touch-action: none;
+  cursor: grab;
+}
+
+.canvas:active {
+  cursor: grabbing;
+}
+
+@media (max-width: 640px) {
+  .canvas {
+    width: min(88vw, 24rem);
+    height: 14rem;
+  }
+}

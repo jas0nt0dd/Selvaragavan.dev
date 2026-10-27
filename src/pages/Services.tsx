@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState, type KeyboardEvent, type Reac
 import { AnimatePresence, motion } from "framer-motion";
 import { PageHeader, Divider, Button } from "@/components/ui/primitives";
 import { ServiceCard } from "@/components/services/ServiceCard";
+import { ServiceModelViewer } from "@/components/services/ServiceModelViewer";
 import { services } from "@/data/services";
 import { usePrefersReducedMotion } from "@/hooks/useMotionHooks";
 import { Icon } from "@/icons/icons";
@@ -194,6 +195,20 @@ function CircularServiceCarousel({ items }: { items: Service[] }) {
           <span className={`${styles.carouselTotal} mono`}>of {String(total).padStart(2, "0")}</span>
         </motion.div>
       </div>
+
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={activeService.id}
+          initial={{ opacity: 0, y: 10, scale: 0.94 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: -10, scale: 0.94 }}
+          transition={{ duration: reducedMotion ? 0 : 0.32, ease: "easeOut" }}
+          className={styles.modelStage}
+          aria-live="polite"
+        >
+          <ServiceModelViewer service={activeService} />
+        </motion.div>
+      </AnimatePresence>
 
       <div className={styles.carouselControls}>
         <button

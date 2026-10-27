@@ -59,6 +59,15 @@
   z-index: 0;
 }
 
+.modelStage {
+  position: relative;
+  z-index: 4;
+  width: 100%;
+  display: grid;
+  place-items: center;
+  pointer-events: auto;
+}
+
 .carouselNumber {
   font-size: clamp(3.25rem, 9vw, 7rem);
   line-height: 0.9;
