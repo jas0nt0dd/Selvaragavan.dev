@@ -41,6 +41,10 @@
 }
 
 @media (max-width: 640px) {
+  .section {
+    padding-block: var(--space-7) var(--space-8);
+  }
+
   .stackContainer {
     margin-top: var(--space-6);
     padding-top: 0;
@@ -48,11 +52,12 @@
 
   .stickyContainer {
     height: 100svh;
+    min-height: 34rem;
     padding: 5.5rem var(--page-gutter) var(--space-4);
   }
 
   .stickyCard {
-    width: 100%;
+    width: min(100%, 34rem);
   }
 }
 

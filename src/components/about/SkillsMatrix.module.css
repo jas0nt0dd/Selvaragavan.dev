@@ -455,7 +455,7 @@
 
   .orbitStage {
     min-height: 22rem;
-    overflow: hidden;
+    overflow: visible;
   }
 
   .orbitTilt {

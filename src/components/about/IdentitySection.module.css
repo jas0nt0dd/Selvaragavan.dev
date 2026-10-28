@@ -138,6 +138,10 @@
     max-width: min(100%, 18rem);
   }
 
+  .monogram span {
+    font-size: 4rem;
+  }
+
   .about {
     font-size: var(--fs-base);
   }

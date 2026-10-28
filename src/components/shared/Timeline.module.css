@@ -104,3 +104,22 @@
   font-size: var(--fs-2xs);
   color: var(--color-red-glow);
 }
+
+@media (max-width: 640px) {
+  .item {
+    grid-template-columns: 22px minmax(0, 1fr);
+    gap: var(--space-3);
+  }
+
+  .content {
+    padding-bottom: var(--space-6);
+  }
+
+  .itemTitle {
+    font-size: var(--fs-md);
+  }
+
+  .itemDescription {
+    font-size: var(--fs-xs);
+  }
+}

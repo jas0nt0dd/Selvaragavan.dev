@@ -10,6 +10,8 @@
 }
 
 .carousel {
+  position: relative;
+  isolation: isolate;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -23,7 +25,7 @@
   position: relative;
   width: 100%;
   max-width: 74rem;
-  height: 530px;
+  height: 720px;
   overflow: visible;
 }
 
@@ -61,11 +63,14 @@
 
 .modelStage {
   position: relative;
-  z-index: 4;
+  z-index: 999;
   width: 100%;
+  height: 960px;
+  margin-block: -320px;
   display: grid;
   place-items: center;
   pointer-events: auto;
+  overflow: visible;
 }
 
 .carouselNumber {
@@ -83,15 +88,21 @@
 }
 
 .carouselControls {
-  position: relative;
-  z-index: 20;
+  position: absolute;
+  top: 360px;
+  left: 0;
+  z-index: 2000;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: var(--space-4);
+  pointer-events: none;
 }
 
 .carouselControl {
+  position: absolute;
+  pointer-events: auto;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -125,7 +136,17 @@
   transform: rotate(180deg);
 }
 
+.carouselControlPrev {
+  left: max(0.5rem, calc((100% - 74rem) / 2));
+}
+
+.carouselControl:not(.carouselControlPrev) {
+  right: max(0.5rem, calc((100% - 74rem) / 2));
+}
+
 .carouselDots {
+  position: absolute;
+  top: 780px;
   display: flex;
   align-items: center;
   gap: var(--space-2);
@@ -223,7 +244,11 @@
   }
 
   .carouselTrack {
-    height: 460px;
+    height: 620px;
+  }
+
+  .carouselControls {
+    top: 310px;
   }
 
   .carouselItem,
@@ -240,11 +265,25 @@
 @media (max-width: 640px) {
   .carousel {
     gap: var(--space-5);
+    min-height: 0;
   }
 
   .carouselTrack {
-    height: 38rem;
-    overflow: clip;
+    height: 44rem;
+    overflow: visible;
+  }
+
+  .modelStage {
+    height: 40rem;
+    margin-block: -10rem;
+  }
+
+  .carouselControls {
+    top: 22rem;
+  }
+
+  .carouselDots {
+    top: 44rem;
   }
 
   .carouselItem:not(.carouselItemActive) {
@@ -265,6 +304,23 @@
     width: 2.75rem;
     height: 2.75rem;
     flex-shrink: 0;
+  }
+
+  .carouselControlPrev {
+    left: 0;
+  }
+
+  .carouselControl:not(.carouselControlPrev) {
+    right: 0;
+  }
+
+  .ctaRow {
+    margin-top: var(--space-6);
+    padding-top: var(--space-6);
+  }
+
+  .ctaText {
+    font-size: var(--fs-base);
   }
 }
 

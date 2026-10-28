@@ -114,3 +114,24 @@
   word-wrap: break-word;
   overflow-wrap: break-word;
 }
+
+@media (max-width: 700px) {
+  .wrapper {
+    min-height: 520px;
+  }
+
+  .carousel {
+    height: 380px;
+  }
+
+  .card {
+    width: min(15rem, 76vw);
+    height: 18rem;
+    margin-left: min(-7.5rem, -38vw);
+    margin-top: -9rem;
+  }
+
+  .cardTitle {
+    font-size: var(--fs-sm);
+  }
+}

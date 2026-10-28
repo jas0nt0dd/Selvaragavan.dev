@@ -11,7 +11,7 @@ const MODEL_PATHS: Record<Service["id"], string> = {
   "genai-prototypes": "/assets/3D/cyber_butterfly.glb",
   "workflow-automation": "/assets/3D/neural_brain.glb",
   "computer-vision": "/assets/3D/cv_eye_logo.glb",
-  "security-tooling": "/assets/3D/crimson_hooded_figure.glb",
+  "security-tooling": "/assets/3D/hooded_figure_3d_crimson.glb",
   "robotics-hardware": "/assets/3D/holo_robot_full.glb",
   "fullstack-ai": "/assets/3D/tech_cubes.glb",
   "mlops-environments": "/assets/3D/tech_cloud.glb",
@@ -20,12 +20,12 @@ const MODEL_PATHS: Record<Service["id"], string> = {
 };
 
 const MODEL_SCALE_OVERRIDES: Partial<Record<Service["id"], number>> = {
-  "genai-prototypes": 0.78,
-  "computer-vision": 0.82,
-  "security-tooling": 0.82,
-  "workflow-automation": 1.18,
-  "robotics-hardware": 1.18,
-  "research-prototypes": 1.18
+  "genai-prototypes": 0.8,
+  "computer-vision": 0.86,
+  "security-tooling": 0.95,
+  "workflow-automation": 1.1,
+  "robotics-hardware": 1.05,
+  "research-prototypes": 1.1
 };
 
 function ServiceModel({ path, serviceId }: { path: string; serviceId: Service["id"] }) {
@@ -36,7 +36,7 @@ function ServiceModel({ path, serviceId }: { path: string; serviceId: Service["i
     const bounds = new Box3().setFromObject(model.scene);
     const size = bounds.getSize(new Vector3());
     const largestDimension = Math.max(size.x, size.y, size.z);
-    const normalizedScale = largestDimension > 0 ? 3.4 / largestDimension : 1;
+    const normalizedScale = largestDimension > 0 ? 2 / largestDimension : 1;
     return normalizedScale * (MODEL_SCALE_OVERRIDES[serviceId] ?? 1);
   }, [model.scene, serviceId]);
 
