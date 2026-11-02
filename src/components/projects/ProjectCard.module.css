@@ -6,44 +6,11 @@
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   overflow: hidden;
-  opacity: 0;
-  transform:
-    perspective(1200px)
-    rotateX(10deg)
-    rotateY(var(--stack-tilt, 0deg))
-    translate3d(0, 42px, -20px)
-    scale(0.94);
-  filter: brightness(0.45) saturate(0.38) blur(0.3px);
   transition:
-    opacity 620ms var(--ease-signal) var(--stagger, 0ms),
-    transform 620ms var(--ease-signal) var(--stagger, 0ms),
-    filter 620ms var(--ease-signal) var(--stagger, 0ms),
     border-color var(--dur-fast) ease,
     box-shadow var(--dur-med) var(--ease-tactical),
     margin-top 620ms var(--ease-signal) var(--stagger, 0ms);
-  will-change: transform, opacity, filter;
   box-shadow: inset 0 0 0 1px rgba(255,255,255,0.02), 0 22px 32px rgba(0,0,0,0.28);
-}
-
-.cardDeclassified {
-  opacity: 1;
-  transform: perspective(1200px) rotateX(0deg) rotateY(0deg) translate3d(0, 0, 0) scale(1);
-  filter: brightness(1) saturate(1) blur(0);
-  animation: drawer-unlock 640ms var(--ease-tactical) var(--stagger, 0ms) both;
-}
-
-@keyframes drawer-unlock {
-  0% {
-    clip-path: inset(0 0 100% 0 round var(--radius-lg));
-    transform: perspective(1200px) rotateX(12deg) rotateY(var(--stack-tilt, 0deg)) translate3d(0, 26px, -20px) scale(0.96);
-  }
-  45% {
-    clip-path: inset(0 0 0 0 round var(--radius-lg));
-  }
-  100% {
-    clip-path: inset(0 0 0 0 round var(--radius-lg));
-    transform: perspective(1200px) rotateX(0deg) rotateY(0deg) translate3d(0, 0, 0) scale(1);
-  }
 }
 
 .card:hover,
@@ -75,16 +42,6 @@
   letter-spacing: var(--ls-wide);
   color: var(--color-steel);
   transition: color 400ms ease var(--stagger, 0ms);
-}
-.cardDeclassified .tabStatus {
-  color: var(--color-red-glow);
-  animation: stamp-in 480ms var(--ease-tactical) var(--stagger, 0ms) both;
-}
-
-@keyframes stamp-in {
-  0% { opacity: 0; transform: scale(1.6) rotate(-6deg); letter-spacing: 0.5em; }
-  60% { opacity: 1; }
-  100% { opacity: 1; transform: scale(1) rotate(0deg); letter-spacing: var(--ls-wide); }
 }
 
 /* -------------------- Media frame -------------------- */
@@ -130,40 +87,6 @@
   letter-spacing: var(--ls-wide);
 }
 
-/* -------------------- Redaction bars: slide away on declassify -------------------- */
-
-.redactionBars {
-  position: absolute;
-  inset: 0;
-  z-index: 3;
-  display: flex;
-  flex-direction: column;
-  pointer-events: none;
-}
-.redactionBars span {
-  flex: 1;
-  background: #05070a;
-  transform: scaleX(1);
-  transform-origin: left;
-  border-bottom: 1px solid rgba(196, 23, 43, 0.25);
-  transition: transform 560ms var(--ease-tactical);
-}
-.redactionBars span:nth-child(1) { transition-delay: calc(var(--stagger, 0ms) + 60ms); }
-.redactionBars span:nth-child(2) { transition-delay: calc(var(--stagger, 0ms) + 140ms); transform-origin: right; }
-.redactionBars span:nth-child(3) { transition-delay: calc(var(--stagger, 0ms) + 220ms); }
-.redactionBars span:nth-child(4) { transition-delay: calc(var(--stagger, 0ms) + 300ms); transform-origin: right; }
-
-.cardDeclassified .redactionBars span {
-  transform-origin: center;
-  animation: redaction-sweep 660ms var(--ease-tactical) var(--stagger, 0ms) forwards;
-}
-
-@keyframes redaction-sweep {
-  0% { transform: scaleX(1); opacity: 1; }
-  40% { transform: scaleX(1); opacity: 1; }
-  100% { transform: scaleX(0); opacity: 0; }
-}
-
 .caseTag {
   display: none;
 }
@@ -182,9 +105,6 @@
   border-radius: var(--radius-sm);
   opacity: 0;
   transition: opacity 400ms ease calc(var(--stagger, 0ms) + 420ms);
-}
-.cardDeclassified .featuredBadge {
-  opacity: 1;
 }
 
 .emblemWatermark {
@@ -232,9 +152,9 @@
   height: 100%;
   filter: drop-shadow(0 0 18px rgba(196, 23, 43, 0.5));
 }
-.cardDeclassified .emblemWatermark {
+.featuredBadge,
+.emblemWatermark {
   opacity: 0.14;
-  transform: scale(1) rotate(0deg);
 }
 .card:hover .emblemWatermark {
   opacity: 0.28;
@@ -246,7 +166,7 @@
   z-index: 3;
   pointer-events: none;
   background: linear-gradient(to bottom, transparent, rgba(196, 23, 43, 0.12) 50%, transparent);
-  opacity: 0;
+  opacity: 0.14;
   transform: translateY(-100%);
   transition: opacity var(--dur-fast) ease;
 }
@@ -260,14 +180,6 @@
   flex-direction: column;
   gap: var(--space-3);
   padding: var(--space-5);
-  opacity: 0;
-  transform: translateY(10px);
-  transition: opacity 480ms var(--ease-signal) calc(var(--stagger, 0ms) + 260ms),
-              transform 480ms var(--ease-signal) calc(var(--stagger, 0ms) + 260ms);
-}
-.cardDeclassified .body {
-  opacity: 1;
-  transform: translateY(0);
 }
 
 .categoryRow {
@@ -308,13 +220,12 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .card,
   .media,
-  .redactionBars span,
   .body,
   .featuredBadge,
   .emblemWatermark,
-  .tabStatus {
+  .tabStatus,
+  .card {
     transition: none !important;
     animation: none !important;
     opacity: 1 !important;

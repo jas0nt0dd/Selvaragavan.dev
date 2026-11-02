@@ -3,41 +3,49 @@
   padding-bottom: var(--space-6);
 }
 
-.stackContainer {
-  position: relative;
+.cards {
   width: 100%;
   margin-top: var(--space-7);
-  padding-top: clamp(3rem, 18vh, 11rem);
 }
 
-.stack {
+.empty {
+  margin-top: var(--space-7);
+}
+
+.carouselStage {
   position: relative;
   width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0;
+  height: calc(var(--card-count) * 100vh);
 }
 
-.stickyContainer {
+.carouselViewport {
   position: sticky;
   top: 0;
   display: flex;
   align-items: center;
-  justify-content: center;
   width: 100%;
   height: 100vh;
-  pointer-events: none;
-  z-index: auto;
-  contain: layout;
+  overflow: hidden;
 }
 
-.stickyCard {
-  position: relative;
-  width: min(100%, 820px);
-  pointer-events: auto;
+.carouselTrack {
+  display: flex;
+  width: 100%;
+  height: min(78vh, 760px);
   will-change: transform;
-  transform-origin: center;
+}
+
+.carouselSlide {
+  display: flex;
+  flex: 0 0 100%;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 0 var(--page-gutter);
+}
+
+.carouselSlide > * {
+  width: min(820px, 100%);
 }
 
 @media (max-width: 640px) {
@@ -45,38 +53,24 @@
     padding-block: var(--space-7) var(--space-8);
   }
 
-  .stackContainer {
+  .cards,
+  .carouselStage {
     margin-top: var(--space-6);
-    padding-top: 0;
   }
 
-  .stickyContainer {
+  .carouselStage {
+    height: calc(var(--card-count) * 100svh);
+  }
+
+  .carouselViewport {
     height: 100svh;
-    min-height: 34rem;
+  }
+
+  .carouselTrack {
+    height: auto;
+  }
+
+  .carouselSlide {
     padding: 5.5rem var(--page-gutter) var(--space-4);
-  }
-
-  .stickyCard {
-    width: min(100%, 34rem);
-  }
-}
-
-.empty {
-  margin-top: var(--space-7);
-}
-
-@media (max-width: 1080px) {
-  .stickyCard {
-    width: min(100%, 680px);
-  }
-}
-
-@media (max-width: 640px) {
-  .stackContainer {
-    padding-top: var(--space-6);
-  }
-
-  .stickyCard {
-    width: min(100%, 100%);
   }
 }

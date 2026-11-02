@@ -6,7 +6,7 @@ import { Tag } from "@/components/ui/primitives";
 import { projectCategoryLabels } from "@/data/projects";
 import { useIsTouchDevice, usePrefersReducedMotion } from "@/hooks/useMotionHooks";
 import type { Project } from "@/types";
-import { ProjectDissolveMedia } from "./ProjectDissolveMedia";
+import { ScrollDissolveReveal } from "@/components/ui/scroll-dissolve-reveal";
 import styles from "./ProjectCard.module.css";
 
 interface ProjectCardProps {
@@ -21,32 +21,9 @@ export function ProjectCard({ project, index = 0, revealProgress }: ProjectCardP
   const [posterFailed, setPosterFailed] = useState(false);
   const [videoFailed, setVideoFailed] = useState(false);
   const [playing, setPlaying] = useState(false);
-  const [declassified, setDeclassified] = useState(false);
   const reducedMotion = usePrefersReducedMotion();
   const isTouch = useIsTouchDevice();
   const canAutoplayPreview = !reducedMotion && !isTouch && Boolean(project.media.video) && !videoFailed;
-
-  useEffect(() => {
-    if (reducedMotion) {
-      setDeclassified(true);
-      return;
-    }
-    const node = cardRef.current;
-    if (!node) return;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setDeclassified(true);
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.25, rootMargin: "0px 0px -10% 0px" }
-    );
-    observer.observe(node);
-    return () => observer.disconnect();
-  }, [reducedMotion]);
 
   useEffect(() => {
     if (!canAutoplayPreview) return;
@@ -98,7 +75,7 @@ export function ProjectCard({ project, index = 0, revealProgress }: ProjectCardP
     <RouteLink
       ref={cardRef}
       to={`/projects/${project.slug}`}
-      className={`${styles.card} ${declassified ? styles.cardDeclassified : ""}`}
+      className={styles.card}
       style={{
         ["--stagger" as string]: `${(index % 6) * 90}ms`,
         ["--stack-shift" as string]: `${(index % 6) * 10}px`,
@@ -110,7 +87,7 @@ export function ProjectCard({ project, index = 0, revealProgress }: ProjectCardP
     >
       <div className={styles.folderTab}>
         <span className={`${styles.tabIndex} mono`}>CASE {String(index + 1).padStart(2, "0")}</span>
-        <span className={`${styles.tabStatus} mono`}>{declassified ? "DECLASSIFIED" : "SEALED"}</span>
+        <span className={`${styles.tabStatus} mono`}>SEALED</span>
       </div>
 
       <div className={styles.mediaFrame}>
@@ -142,13 +119,7 @@ export function ProjectCard({ project, index = 0, revealProgress }: ProjectCardP
           </div>
         )}
 
-        {project.media.poster && !posterFailed && revealProgress && !reducedMotion ? (
-          <ProjectDissolveMedia src={project.media.poster} alt="" progress={revealProgress} />
-        ) : null}
-
-        <div className={styles.redactionBars} aria-hidden="true">
-          <span /><span /><span /><span />
-        </div>
+        {revealProgress && !reducedMotion ? <ScrollDissolveReveal progress={revealProgress} /> : null}
 
         {canAutoplayPreview ? (
           <button

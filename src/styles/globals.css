@@ -10,7 +10,13 @@ html {
   color-scheme: dark;
   scroll-behavior: smooth;
   overflow-x: clip;
+  scrollbar-width: none;
   -webkit-text-size-adjust: 100%;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none;
 }
 
 body {
@@ -22,7 +28,8 @@ body {
   line-height: var(--lh-normal);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-  overflow-x: hidden;
+  overflow-x: clip;
+  scrollbar-width: none;
 }
 
 body.nav-open,
@@ -101,23 +108,6 @@ input, textarea, select {
   top: var(--space-4);
 }
 
-/* Scrollbar */
-::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
-}
-::-webkit-scrollbar-track {
-  background: var(--color-void);
-}
-::-webkit-scrollbar-thumb {
-  background: var(--color-border-strong);
-  border-radius: var(--radius-pill);
-  border: 2px solid var(--color-void);
-}
-::-webkit-scrollbar-thumb:hover {
-  background: var(--color-red-signal);
-}
-
 /* ---------- Signature motion: Arkham-style Bat-Signal transition ----------
    The outgoing page cracks to black like a power-cut, then your bat
    emblem burns in on a crimson searchlight glow before the next page
@@ -178,11 +168,5 @@ input, textarea, select {
   ::view-transition-old(root),
   ::view-transition-new(root) {
     animation: none !important;
-  }
-}
-
-@media (max-width: 640px) {
-  ::-webkit-scrollbar {
-    width: 6px;
   }
 }

@@ -1,5 +1,5 @@
 import { useMemo, useRef, useState } from "react";
-import { motion, useReducedMotion, useScroll, useTransform, type MotionValue } from "framer-motion";
+import { motion, useScroll, useTransform, type MotionValue } from "framer-motion";
 import { PageHeader, Reveal, EmptyState } from "@/components/ui/primitives";
 import { ProjectCard } from "@/components/projects/ProjectCard";
 import { ProjectFilter } from "@/components/projects/ProjectFilter";
@@ -8,41 +8,6 @@ import type { Project, ProjectCategory } from "@/types";
 import styles from "./Projects.module.css";
 
 type FilterState = ProjectCategory | "all";
-
-interface StickyCardProps {
-  index: number;
-  isLast: boolean;
-  project: Project;
-}
-
-function StickyCard({ index, isLast, project }: StickyCardProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const prefersReducedMotion = useReducedMotion();
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    // The last card has no content after it, so complete its timeline at page bottom.
-    offset: isLast ? ["start end", "end end"] : ["start end", "end start"]
-  });
-
-  const scale = useTransform(scrollYProgress, [0, 0.28, 0.78, 1], [0.96, 1, 1, isLast ? 1 : 0.97]);
-  const opacity = useTransform(scrollYProgress, [0, 0.22, 0.82, 1], [0, 1, 1, isLast ? 1 : 0.16]);
-  const y = useTransform(scrollYProgress, [0, 0.26, 0.82, 1], [72, 0, 0, isLast ? 0 : -70]);
-
-  const motionStyle: { scale?: MotionValue<number>; opacity?: MotionValue<number>; y?: MotionValue<number> } = prefersReducedMotion
-    ? {}
-    : { scale, opacity, y };
-
-  return (
-    <div ref={containerRef} className={styles.stickyContainer}>
-      <motion.div
-        style={motionStyle}
-        className={styles.stickyCard}
-      >
-        <ProjectCard project={project} index={index} revealProgress={scrollYProgress} />
-      </motion.div>
-    </div>
-  );
-}
 
 export function Projects() {
   const [active, setActive] = useState<FilterState>("all");
@@ -73,17 +38,8 @@ export function Projects() {
         </div>
 
         {filtered.length > 0 ? (
-          <div className={styles.stackContainer}>
-            <div className={styles.stack}>
-              {filtered.map((project, i) => (
-                <StickyCard
-                  key={project.id}
-                  index={i}
-                  isLast={i === filtered.length - 1}
-                  project={project}
-                />
-              ))}
-            </div>
+          <div className={styles.cards}>
+            <ProjectCarousel projects={filtered} />
           </div>
         ) : (
           <div className="container">
@@ -94,5 +50,87 @@ export function Projects() {
         )}
       </section>
     </>
+  );
+}
+
+function ProjectSlide({
+  project,
+  index,
+  cardCount,
+  scrollYProgress
+}: {
+  project: Project;
+  index: number;
+  cardCount: number;
+  scrollYProgress: MotionValue<number>;
+}) {
+  const segmentStart = index / cardCount;
+  const segmentEnd = (index + 1) / cardCount;
+  const revealProgress = useTransform(
+    scrollYProgress,
+    [
+      segmentStart + (segmentEnd - segmentStart) * 0.04,
+      segmentStart + (segmentEnd - segmentStart) * 0.14,
+      segmentStart + (segmentEnd - segmentStart) * 0.68,
+      segmentStart + (segmentEnd - segmentStart) * 0.8
+    ],
+    [0, 0, 1, 1]
+  );
+
+  return (
+    <div className={styles.carouselSlide}>
+      <ProjectCard project={project} index={index} revealProgress={revealProgress} />
+    </div>
+  );
+}
+
+function ProjectCarousel({ projects: carouselProjects }: { projects: Project[] }) {
+  const stageRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: stageRef,
+    offset: ["start start", "end end"]
+  });
+  const progressStops = [0];
+  const positionStops = ["0%"];
+  const cardCount = carouselProjects.length;
+
+  for (let index = 0; index < cardCount; index += 1) {
+    const segmentStart = index / cardCount;
+    const segmentEnd = (index + 1) / cardCount;
+    const nextIndex = Math.min(index + 1, cardCount - 1);
+    progressStops.push(
+      segmentStart + (segmentEnd - segmentStart) * 0.9,
+      segmentStart + (segmentEnd - segmentStart) * 0.99,
+      segmentEnd
+    );
+    positionStops.push(
+      `-${index * 100}%`,
+      `-${nextIndex * 100}%`,
+      `-${nextIndex * 100}%`
+    );
+  }
+
+  const trackX = useTransform(scrollYProgress, progressStops, positionStops);
+
+  return (
+    <div
+      ref={stageRef}
+      className={styles.carouselStage}
+      style={{ ["--card-count" as string]: carouselProjects.length }}
+    >
+      <div className={styles.carouselViewport}>
+        <motion.div className={styles.carouselTrack} style={{ x: trackX }}>
+          {carouselProjects.map((project, index) => (
+            <ProjectSlide
+              key={project.id}
+              project={project}
+              index={index}
+              cardCount={cardCount}
+              scrollYProgress={scrollYProgress}
+            />
+          ))}
+        </motion.div>
+      </div>
+    </div>
   );
 }
