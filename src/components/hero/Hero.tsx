@@ -1,18 +1,16 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { RouteLink } from "@/components/layout/RouteLink";
-import { Button, StatusIndicator, Tag } from "@/components/ui/primitives";
+import { Button, StatusIndicator } from "@/components/ui/primitives";
 import { Icon } from "@/icons/icons";
 import { profile } from "@/data/profile";
-import { OBJECTWAYS_START_DATE } from "@/data/experience";
 import { usePrefersReducedMotion } from "@/hooks/useMotionHooks";
 import { AsciiGlitchRipple } from "@/components/effects/AsciiGlitchRipple";
 import { BatLogoModel } from "./BatLogoModel";
 import styles from "./Hero.module.css";
 
-export function Hero() {
+export function Hero({ landing = false }: { landing?: boolean }) {
   return (
-    <section className={styles.hero} aria-label="Introduction">
-      <WhoAmIButton />
+    <section className={`${styles.hero} ${landing ? styles.landing : ""}`} aria-label="Introduction">
       <div className={`container ${styles.grid}`}>
         <div className={styles.copy}>
           <div className={styles.eyebrow}>
@@ -53,18 +51,8 @@ export function Hero() {
 
         </div>
 
-        <aside className={styles.panel} aria-label="System status readout">
-          <div className={styles.panelHead}>
-            <span className="mono">STATUS READOUT</span>
-            <Icon name="cpu" size={16} />
-          </div>
-          <div className={styles.videoContainer}>
-            <BatLogoModel />
-          </div>
-          <div className={styles.panelFoot}>
-            <RoleTicker />
-            <EmploymentStatusLine />
-          </div>
+        <aside className={styles.modelStage} aria-label="Interactive 3D bat logo">
+          <BatLogoModel />
         </aside>
       </div>
 
@@ -134,66 +122,5 @@ function RoleCycler() {
     <span className={styles.roleStream}>
       <span key={role} className={styles.roleItem}>{role}</span>
     </span>
-  );
-}
-
-function WhoAmIButton() {
-  const audioRef = useRef<HTMLAudioElement>(null);
-  const [isPlaying, setIsPlaying] = useState(false);
-
-  const toggleAudio = () => {
-    const audio = audioRef.current;
-    if (!audio) return;
-
-    if (isPlaying) {
-      audio.pause();
-      setIsPlaying(false);
-      return;
-    }
-
-    audio.currentTime = 0;
-    audio.play().then(() => setIsPlaying(true)).catch(() => setIsPlaying(false));
-  };
-
-  return (
-    <div className={styles.identityAudio}>
-      <audio
-        ref={audioRef}
-        src="/assets/audio/who-am-i.mp3"
-        preload="metadata"
-        onEnded={() => setIsPlaying(false)}
-        onPause={() => setIsPlaying(false)}
-      />
-      <button
-        type="button"
-        className={styles.identityAudioButton}
-        onClick={toggleAudio}
-        aria-pressed={isPlaying}
-        aria-label={isPlaying ? "Pause identity transmission" : "Play identity transmission"}
-      >
-        <Icon name={isPlaying ? "pause" : "play"} size={14} />
-        <span className="mono">{isPlaying ? "TRANSMISSION ACTIVE" : "WHO AM I?"}</span>
-      </button>
-    </div>
-  );
-}
-
-function EmploymentStatusLine() {
-  const now = new Date();
-  const started = now >= OBJECTWAYS_START_DATE;
-  return (
-    <AsciiGlitchRipple as="p" className={`${styles.employment} mono`}>
-      {started ? "GEN AI ENGINEER — OBJECTWAYS · ACTIVE" : "GEN AI ENGINEER — OBJECTWAYS · INCOMING"}
-    </AsciiGlitchRipple>
-  );
-}
-
-function RoleTicker() {
-  return (
-    <div className={styles.roleTicker}>
-      {profile.roles.map((role) => (
-        <Tag key={role}>{role}</Tag>
-      ))}
-    </div>
   );
 }

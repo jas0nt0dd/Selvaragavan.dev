@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
+import { Icon } from "@/icons/icons";
 import { BackgroundFX } from "@/components/effects/BackgroundFX";
 import { BatSignalTransition } from "@/components/effects/BatSignalTransition";
 import { CustomCursor } from "@/components/effects/CustomCursor";
@@ -33,11 +34,53 @@ export function SiteShell() {
         Skip to content
       </a>
       <CinematicNav />
+      <WhoAmIButton />
       <div ref={mainRef} id="main-content" className={styles.main} tabIndex={-1}>
         <Outlet />
       </div>
       <Footer />
     </>
+  );
+}
+
+function WhoAmIButton() {
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  const toggleAudio = () => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    if (isPlaying) {
+      audio.pause();
+      setIsPlaying(false);
+      return;
+    }
+
+    audio.currentTime = 0;
+    audio.play().then(() => setIsPlaying(true)).catch(() => setIsPlaying(false));
+  };
+
+  return (
+    <div className={styles.identityAudio}>
+      <audio
+        ref={audioRef}
+        src="/assets/audio/who-am-i.mp3"
+        preload="metadata"
+        onEnded={() => setIsPlaying(false)}
+        onPause={() => setIsPlaying(false)}
+      />
+      <button
+        type="button"
+        className={styles.identityAudioButton}
+        onClick={toggleAudio}
+        aria-pressed={isPlaying}
+        aria-label={isPlaying ? "Pause identity transmission" : "Play identity transmission"}
+      >
+        <Icon name={isPlaying ? "pause" : "play"} size={14} />
+        <span className="mono">{isPlaying ? "TRANSMISSION ACTIVE" : "WHO AM I?"}</span>
+      </button>
+    </div>
   );
 }
 

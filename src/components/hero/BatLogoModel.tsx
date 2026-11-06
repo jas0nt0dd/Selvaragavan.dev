@@ -21,7 +21,7 @@ function BatLogo() {
 
   return (
     <Center>
-      <group ref={groupRef}>
+      <group ref={groupRef} scale={0.9}>
         <primitive object={model.scene} />
       </group>
     </Center>
@@ -91,9 +91,6 @@ export function BatLogoModel() {
         </Suspense>
         <BatLogoControls reducedMotion={reducedMotion} />
       </Canvas>
-      <span className={`${styles.modelHint} mono`} aria-hidden="true">
-        DRAG TO INSPECT
-      </span>
     </div>
   );
 }

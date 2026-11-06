@@ -1,19 +1,31 @@
-import type { CSSProperties } from "react";
+import { type CSSProperties } from "react";
 import { Hero } from "@/components/hero/Hero";
 import { RouteLink } from "@/components/layout/RouteLink";
 import { Reveal, SectionLabel, Button, Divider } from "@/components/ui/primitives";
 import { AsciiGlitchRipple } from "@/components/effects/AsciiGlitchRipple";
 import { projectCategoryLabels, projects } from "@/data/projects";
 import { services } from "@/data/services";
+import { usePrefersReducedMotion } from "@/hooks/useMotionHooks";
 import type { Project } from "@/types";
 import styles from "./Home.module.css";
 
 export function Home() {
   const serviceSample = services.slice(0, 4);
+  const reducedMotion = usePrefersReducedMotion();
 
   return (
-    <>
-      <Hero />
+    <div className={styles.home}>
+      <video
+        className={styles.landingVideo}
+        src="/assets/background/Add_crimson_red_and_movement_2e4b8575_1080p.mp4"
+        autoPlay={!reducedMotion}
+        muted
+        playsInline
+        preload="auto"
+        loop
+        aria-hidden="true"
+      />
+      <Hero landing />
 
       <section className={styles.section} aria-labelledby="featured-heading">
         <div className="container">
@@ -85,7 +97,7 @@ export function Home() {
           </Reveal>
         </div>
       </section>
-    </>
+    </div>
   );
 }
 
