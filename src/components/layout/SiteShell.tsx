@@ -6,10 +6,10 @@ import { CustomCursor } from "@/components/effects/CustomCursor";
 import { Preloader } from "@/components/effects/Preloader";
 import { CinematicNav } from "@/components/layout/CinematicNav";
 import { RouteLink } from "@/components/layout/RouteLink";
-import { Icon } from "@/icons/icons";
 import { profile } from "@/data/profile";
 import { navigation, externalLinks } from "@/data/site";
 import { useSwipeNavigation } from "@/hooks/useSwipeNavigation";
+import { SocialFlipButton } from "@/components/ui/SocialFlipButton";
 import styles from "./SiteShell.module.css";
 
 export function SiteShell() {
@@ -60,17 +60,14 @@ function Footer() {
           ))}
         </nav>
 
-        <div className={styles.footerSocials}>
-          <a href={externalLinks.github} target="_blank" rel="noreferrer" aria-label="GitHub profile">
-            <Icon name="github" size={17} />
-          </a>
-          <a href={externalLinks.linkedin} target="_blank" rel="noreferrer" aria-label="LinkedIn profile">
-            <Icon name="linkedin" size={17} />
-          </a>
-          <a href={externalLinks.email} aria-label="Send an email">
-            <Icon name="mail" size={17} />
-          </a>
-        </div>
+        <SocialFlipButton
+          className={styles.footerSocials}
+          items={[
+            { letter: "G", icon: "github", label: "GitHub", href: externalLinks.github, external: true },
+            { letter: "L", icon: "linkedin", label: "LinkedIn", href: externalLinks.linkedin, external: true },
+            { letter: "M", icon: "mail", label: "Email", href: externalLinks.email }
+          ]}
+        />
       </div>
       <div className={`container ${styles.footerMeta} mono`}>
         <span>© {new Date().getFullYear()} {profile.name}</span>
