@@ -69,10 +69,9 @@ export function Tag({ children, muted = false }: { children: ReactNode; muted?: 
 
 /* ------------------------- Section Label ------------------------- */
 
-export function SectionLabel({ index, label }: { index: string; label: string }) {
+export function SectionLabel({ label }: { label: string }) {
   return (
     <div className={styles.sectionLabel}>
-      <span className={styles.sectionIndex}>{index}</span>
       <span className={styles.sectionLine} aria-hidden="true" />
       <span className={styles.sectionText}>{label}</span>
     </div>
@@ -105,19 +104,16 @@ export function Divider({ label }: { label?: string }) {
 /* --------------------------- Page Header --------------------------- */
 
 export function PageHeader({
-  index,
   eyebrow,
   title,
   description
 }: {
-  index: string;
   eyebrow: string;
   title: string;
   description?: string;
 }) {
   return (
     <header className={styles.pageHeader}>
-      <div className={`${styles.pageHeaderIndex} mono`}>{index}</div>
       <div className={styles.pageHeaderBody}>
         <p className={`${styles.pageHeaderEyebrow} mono`}>{eyebrow}</p>
         <h1 className={styles.pageHeaderTitle}>{title}</h1>

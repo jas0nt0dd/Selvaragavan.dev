@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { PerspectiveGrid } from "@/components/ui/PerspectiveGrid";
 import { usePrefersReducedMotion } from "@/hooks/useMotionHooks";
 import styles from "./BackgroundFX.module.css";
 
@@ -18,6 +19,7 @@ export function BackgroundFX() {
   return (
     <div className={styles.root} aria-hidden="true">
       <div className={styles.grid} />
+      <PerspectiveGrid rows={20} cols={20} />
 
       {!watermarkFailed ? (
         <img

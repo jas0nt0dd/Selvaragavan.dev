@@ -1,0 +1,78 @@
+.creepyButton {
+  position: relative;
+  isolation: isolate;
+}
+
+.eyes {
+  position: absolute;
+  right: 0.65em;
+  bottom: 0.3em;
+  z-index: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.18em;
+  height: 0.55em;
+  pointer-events: none;
+}
+
+.eye {
+  position: relative;
+  width: 0.55em;
+  height: 0.55em;
+  overflow: hidden;
+  border-radius: 50%;
+  background: #f7f7f2;
+  animation: blink 3s linear infinite;
+}
+
+.pupil {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0.25em;
+  height: 0.25em;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: #08090c;
+  transition: transform 75ms ease-out;
+}
+
+.cover {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform-origin: 1.25em 50%;
+  border-radius: inherit;
+  background: #a20e22;
+  color: #fff;
+}
+
+.placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+}
+
+@keyframes blink {
+  0%, 92%, 100% {
+    transform: scaleY(1);
+  }
+  94%, 98% {
+    transform: scaleY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .eye {
+    animation: none;
+  }
+
+  .pupil {
+    transition: none;
+  }
+}

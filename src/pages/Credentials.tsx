@@ -20,7 +20,6 @@ export function Credentials() {
     <>
       <div className="container">
         <PageHeader
-          index="05"
           eyebrow="Verified Signal"
           title="Credentials"
           description="Education, awards and certifications — presented as evidence, not a resume pasted into a webpage."
@@ -30,7 +29,7 @@ export function Credentials() {
       <section className={styles.section}>
         <div className="container">
           <Reveal>
-            <SectionLabel index="//01" label="Education" />
+            <SectionLabel label="Education" />
           </Reveal>
           <div className={styles.eduGrid}>
             {education.map((entry, i) => (
@@ -55,7 +54,7 @@ export function Credentials() {
       <section className={styles.section}>
         <div className="container">
           <Reveal>
-            <SectionLabel index="//02" label="Awards & Achievements" />
+            <SectionLabel label="Awards & Achievements" />
           </Reveal>
           <CylinderCarousel 
             cards={awards.map(award => ({
@@ -73,7 +72,7 @@ export function Credentials() {
       <section className={styles.section}>
         <div className="container">
           <Reveal>
-            <SectionLabel index="//03" label="GitHub Signal" />
+            <SectionLabel label="GitHub Signal" />
           </Reveal>
           <Reveal delay={1}>
             <div className={styles.readmePreview}>
@@ -129,7 +128,7 @@ export function Credentials() {
       <section className={styles.section}>
         <div className="container">
           <Reveal>
-            <SectionLabel index="//04" label="Certifications" />
+            <SectionLabel label="Certifications" />
           </Reveal>
           <Reveal delay={1}>
             <AsciiGlitchRipple as="p" className={styles.certNote}>

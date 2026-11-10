@@ -12,7 +12,7 @@ export function IdentitySection() {
     <section className={styles.section} aria-labelledby="identity-heading">
       <div className="container">
         <Reveal>
-          <SectionLabel index="//01" label="Identity" />
+          <SectionLabel label="Identity" />
         </Reveal>
 
         <div className={styles.grid}>

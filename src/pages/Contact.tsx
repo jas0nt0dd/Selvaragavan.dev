@@ -8,7 +8,6 @@ export function Contact() {
     <>
       <div className="container">
         <PageHeader
-          index="06"
           eyebrow="Open a Channel"
           title="Contact"
           description="Building something in AI, security, or robotics? Send a signal — I read every message myself."

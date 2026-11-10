@@ -9,7 +9,7 @@ export function SkillsMatrix() {
     <section className={styles.section} aria-labelledby="skills-heading">
       <div className="container">
         <Reveal>
-          <SectionLabel index="//02" label="Capability Matrix" />
+          <SectionLabel label="Capability Matrix" />
         </Reveal>
         <Reveal delay={1}>
           <h2 id="skills-heading" className={styles.heading}>

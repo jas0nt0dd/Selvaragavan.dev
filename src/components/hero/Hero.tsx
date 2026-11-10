@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import { RouteLink } from "@/components/layout/RouteLink";
-import { Button, StatusIndicator } from "@/components/ui/primitives";
+import { Button } from "@/components/ui/primitives";
 import { Icon } from "@/icons/icons";
 import { profile } from "@/data/profile";
 import { usePrefersReducedMotion } from "@/hooks/useMotionHooks";
@@ -13,12 +12,6 @@ export function Hero({ landing = false }: { landing?: boolean }) {
     <section className={`${styles.hero} ${landing ? styles.landing : ""}`} aria-label="Introduction">
       <div className={`container ${styles.grid}`}>
         <div className={styles.copy}>
-          <div className={styles.eyebrow}>
-            <StatusIndicator label="SYSTEM ONLINE" />
-            <span className={`${styles.eyebrowDivider} mono`}>//</span>
-            <span className="mono">{profile.location.toUpperCase()}</span>
-          </div>
-
           <h1 className={styles.headline}>
             <TypewriterName />
             <span className={styles.headlineSub}>{profile.headline}</span>
@@ -56,11 +49,6 @@ export function Hero({ landing = false }: { landing?: boolean }) {
         </aside>
       </div>
 
-      <RouteLink to="/about" className={styles.scrollCue} aria-label="Scroll to learn more">
-        <span className="mono">DESCEND</span>
-        <span className={styles.scrollLine} />
-        <Icon name="chevronDown" size={16} />
-      </RouteLink>
     </section>
   );
 }

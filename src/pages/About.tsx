@@ -24,7 +24,7 @@ export function About() {
   return (
     <>
       <div className="container">
-        <PageHeader index="02" eyebrow="Dossier" title="About" description="Who I am, what I build, and how the disciplines connect." />
+        <PageHeader eyebrow="Dossier" title="About" description="Who I am, what I build, and how the disciplines connect." />
       </div>
 
       <IdentitySection />
@@ -33,7 +33,7 @@ export function About() {
       <section className={styles.section} aria-labelledby="awards-heading">
         <div className="container">
           <Reveal>
-            <SectionLabel index="//03" label="Awards" />
+            <SectionLabel label="Awards" />
           </Reveal>
           <Reveal delay={1}>
             <div className={styles.sectionHead}>
@@ -53,7 +53,7 @@ export function About() {
         <HangingIDCard />
         <div className="container">
           <Reveal>
-            <SectionLabel index="//04" label="Experience" />
+            <SectionLabel label="Experience" />
           </Reveal>
           <Reveal delay={1}>
             <AsciiGlitchRipple as="h2" className={styles.heading}>

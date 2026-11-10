@@ -42,7 +42,6 @@ export function Services() {
     <>
       <div className="container">
         <PageHeader
-          index="03"
           eyebrow="Mission Modules"
           title="Services"
           description="Nine ways to work together, scoped from real systems I've already built — not a generic agency menu."

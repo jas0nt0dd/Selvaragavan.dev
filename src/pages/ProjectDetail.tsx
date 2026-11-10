@@ -77,7 +77,7 @@ export function ProjectDetail() {
         <div className={styles.body}>
           <div className={styles.main}>
             <Reveal>
-              <SectionLabel index="//" label="Overview" />
+              <SectionLabel label="Overview" />
               <p className={styles.fullDescription}>{project.fullDescription}</p>
             </Reveal>
 

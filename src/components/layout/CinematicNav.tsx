@@ -3,6 +3,7 @@ import { useLocation } from "react-router-dom";
 import { navigation } from "@/data/site";
 import { profile } from "@/data/profile";
 import { useBodyScrollLock } from "@/hooks/useMotionHooks";
+import { CreepyButton } from "@/components/ui/creepy-button";
 import { RouteLink } from "./RouteLink";
 import styles from "./CinematicNav.module.css";
 
@@ -70,12 +71,14 @@ export function CinematicNav() {
   return (
     <>
       <div className={styles.bar}>
-        <RouteLink to="/" className={styles.brand} aria-label={`${profile.name} — Home`}>
-          <span className={styles.brandGlyph}>
-            <img src={batLogo} alt="" width={18} height={18} />
-          </span>
-          <span className={`${styles.brandText} mono`}>SELVARAGAVAN.M</span>
-        </RouteLink>
+        <CreepyButton asChild coverClassName={styles.brandCreepyCover}>
+          <RouteLink to="/" className={styles.brand} aria-label={`${profile.name} — Home`}>
+            <span className={styles.brandGlyph}>
+              <img src={batLogo} alt="" width={18} height={18} />
+            </span>
+            <span className={`${styles.brandText} mono`}>SELVARAGAVAN.M</span>
+          </RouteLink>
+        </CreepyButton>
 
         <button
           ref={triggerRef}

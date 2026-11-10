@@ -20,18 +20,6 @@
   animation: fade-up 900ms var(--ease-signal) both;
 }
 
-.eyebrow {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-  margin-bottom: var(--space-5);
-  font-size: var(--fs-2xs);
-  color: var(--color-smoke);
-}
-.eyebrowDivider {
-  color: var(--color-border-strong);
-}
-
 .headline {
   display: flex;
   flex-direction: column;
@@ -184,21 +172,12 @@
   text-align: center;
 }
 
-.landing .eyebrow,
 .landing .roleSequence {
   justify-content: center;
 }
 
-.landing .eyebrow {
-  color: var(--color-bone);
-  font-size: var(--fs-xs);
-  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.9);
-}
-
-.landing .eyebrowDivider,
 .landing .roleLabel,
-.landing .subhead,
-.landing .scrollCue {
+.landing .subhead {
   color: var(--color-bone-dim);
 }
 
@@ -237,42 +216,7 @@
   box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
 }
 
-.landing .scrollCue {
-  font-size: var(--fs-xs);
-  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.9);
-}
-
-/* -------------------- Scroll cue -------------------- */
-
-.scrollCue {
-  position: absolute;
-  left: 50%;
-  bottom: var(--space-6);
-  transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--space-2);
-  font-size: var(--fs-2xs);
-  color: var(--color-steel);
-  letter-spacing: var(--ls-wider);
-  transition: color var(--dur-fast) ease;
-}
-.scrollCue:hover {
-  color: var(--color-red-glow);
-}
-.scrollLine {
-  width: 1px;
-  height: 28px;
-  background: linear-gradient(to bottom, var(--color-border-strong), transparent);
-  animation: sweep-down 2.2s var(--ease-tactical) infinite;
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .scrollLine {
-    animation: none;
-  }
-
   .roleItem {
     animation: none;
   }
@@ -357,12 +301,5 @@
 
   .roleStream {
     min-width: 0;
-  }
-
-  .scrollCue {
-    position: static;
-    width: fit-content;
-    margin: var(--space-6) auto 0;
-    transform: none;
   }
 }

@@ -1,4 +1,4 @@
-import { type CSSProperties } from "react";
+import { useState, type CSSProperties } from "react";
 import { Hero } from "@/components/hero/Hero";
 import { RouteLink } from "@/components/layout/RouteLink";
 import { Reveal, SectionLabel, Button, Divider } from "@/components/ui/primitives";
@@ -10,6 +10,7 @@ import styles from "./Home.module.css";
 
 export function Home() {
   const serviceSample = services.slice(0, 4);
+  const [activeModuleId, setActiveModuleId] = useState<string | null>(null);
 
   return (
     <div className={styles.home}>
@@ -24,7 +25,7 @@ export function Home() {
       <section className={styles.section} aria-labelledby="featured-heading">
         <div className="container">
           <Reveal>
-            <SectionLabel index="//01" label="Featured Case Files" />
+            <SectionLabel label="Featured Case Files" />
           </Reveal>
           <Reveal delay={1}>
             <div className={styles.sectionHead}>
@@ -46,7 +47,7 @@ export function Home() {
       <section className={styles.section} aria-labelledby="capability-heading">
         <div className="container">
           <Reveal>
-            <SectionLabel index="//02" label="Capability Modules" />
+            <SectionLabel label="Capability Modules" />
           </Reveal>
           <Reveal delay={1}>
             <div className={styles.sectionHead}>
@@ -62,11 +63,36 @@ export function Home() {
           <div className={styles.moduleGrid}>
             {serviceSample.map((service, i) => (
               <Reveal key={service.id} delay={(Math.min(i + 1, 5) as 1 | 2 | 3 | 4)}>
-                <div className={styles.module}>
+                <button
+                  type="button"
+                  className={`${styles.module} ${activeModuleId === service.id ? styles.moduleActive : ""}`}
+                  aria-expanded={activeModuleId === service.id}
+                  aria-controls={`module-outcome-${service.id}`}
+                  onPointerEnter={(event) => {
+                    if (event.pointerType === "mouse") setActiveModuleId(service.id);
+                  }}
+                  onPointerLeave={(event) => {
+                    if (event.pointerType === "mouse") setActiveModuleId(null);
+                  }}
+                  onFocus={() => setActiveModuleId(service.id)}
+                  onBlur={() => setActiveModuleId(null)}
+                  onClick={() => {
+                    if (window.matchMedia("(hover: none)").matches) {
+                      setActiveModuleId(service.id);
+                    }
+                  }}
+                >
                   <span className={`${styles.moduleCode} mono`}>{service.code}</span>
                   <AsciiGlitchRipple as="h3" className={styles.moduleTitle}>{service.title}</AsciiGlitchRipple>
-                  <AsciiGlitchRipple as="p" className={styles.moduleOutcome}>{service.outcome}</AsciiGlitchRipple>
-                </div>
+                  <AsciiGlitchRipple
+                    as="p"
+                    id={`module-outcome-${service.id}`}
+                    className={styles.moduleOutcome}
+                    aria-hidden={activeModuleId !== service.id}
+                  >
+                    {service.outcome}
+                  </AsciiGlitchRipple>
+                </button>
               </Reveal>
             ))}
           </div>

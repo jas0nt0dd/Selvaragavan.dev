@@ -23,7 +23,6 @@ export function Projects() {
     <>
       <div className="container">
         <PageHeader
-          index="04"
           eyebrow="Case Files"
           title="Projects"
           description="Seven systems, opened like classified files: problem, solution, stack and outcome for each."
