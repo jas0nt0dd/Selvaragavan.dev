@@ -3,12 +3,12 @@
   z-index: 2;
 }
 
-.home > :not(.landingVideo) {
+.home > :not(.landingBackground) {
   position: relative;
   z-index: 3;
 }
 
-.landingVideo {
+.landingBackground {
   position: absolute;
   top: 0;
   left: 0;

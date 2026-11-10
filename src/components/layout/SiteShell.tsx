@@ -15,6 +15,7 @@ import styles from "./SiteShell.module.css";
 
 export function SiteShell() {
   const [booted, setBooted] = useState(false);
+  const [footerOpen, setFooterOpen] = useState(false);
   const location = useLocation();
   const mainRef = useRef<HTMLDivElement | null>(null);
 
@@ -22,6 +23,23 @@ export function SiteShell() {
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
+  }, [location.pathname]);
+
+  useEffect(() => {
+    setFooterOpen(false);
+    const updateFooterVisibility = () => {
+      const { scrollHeight } = document.documentElement;
+      const reachedBottom = window.scrollY + window.innerHeight >= scrollHeight - 2;
+      setFooterOpen(reachedBottom);
+    };
+
+    updateFooterVisibility();
+    window.addEventListener("scroll", updateFooterVisibility, { passive: true });
+    window.addEventListener("resize", updateFooterVisibility);
+    return () => {
+      window.removeEventListener("scroll", updateFooterVisibility);
+      window.removeEventListener("resize", updateFooterVisibility);
+    };
   }, [location.pathname]);
 
   return (
@@ -38,7 +56,7 @@ export function SiteShell() {
       <div ref={mainRef} id="main-content" className={styles.main} tabIndex={-1}>
         <Outlet />
       </div>
-      <Footer />
+      <Footer isOpen={footerOpen} />
     </>
   );
 }
@@ -84,11 +102,14 @@ function WhoAmIButton() {
   );
 }
 
-function Footer() {
+function Footer({ isOpen }: { isOpen: boolean }) {
   const batLogo = "/assets/bat-black-silhouette-with-opened-wings.png";
 
   return (
-    <footer className={styles.footer}>
+    <footer
+      className={`${styles.footer} ${isOpen ? styles.footerOpen : ""}`}
+      aria-hidden={!isOpen}
+    >
       <div className={`container ${styles.footerInner}`}>
         <div className={styles.footerBrand}>
           <img src={batLogo} alt="" className={styles.footerBat} width={18} height={18} />

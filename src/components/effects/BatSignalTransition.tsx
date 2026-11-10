@@ -44,7 +44,7 @@ export function BatSignalTransition() {
       <div className={styles.beam} />
       <div className={styles.glow} />
       <img
-        src="/assets/apple-touch-icon.png"
+        src="/assets/background/bat_stic.png"
         alt=""
         className={styles.emblem}
         width={180}

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { usePrefersReducedMotion, useIsTouchDevice } from "@/hooks/useMotionHooks";
 import styles from "./CustomCursor.module.css";
 
-const BAT_CURSOR_SRC = "/assets/bat-black-silhouette-with-opened-wings.png";
+const BAT_CURSOR_SRC = "/assets/background/bat_stic.png";
 const BAT_HOTSPOT_X = 0.5;
 const BAT_HOTSPOT_Y = 0.73;
 const BAT_LEADER_WIDTH_MOVING = 54;
@@ -116,7 +116,7 @@ export function CustomCursor() {
 
     function scaleForWidth(width: number) {
       if (!batImage.naturalWidth) return width / 512;
-      return width / batImage.naturalWidth;
+      return (width * 1.55) / batImage.naturalWidth;
     }
 
     const formationOffset = (index: number) => {

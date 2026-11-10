@@ -21,7 +21,7 @@ export function BackgroundFX() {
 
       {!watermarkFailed ? (
         <img
-          src="/assets/bat-black-silhouette-with-opened-wings.png"
+          src="/assets/background/bat_stic.png"
           alt=""
           className={styles.watermarkImg}
           onError={() => setWatermarkFailed(true)}

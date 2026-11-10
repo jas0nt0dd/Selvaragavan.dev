@@ -5,24 +5,18 @@ import { Reveal, SectionLabel, Button, Divider } from "@/components/ui/primitive
 import { AsciiGlitchRipple } from "@/components/effects/AsciiGlitchRipple";
 import { projectCategoryLabels, projects } from "@/data/projects";
 import { services } from "@/data/services";
-import { usePrefersReducedMotion } from "@/hooks/useMotionHooks";
 import type { Project } from "@/types";
 import styles from "./Home.module.css";
 
 export function Home() {
   const serviceSample = services.slice(0, 4);
-  const reducedMotion = usePrefersReducedMotion();
 
   return (
     <div className={styles.home}>
-      <video
-        className={styles.landingVideo}
-        src="/assets/background/Add_crimson_red_and_movement_2e4b8575_1080p.mp4"
-        autoPlay={!reducedMotion}
-        muted
-        playsInline
-        preload="auto"
-        loop
+      <img
+        className={styles.landingBackground}
+        src="/assets/background/Add_crimson_red_and_movement_2e4b8575_1080p.gif"
+        alt=""
         aria-hidden="true"
       />
       <Hero landing />
@@ -131,13 +125,7 @@ function HomeProjectFlow({ projects: carouselProjects }: { projects: Project[] }
             data-cursor="interactive"
           >
             <div className={styles.projectFlowMedia}>
-              {project.media.poster ? (
-                <img src={project.media.poster} alt="" loading="lazy" />
-              ) : (
-                <div className={styles.projectFlowFallback}>
-                  <span className="mono">NO PREVIEW</span>
-                </div>
-              )}
+              <img src="/assets/swipe/bat.png" alt="" loading="lazy" />
               <span className={`${styles.projectFlowIndex} mono`}>CASE {String(index + 1).padStart(2, "0")}</span>
             </div>
             <div className={styles.projectFlowBody}>
