@@ -41,6 +41,16 @@ npm run lint        # ESLint
 npm run typecheck   # tsc --noEmit
 ```
 
+### Enable contact form delivery
+
+The contact form sends submissions through Formspree. Create a form in your Formspree account and set its destination to `selvaragavanart@gmail.com`, then copy its endpoint into `.env.local`:
+
+```env
+VITE_FORMSPREE_ENDPOINT=https://formspree.io/f/your-form-id
+```
+
+Use the full endpoint URL provided by Formspree. For deployment, add the same `VITE_FORMSPREE_ENDPOINT` value to the project's Vercel environment variables and redeploy. The endpoint is public by design; do not put private API keys in `VITE_` variables. Until an endpoint is configured, the form reports that sending is unavailable and offers a direct email link instead.
+
 ---
 
 ## Architecture
@@ -127,9 +137,9 @@ Everything lives in `src/styles/tokens.css` as CSS custom properties. Changing `
 Before shipping:
 
 - Set the build command to `npm run build` and the output directory to `dist/`.
-- No environment variables are required for the current feature set (everything is static data + a `mailto:` contact fallback).
+- Set `VITE_FORMSPREE_ENDPOINT` to enable contact-form delivery to the configured Formspree recipient.
 - **Video hosting**: keep short, compressed previews (10–20s, well under a few MB each) in `public/assets/projects/` for simplicity. If you outgrow that, move them to object storage (e.g. Cloudflare R2, S3) or a media host and just update the `video` path in `src/data/projects.ts` — component code doesn't need to change either way.
-- A real contact backend, CMS-managed projects, analytics, or an admin dashboard would each need a small serverless function or separate backend — none of that exists today, and the Contact page is explicit in the UI that submitting opens a pre-filled `mailto:` link rather than posting to a server.
+- CMS-managed projects, analytics, or an admin dashboard would each need additional service integrations.
 
 ---
 
