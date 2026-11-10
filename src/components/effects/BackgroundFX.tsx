@@ -18,7 +18,6 @@ export function BackgroundFX() {
 
   return (
     <div className={styles.root} aria-hidden="true">
-      <div className={styles.grid} />
       <PerspectiveGrid rows={20} cols={20} />
 
       {!watermarkFailed ? (

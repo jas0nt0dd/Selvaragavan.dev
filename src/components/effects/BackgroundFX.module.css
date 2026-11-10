@@ -9,16 +9,6 @@
     linear-gradient(180deg, rgba(5, 7, 10, 0.95), rgba(5, 7, 10, 0.98));
 }
 
-.grid {
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(to right, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
-  background-size: 64px 64px;
-  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 100%);
-}
-
 .watermarkImg,
 .watermarkSvg {
   position: absolute;
