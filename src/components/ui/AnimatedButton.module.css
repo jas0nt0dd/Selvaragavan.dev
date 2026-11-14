@@ -1,0 +1,38 @@
+.animatedButton {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.label {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: inherit;
+  gap: inherit;
+  width: 100%;
+  height: 100%;
+}
+
+.borderShine {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  padding: 1px;
+  border-radius: inherit;
+  background: linear-gradient(-75deg, transparent 30%, rgba(255, 255, 255, 0.66) 50%, transparent 70%);
+  background-size: 200% 100%;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .label,
+  .borderShine {
+    animation: none;
+  }
+}

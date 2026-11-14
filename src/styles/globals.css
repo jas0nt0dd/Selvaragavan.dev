@@ -61,11 +61,45 @@ a {
 }
 
 button {
+  position: relative;
+  isolation: isolate;
   font-family: inherit;
   color: inherit;
   background: none;
   border: none;
   cursor: pointer;
+  --liquid-fill: rgba(196, 23, 43, 0.3);
+}
+
+button::after,
+.liquidButton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  background: var(--liquid-fill, var(--color-red-signal));
+  clip-path: ellipse(0% 0% at 50% 100%);
+  pointer-events: none;
+  transition: clip-path 680ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+button > *,
+.liquidButton > * {
+  z-index: 1;
+}
+
+button:not(:disabled):hover::after,
+button:not(:disabled):focus-visible::after,
+.liquidButton:hover::after,
+.liquidButton:focus-visible::after {
+  clip-path: ellipse(150% 125% at 50% 100%);
+}
+
+.liquidButton {
+  position: relative;
+  isolation: isolate;
+  --liquid-fill: rgba(196, 23, 43, 0.3);
 }
 
 ul, ol {
@@ -173,5 +207,10 @@ input, textarea, select {
   ::view-transition-old(root),
   ::view-transition-new(root) {
     animation: none !important;
+  }
+
+  button::after,
+  .liquidButton::after {
+    transition: none;
   }
 }

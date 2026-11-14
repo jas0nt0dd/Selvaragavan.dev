@@ -1,9 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/primitives";
 import { Icon } from "@/icons/icons";
 import { profile } from "@/data/profile";
 import { usePrefersReducedMotion } from "@/hooks/useMotionHooks";
 import { AsciiGlitchRipple } from "@/components/effects/AsciiGlitchRipple";
+import AnimatedButton from "@/components/ui/animated-button";
+import { InteractiveParticles } from "@/components/ui/interactive-particles";
 import { BatLogoModel } from "./BatLogoModel";
 import styles from "./Hero.module.css";
 
@@ -26,10 +28,10 @@ export function Hero({ landing = false }: { landing?: boolean }) {
 
           <div className={styles.markers}>
             {profile.capabilityMarkers.map((marker) => (
-              <span key={marker} className={styles.marker}>
+              <AnimatedButton key={marker} as="span" className={styles.marker}>
                 <MarkerIcon marker={marker} />
                 <AsciiGlitchRipple as="span">{marker}</AsciiGlitchRipple>
-              </span>
+              </AnimatedButton>
             ))}
           </div>
 
@@ -67,6 +69,7 @@ function TypewriterName() {
   const reducedMotion = usePrefersReducedMotion();
   const full = profile.name;
   const [typed, setTyped] = useState(reducedMotion ? full : "");
+  const textRef = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
     if (reducedMotion) {
@@ -84,8 +87,10 @@ function TypewriterName() {
 
   return (
     <span className={styles.headlineName}>
-      <span>{typed}</span>
+      <span className={styles.headlineNameMeasure} aria-hidden="true">{full}</span>
+      <span ref={textRef} className={styles.headlineNameText} aria-hidden="true">{typed}</span>
       <span className="visually-hidden">{full}</span>
+      <InteractiveParticles text={full} sourceRef={textRef} color="#f2c94c" />
     </span>
   );
 }

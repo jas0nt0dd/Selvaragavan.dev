@@ -27,12 +27,27 @@
 }
 
 .headlineName {
-  display: block;
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
   font-size: clamp(2.1rem, 5.8vw, var(--fs-4xl));
   line-height: 1.1;
   color: var(--color-bone);
   white-space: normal;
   word-break: break-word;
+}
+
+.headlineNameMeasure {
+  display: block;
+  visibility: hidden;
+}
+
+.headlineNameText {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  color: rgba(242, 201, 76, 0.12);
+  white-space: nowrap;
 }
 
 .headlineSub {

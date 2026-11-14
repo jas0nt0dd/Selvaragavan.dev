@@ -2,6 +2,7 @@ import { forwardRef, type ReactNode, type ButtonHTMLAttributes, type AnchorHTMLA
 import { RouteLink } from "@/components/layout/RouteLink";
 import { Icon } from "@/icons/icons";
 import { AsciiGlitchRipple } from "@/components/effects/AsciiGlitchRipple";
+import AnimatedButton from "@/components/ui/animated-button";
 import type { IconName } from "@/types";
 import { useReveal } from "@/hooks/useMotionHooks";
 import styles from "./primitives.module.css";
@@ -29,7 +30,7 @@ type ButtonProps = ButtonAsButton | ButtonAsLink | ButtonAsAnchor;
 
 export function Button(props: ButtonProps) {
   const { variant = "primary", icon, iconPosition = "right", children } = props;
-  const classes = `${styles.button} ${styles[variant]}`;
+  const classes = `liquidButton ${styles.button} ${styles[variant]}`;
   const content = (
     <>
       <span>{children}</span>
@@ -64,7 +65,11 @@ export function Button(props: ButtonProps) {
 /* ---------------------------- Tag ---------------------------- */
 
 export function Tag({ children, muted = false }: { children: ReactNode; muted?: boolean }) {
-  return <span className={`${styles.tag} ${muted ? styles.tagMuted : ""}`}>{children}</span>;
+  return (
+    <AnimatedButton as="span" className={`${styles.tag} ${muted ? styles.tagMuted : ""}`}>
+      {children}
+    </AnimatedButton>
+  );
 }
 
 /* ------------------------- Section Label ------------------------- */

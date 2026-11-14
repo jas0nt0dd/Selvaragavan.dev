@@ -1,6 +1,7 @@
 .wrap {
-  position: relative;
-  height: 0;
+  position: absolute;
+  inset: 0;
+  z-index: 5;
   pointer-events: none;
 }
 
@@ -9,7 +10,7 @@
   top: -18px;
   right: 2rem;
   left: auto;
-  transform: translateY(-40px);
+  transform: translateY(-110vh);
   opacity: 0;
   display: flex;
   flex-direction: column;
@@ -20,16 +21,28 @@
 }
 
 .rigVisible {
-  opacity: 1;
-  transform: translateY(0);
-  animation: drop-settle 900ms var(--ease-tactical) 120ms both;
+  animation: drop-settle 1500ms var(--ease-signal) 100ms both;
 }
 
 @keyframes drop-settle {
-  0% { transform: translateY(-60px); }
-  55% { transform: translateY(8px); }
-  75% { transform: translateY(-4px); }
-  100% { transform: translateY(0); }
+  0% {
+    opacity: 0;
+    transform: translateY(-110vh) rotate(-4deg);
+  }
+  58% {
+    opacity: 1;
+    transform: translateY(18px) rotate(4deg);
+  }
+  74% {
+    transform: translateY(-9px) rotate(-2.5deg);
+  }
+  88% {
+    transform: translateY(4px) rotate(1.2deg);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) rotate(0);
+  }
 }
 
 .nail {

@@ -15,7 +15,7 @@
 .carouselStage {
   position: relative;
   width: 100%;
-  height: calc(var(--card-count) * 100vh);
+  height: calc(var(--card-count) * 400vh);
 }
 
 .carouselViewport {
@@ -59,7 +59,7 @@
   }
 
   .carouselStage {
-    height: calc(var(--card-count) * 100svh);
+    height: calc(var(--card-count) * 400svh);
   }
 
   .carouselViewport {

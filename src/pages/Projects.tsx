@@ -65,13 +65,14 @@ function ProjectSlide({
 }) {
   const segmentStart = index / cardCount;
   const segmentEnd = (index + 1) / cardCount;
+  const segmentLength = segmentEnd - segmentStart;
   const revealProgress = useTransform(
     scrollYProgress,
     [
-      segmentStart + (segmentEnd - segmentStart) * 0.04,
-      segmentStart + (segmentEnd - segmentStart) * 0.14,
-      segmentStart + (segmentEnd - segmentStart) * 0.68,
-      segmentStart + (segmentEnd - segmentStart) * 0.8
+      segmentStart + segmentLength * 0.12,
+      segmentStart + segmentLength * 0.3,
+      segmentStart + segmentLength * 0.62,
+      segmentStart + segmentLength * 0.7
     ],
     [0, 0, 1, 1]
   );
@@ -96,13 +97,15 @@ function ProjectCarousel({ projects: carouselProjects }: { projects: Project[] }
   for (let index = 0; index < cardCount; index += 1) {
     const segmentStart = index / cardCount;
     const segmentEnd = (index + 1) / cardCount;
+    const segmentLength = segmentEnd - segmentStart;
     const nextIndex = Math.min(index + 1, cardCount - 1);
-    progressStops.push(
-      segmentStart + (segmentEnd - segmentStart) * 0.9,
-      segmentStart + (segmentEnd - segmentStart) * 0.99,
-      segmentEnd
-    );
+    const holdStart = segmentStart + segmentLength * 0.1;
+    const moveStart = segmentStart + segmentLength * 0.88;
+    const moveEnd = segmentStart + segmentLength * 0.99;
+
+    progressStops.push(holdStart, moveStart, moveEnd, segmentEnd);
     positionStops.push(
+      `-${index * 100}%`,
       `-${index * 100}%`,
       `-${nextIndex * 100}%`,
       `-${nextIndex * 100}%`
